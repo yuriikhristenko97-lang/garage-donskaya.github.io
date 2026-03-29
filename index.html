@@ -89,7 +89,6 @@
             border:1px solid #444;
             flex-shrink:0;
         }
-        /* Буква на колонне - ПО ЦЕНТРУ, КРАСНАЯ, КОНТРАСТНАЯ */
         .col .label{
             position:absolute;
             top:50%;
@@ -139,6 +138,41 @@
         .entrance .label{color:#4ade80;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-shadow:0 0 8px rgba(74,222,128,0.6);white-space:nowrap;}
         @keyframes pulse{0%,100%{opacity:1;transform:translateX(0);}50%{opacity:0.7;transform:translateX(3px);}}
         .row-separator{width:100%;height:1px;background:linear-gradient(90deg, transparent, #555, #666, #555, transparent);margin:2px 0;overflow:hidden;}
+        
+        /* КНОПКА РЕЖИМА РЕДАКТИРОВАНИЯ */
+        .edit-mode-btn{
+            position:fixed;
+            top:10px;
+            left:10px;
+            padding:10px 16px;
+            background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+            color:#fff;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:13px;
+            font-weight:600;
+            z-index:999;
+            box-shadow:0 4px 15px rgba(99,102,241,0.4);
+            transition:all 0.2s;
+            display:flex;
+            align-items:center;
+            gap:6px;
+        }
+        .edit-mode-btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 6px 20px rgba(99,102,241,0.5);
+        }
+        .edit-mode-btn.active{
+            background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+            box-shadow:0 4px 15px rgba(34,197,94,0.4);
+            animation:pulse-green 2s infinite;
+        }
+        @keyframes pulse-green{
+            0%, 100% { box-shadow:0 4px 15px rgba(34,197,94,0.4); }
+            50% { box-shadow:0 4px 25px rgba(34,197,94,0.6); }
+        }
+        
         #modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(8px);}
         .modal-box{background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);padding:22px;border-radius:14px;width:340px;max-width:90vw;border:1px solid #555;box-shadow:0 15px 50px rgba(0,0,0,0.7);}
         .modal-box h3{margin-bottom:14px;color:#ffd700;text-align:center;font-size:16px;font-weight:600;}
@@ -153,15 +187,70 @@
         .modal-box button.save:hover{background:linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);}
         .modal-box button.close{background:#555;}
         .modal-box button.close:hover{background:#666;}
+        
+        /* МОДАЛКА ПАРОЛЯ */
+        #passwordModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);align-items:center;justify-content:center;z-index:1001;backdrop-filter:blur(8px);}
+        .password-box{background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);padding:24px;border-radius:14px;width:320px;max-width:90vw;border:1px solid #555;box-shadow:0 15px 50px rgba(0,0,0,0.7);}
+        .password-box h3{margin-bottom:16px;color:#6366f1;text-align:center;font-size:17px;font-weight:600;}
+        .password-box input{width:100%;margin:10px 0;padding:12px 14px;background:#1a1a1a;border:1px solid #555;color:#eee;border-radius:6px;font-size:14px;}
+        .password-box input:focus{outline:none;border-color:#6366f1;box-shadow:0 0 10px rgba(99,102,241,0.3);}
+        .password-box .error{color:#f87171;font-size:12px;margin:8px 0;text-align:center;display:none;}
+        .password-box .btn-group{display:flex;gap:8px;margin-top:16px;}
+        .password-box button{flex:1;padding:11px;background:#555;color:#eee;border:none;border-radius:6px;cursor:pointer;font-size:13px;transition:all 0.2s;font-weight:600;}
+        .password-box button:hover{transform:translateY(-1px);}
+        .password-box button.confirm{background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);}
+        .password-box button.confirm:hover{background:linear-gradient(180deg, #818cf8 0%, #6366f1 100%);}
+        .password-box button.cancel{background:#555;}
+        .password-box button.cancel:hover{background:#666;}
+        
         .status{position:fixed;top:10px;right:10px;padding:8px 16px;background:#2d2d2d;border:1px solid #444;border-radius:6px;font-size:12px;z-index:999;}
         .status.connected{border-color:#4ade80;color:#4ade80;}
         .status.disconnected{border-color:#f87171;color:#f87171;}
+        
+        /* Индикатор режима просмотра */
+        .view-mode-indicator{
+            position:fixed;
+            top:10px;
+            left:10px;
+            padding:10px 16px;
+            background:linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
+            color:#fff;
+            border-radius:8px;
+            font-size:13px;
+            font-weight:600;
+            z-index:999;
+            box-shadow:0 4px 15px rgba(0,0,0,0.3);
+            display:flex;
+            align-items:center;
+            gap:6px;
+        }
     </style>
 </head>
 <body>
     <div class="status" id="status">🔄 Подключение...</div>
+    
+    <!-- Кнопка режима редактирования -->
+    <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
+        ✏️ Редактирование
+    </button>
+    
     <main><div class="garage" id="g"></div></main>
     <div class="tooltip" id="tooltip"></div>
+    
+    <!-- Модалка пароля -->
+    <div id="passwordModal">
+        <div class="password-box">
+            <h3>🔐 Введите пароль</h3>
+            <input type="password" id="passwordInput" placeholder="Пароль" onkeypress="if(event.key==='Enter')confirmPassword()">
+            <div class="error" id="passwordError">❌ Неверный пароль!</div>
+            <div class="btn-group">
+                <button class="cancel" onclick="closePasswordModal()">Отмена</button>
+                <button class="confirm" onclick="confirmPassword()">Войти</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модалка редактирования места -->
     <div id="modal">
         <div class="modal-box">
             <h3 id="title">🚗 Место</h3>
@@ -196,6 +285,10 @@
         const db = firebase.database();
         const statusEl = document.getElementById('status');
 
+        // Пароль для редактирования
+        const EDIT_PASSWORD = 'ip-donskaya_2026'
+        let isEditMode = false
+
         // Локальные данные
         let localDB = {}
         let id = 0
@@ -219,6 +312,52 @@
             localDB = snapshot.val() || {}
             build()
         });
+
+        // Переключение режима редактирования
+        function toggleEditMode(){
+            if(isEditMode){
+                // Выключить режим
+                isEditMode = false
+                updateEditModeBtn()
+            } else {
+                // Показать ввод пароля
+                document.getElementById('passwordModal').style.display = 'flex'
+                document.getElementById('passwordInput').value = ''
+                document.getElementById('passwordError').style.display = 'none'
+                document.getElementById('passwordInput').focus()
+            }
+        }
+
+        // Обновление кнопки режима
+        function updateEditModeBtn(){
+            const btn = document.getElementById('editModeBtn')
+            if(isEditMode){
+                btn.className = 'edit-mode-btn active'
+                btn.innerHTML = '✅ Режим редактирования'
+            } else {
+                btn.className = 'edit-mode-btn'
+                btn.innerHTML = '✏️ Редактирование'
+            }
+        }
+
+        // Закрыть модалку пароля
+        function closePasswordModal(){
+            document.getElementById('passwordModal').style.display = 'none'
+        }
+
+        // Проверка пароля
+        function confirmPassword(){
+            const password = document.getElementById('passwordInput').value
+            if(password === EDIT_PASSWORD){
+                isEditMode = true
+                updateEditModeBtn()
+                closePasswordModal()
+            } else {
+                document.getElementById('passwordError').style.display = 'block'
+                document.getElementById('passwordInput').value = ''
+                document.getElementById('passwordInput').focus()
+            }
+        }
 
         // Получить букву для колонны
         function getColLetter(index){
@@ -253,7 +392,14 @@
                     <div class="empty-icon">🅿️</div>
                 `
             }
-            el.onclick = () => openM(i)
+            
+            // Клик только в режиме редактирования
+            el.onclick = () => {
+                if(isEditMode){
+                    openM(i)
+                }
+            }
+            
             return el
         }
 
@@ -288,7 +434,6 @@
             positionTooltip(e.currentTarget)
         }
 
-        // КОЛОННА с буквой по центру
         function col(){
             const e = document.createElement('div')
             e.className = 'col'
@@ -404,6 +549,7 @@
         }
 
         function openM(i){
+            if(!isEditMode) return
             active = i
             document.getElementById('title').innerText = '🚗 Место №' + i
             const d = localDB[i] || {}
@@ -417,8 +563,9 @@
             active = null
         }
 
+        // Сохранение в Firebase
         function save(){
-            if(!active) return
+            if(!active || !isEditMode) return
             const car = document.getElementById('car').value.trim()
             const num = document.getElementById('num').value.trim()
             
@@ -430,8 +577,9 @@
             closeM()
         }
 
+        // Очистка в Firebase
         function clearCar(){
-            if(!active) return
+            if(!active || !isEditMode) return
             document.getElementById('car').value = ''
             document.getElementById('num').value = ''
             db.ref('spots/' + active).remove()
@@ -460,7 +608,9 @@
             g.appendChild(createFullRow(20, 'face-up', 2, 0, true))
         }
 
+        // Первая отрисовка
         build()
+        updateEditModeBtn()
     </script>
 </body>
 </html>
