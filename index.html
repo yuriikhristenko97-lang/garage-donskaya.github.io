@@ -529,16 +529,10 @@ function createCenterBlock(spotsCount, faceClass){
     return center
 }
 
-function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0, useSpacer = false){
+function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0){
     const row = document.createElement('div')
     row.className = 'row-full'
-    
-    if(useSpacer){
-        row.appendChild(spacer())
-    } else {
-        row.appendChild(createSideGroup(leftSideSpots, true))
-    }
-    
+    row.appendChild(createSideGroup(leftSideSpots, true))
     row.appendChild(createCenterBlock(spotsCount, faceClass))
     row.appendChild(createSideGroup(rightSideSpots, false))
     return row
@@ -657,9 +651,8 @@ function build(){
     const g = document.getElementById('g')
     g.innerHTML = ''
 
-    /* === ВЕРХНЯЯ ЗОНА: spacer + 20 центральных + 2 справа === */
-    /* Машины едут → (от въезда к дальнему краю) */
-    g.appendChild(createFullRow(20, 'face-down', 0, 2, true))
+    /* === ВЕРХНЯЯ ЗОНА: 2 слева + 20 центральных + 2 справа === */
+    g.appendChild(createFullRow(20, 'face-down', 2, 2))
     g.appendChild(road('→ → → → →'))
 
     /* === БЛОК 1 === */
@@ -677,9 +670,8 @@ function build(){
 
     g.appendChild(road('← ← ← ← ←'))
 
-    /* === НИЖНЯЯ ЗОНА: 2 слева (у въезда) + 20 центральных + 2 справа === */
-    /* Машины едут ← (к выезду/въезду) */
-    g.appendChild(createFullRow(20, 'face-up', 2, 2, false))
+    /* === НИЖНЯЯ ЗОНА: 2 слева + 20 центральных + 0 справа === */
+    g.appendChild(createFullRow(20, 'face-up', 2, 0))
 }
 
 build()
