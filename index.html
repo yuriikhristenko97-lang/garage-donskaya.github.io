@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Онлайн гараж</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    background:linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #8b5cf6 100%);
+    color:#eee;
+    font-family:'Segoe UI',Arial,sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px;
+    overflow: hidden;
+}
+
+/* ОСНОВНОЙ КОНТЕЙНЕР */
+.garage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content: center;
+    background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
+    border:1px solid #555;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    max-width: 98vw;
+    max-height: 98vh;
+    overflow: hidden;
+}
+
+/* РЯД */
+.row-full{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    margin: 1px 0;
+    gap: 2px;
+}
+
+/* Боковые группы мест */
+.side-group{
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    background:linear-gradient(180deg, #3d3d3d 0%, #353535 100%);
+    padding: 0 2px;
+    border-radius: 6px;
+    border:1px solid #444;
+}
+
+/* Невидимый spacer для выравнивания */
+.spacer{
+    width: 90px;
+    flex-shrink: 0;
+    visibility: hidden;
+}
+
+/* ЦЕНТРАЛЬНЫЙ БЛОК */
+.center-block{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(180deg, #3d3d3d 0%, #353535 100%);
+    padding: 0 2px;
+    border-radius: 6px;
+    border:1px solid #444;
+}
+
+/* ПАРАМЕТРЫ МЕСТА */
+.spot{
+    width: 40px;
+    height: 58px;
+    border:1px solid #555;
+    margin:0 1px;
+    padding:3px 2px;
+    font-size:6px;
+    display:flex;
+    flex-direction:column;
+    cursor:pointer;
+    transition:all 0.25s ease;
+    text-align:center;
+    background:linear-gradient(180deg, #4a4a4a 0%, #424242 100%);
+    border-radius: 4px;
+    position: relative;
+}
+
+.spot:hover{
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    border-color: #aaa;
+    z-index: 100;
+}
+
+/* Пустое место */
+.spot.empty-spot{
+    background:linear-gradient(180deg, #525252 0%, #484848 100%);
+    border:1px dashed #777;
+}
+.spot.empty-spot:hover{
+    background:linear-gradient(180deg, #5a5a5a 0%, #505050 100%);
+    border-color: #999;
+    border-style: solid;
+}
+.spot.empty-spot .empty-icon{
+    font-size: 16px;
+    color: #666;
+    margin-top: auto;
+    margin-bottom: 3px;
+    transition: all 0.2s;
+}
+.spot.empty-spot:hover .empty-icon{
+    color: #ffd700;
+    transform: scale(1.2);
+}
+
+/* Занятое место */
+.spot.occupied{
+    background:linear-gradient(180deg, #2d6a4f 0%, #1b4332 100%);
+    border-color:#40916c;
+    border-style: solid;
+}
+.spot.occupied:hover{
+    background:linear-gradient(180deg, #40916c 0%, #2d6a4f 100%);
+}
+
+/* Номер места */
+.spot .num{
+    position:absolute;
+    top:2px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:5px;
+    color:#777;
+    font-weight:bold;
+    background: rgba(0,0,0,0.3);
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
+/* Информация об авто в месте */
+.spot .car-info{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    height:100%;
+    padding-top:10px;
+}
+.spot .car-mark{
+    color: #ffd700;
+    font-size: 6px;
+    font-weight: 700;
+    margin-bottom: 1px;
+    word-break: break-word;
+    max-width: 100%;
+    line-height: 1.1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+.spot .car-num{
+    color: #fff;
+    font-size: 5px;
+    font-weight: 600;
+    word-break: break-word;
+    max-width: 100%;
+    line-height: 1.1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.3);
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+/* Увеличенная информация при наведении */
+.spot.occupied:hover .car-info-hover{
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+.spot .car-info-hover{
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #1b4332 0%, #0d2818 100%);
+    border: 2px solid #40916c;
+    border-radius: 8px;
+    padding: 10px 16px;
+    min-width: 160px;
+    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+.spot .car-info-hover .mark{
+    color: #ffd700;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-align: center;
+}
+.spot .car-info-hover .divider{
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #40916c, transparent);
+    margin: 4px 0;
+}
+.spot .car-info-hover .num{
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+.spot .car-info-hover .spot-id{
+    color: #888;
+    font-size: 9px;
+    margin-top: 5px;
+}
+
+/* Жёлтая полоска ТОЛЬКО у центральных мест */
+.center-block .face-down .spot{border-bottom:2px solid #ffd700;}
+.center-block .face-up .spot{border-top:2px solid #ffd700;}
+
+/* КОЛОННЫ */
+.col{
+    width:24px;
+    height:64px;
+    background:linear-gradient(90deg, #525252 0%, #626262 50%, #525252 100%);
+    margin:0 2px;
+    position:relative;
+    border-radius: 4px;
+    border:1px solid #444;
+}
+.col:before,.col:after{
+    content:'';position:absolute;left:2px;right:2px;height:7px;
+    background:linear-gradient(90deg, #ffd700 0%, #ffec8b 50%, #ffd700 100%);
+    transform:skewY(-20deg);
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.col:before{top:6px}
+.col:after{bottom:6px}
+
+/* Фейк для выравнивания */
+.fake{width:24px;height:58px;margin:0 2px;visibility:hidden}
+
+/* ДОРОГИ */
+.road{
+    width: 100%;
+    height:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin: 2px 0;
+}
+.road .arrow{
+    color: #ffd700;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-shadow: 0 0 8px rgba(255,215,0,0.6);
+}
+
+/* ДВОЙНАЯ ДОРОГА */
+.double-road{
+    width: 100%;
+    height:26px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    margin: 3px 0;
+}
+.double-road .lane{
+    height:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.double-road .lane-top{
+    justify-content:flex-start;
+    padding-left: 50%;
+}
+.double-road .lane-bottom{
+    justify-content:flex-end;
+    padding-right: 50%;
+}
+.double-road .arrow{
+    color:#ffd700;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-shadow: 0 0 8px rgba(255,215,0,0.6);
+}
+.double-road .divider{
+    height:1px;
+    background:linear-gradient(90deg, transparent, #666, #777, #666, transparent);
+    margin: 1px 0;
+}
+
+/* Разделитель между рядами */
+.row-separator{
+    width: 100%;
+    height: 1px;
+    background:linear-gradient(90deg, transparent, #555, #666, #555, transparent);
+    margin: 2px 0;
+}
+
+/* МОДАЛКА */
+#modal{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,.9);align-items:center;justify-content:center;z-index:1000;
+    backdrop-filter:blur(8px);
+}
+.modal-box{
+    background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
+    padding:20px;border-radius:14px;width:320px;max-width:90vw;
+    border:1px solid #555;
+    box-shadow:0 15px 50px rgba(0,0,0,0.7);
+}
+.modal-box h3{margin-bottom:14px;color:#ffd700;text-align:center;font-size:16px;font-weight:600;}
+.modal-box input{
+    width:100%;margin:8px 0;padding:10px 12px;
+    background:#1a1a1a;border:1px solid #555;color:#eee;
+    border-radius:6px;font-size:13px;
+}
+.modal-box input:focus{outline:none;border-color:#ffd700;box-shadow:0 0 10px rgba(255,215,0,0.2);}
+.modal-box .btn-group{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-top:14px;
+    gap: 6px;
+}
+.modal-box button{
+    padding:10px 8px;
+    background:#555;color:#eee;
+    border:none;border-radius:6px;cursor:pointer;font-size:11px;transition:all 0.2s;
+    font-weight:600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.modal-box button:hover{transform:translateY(-1px);}
+.modal-box button.clear{
+    background:linear-gradient(180deg, #c0392b 0%, #922b21 100%);
+}
+.modal-box button.clear:hover{
+    background:linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
+}
+.modal-box button.save{
+    background:linear-gradient(180deg, #27ae60 0%, #1e8449 100%);
+}
+.modal-box button.save:hover{
+    background:linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+}
+.modal-box button.close{
+    background:#555;
+}
+.modal-box button.close:hover{
+    background:#666;
+}
+</style>
+</head>
+
+<body>
+
+<main>
+<div class="garage" id="g"></div>
+</main>
+
+<!-- МОДАЛКА -->
+<div id="modal">
+<div class="modal-box">
+<h3 id="title">🚗 Место</h3>
+<input id="car" placeholder="Марка автомобиля">
+<input id="num" placeholder="Гос. номер">
+<div class="btn-group">
+    <button class="clear" onclick="clearCar()">🗑️ Очистить</button>
+    <button class="close" onclick="closeM()">Закрыть</button>
+    <button class="save" onclick="save()">💾 Сохранить</button>
+</div>
+</div>
+</div>
+
+<script>
+let db = {}
+let id = 0
+let active = null
+
+function mkSpot(faceClass = '', isSideSpot = false){
+    const i = ++id
+    const d = db[i] || {}
+    const el = document.createElement('div')
+    const className = isSideSpot ? 'spot' : 'spot ' + faceClass
+    
+    if(d.car){
+        el.className = className + ' occupied'
+        el.innerHTML = `
+            <span class="num">${i}</span>
+            <div class="car-info">
+                <div class="car-mark">${d.car}</div>
+                <div class="car-num">${d.num||''}</div>
+            </div>
+        `
+        const tooltip = document.createElement('div')
+        tooltip.className = 'car-info-hover'
+        tooltip.innerHTML = `
+            <div class="mark">${d.car}</div>
+            <div class="divider"></div>
+            <div class="num">${d.num||'—'}</div>
+            <div class="spot-id">Место №${i}</div>
+        `
+        el.appendChild(tooltip)
+        
+        el.addEventListener('mouseenter', () => {
+            const rect = el.getBoundingClientRect()
+            tooltip.style.top = (rect.bottom + 8) + 'px'
+            tooltip.style.display = 'flex'
+        })
+        el.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none'
+        })
+    } else {
+        el.className = className + ' empty-spot'
+        el.innerHTML = `
+            <span class="num">${i}</span>
+            <div class="empty-icon">🅿️</div>
+        `
+    }
+    
+    el.onclick = () => openM(i)
+    return el
+}
+
+function col(){
+    const e = document.createElement('div')
+    e.className = 'col'
+    return e
+}
+function fake(){
+    const e = document.createElement('div')
+    e.className = 'fake'
+    return e
+}
+function spacer(){
+    const e = document.createElement('div')
+    e.className = 'spacer'
+    return e
+}
+
+function createSideGroup(count, isLeft){
+    const group = document.createElement('div')
+    group.className = 'side-group'
+    if(count === 0) {
+        group.style.visibility = 'hidden'
+        return group
+    }
+    for(let i=0; i<count; i++) group.appendChild(mkSpot('', true))
+    return group
+}
+
+function createCenterBlock(spotsCount, faceClass){
+    const center = document.createElement('div')
+    center.className = 'center-block ' + faceClass
+    center.appendChild(fake())
+    
+    const spotsPerBlock = 4
+    const numBlocks = Math.ceil(spotsCount / spotsPerBlock)
+    
+    for(let s = 0; s < numBlocks; s++){
+        const currentBlockSpots = Math.min(spotsPerBlock, spotsCount - (s * spotsPerBlock))
+        for(let i = 0; i < currentBlockSpots; i++) center.appendChild(mkSpot(faceClass, false))
+        if(s < numBlocks - 1) center.appendChild(fake())
+    }
+    
+    center.appendChild(fake())
+    return center
+}
+
+function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0, useSpacer = false){
+    const row = document.createElement('div')
+    row.className = 'row-full'
+    
+    if(useSpacer){
+        row.appendChild(spacer())
+    } else {
+        row.appendChild(createSideGroup(leftSideSpots, true))
+    }
+    
+    row.appendChild(createCenterBlock(spotsCount, faceClass))
+    row.appendChild(createSideGroup(rightSideSpots, false))
+    return row
+}
+
+function rowCols(cls){
+    const row = document.createElement('div')
+    row.className = 'row-full'
+    row.appendChild(createSideGroup(0, true))
+    
+    const center = document.createElement('div')
+    center.className = 'center-block ' + cls
+    center.appendChild(col())
+    for(let s = 0; s < 4; s++){
+        for(let i = 0; i < 4; i++) center.appendChild(mkSpot(cls, false))
+        center.appendChild(col())
+    }
+    for(let i = 0; i < 4; i++) center.appendChild(mkSpot(cls, false))
+    center.appendChild(col())
+    row.appendChild(center)
+    row.appendChild(createSideGroup(0, false))
+    return row
+}
+
+function road(arrowDir){
+    const d = document.createElement('div')
+    d.className = 'road'
+    const arrow = document.createElement('span')
+    arrow.className = 'arrow'
+    arrow.innerText = arrowDir
+    d.appendChild(arrow)
+    return d
+}
+
+function doubleRoad(){
+    const d = document.createElement('div')
+    d.className = 'double-road'
+    
+    const top = document.createElement('div')
+    top.className = 'lane lane-top'
+    const topArrow = document.createElement('span')
+    topArrow.className = 'arrow'
+    topArrow.innerText = '◄ ◄ ◄ ◄ ◄'
+    top.appendChild(topArrow)
+    
+    const divider = document.createElement('div')
+    divider.className = 'divider'
+    
+    const bottom = document.createElement('div')
+    bottom.className = 'lane lane-bottom'
+    const bottomArrow = document.createElement('span')
+    bottomArrow.className = 'arrow'
+    bottomArrow.innerText = '► ► ► ► ►'
+    bottom.appendChild(bottomArrow)
+    
+    d.appendChild(top)
+    d.appendChild(divider)
+    d.appendChild(bottom)
+    return d
+}
+
+function rowSeparator(){
+    const d = document.createElement('div')
+    d.className = 'row-separator'
+    return d
+}
+
+function openM(i){
+    active = i
+    document.getElementById('title').innerText = '🚗 Место №' + i
+    const d = db[i] || {}
+    document.getElementById('car').value = d.car || ''
+    document.getElementById('num').value = d.num || ''
+    document.getElementById('modal').style.display = 'flex'
+    document.getElementById('car').focus()
+}
+function closeM(){
+    document.getElementById('modal').style.display = 'none'
+    active = null
+}
+function save(){
+    if(!active) return
+    const car = document.getElementById('car').value.trim()
+    const num = document.getElementById('num').value.trim()
+    if(car){ db[active] = {car, num} }
+    else { delete db[active] }
+    closeM()
+    build()
+}
+function clearCar(){
+    if(!active) return
+    document.getElementById('car').value = ''
+    document.getElementById('num').value = ''
+    delete db[active]
+    closeM()
+    build()
+}
+document.getElementById('modal').onclick = function(e){
+    if(e.target === this) closeM()
+}
+
+function build(){
+    id = 0
+    const g = document.getElementById('g')
+    g.innerHTML = ''
+
+    /* === ВЕРХНЯЯ ЗОНА: spacer + 20 центральных + 2 справа === */
+    g.appendChild(createFullRow(20, 'face-up', 0, 2, true))
+    g.appendChild(road('← ← ← ← ←'))
+
+    /* === БЛОК 1 === */
+    g.appendChild(rowCols('face-down'))
+    g.appendChild(rowSeparator())
+    g.appendChild(rowCols('face-up'))
+
+    /* === ЦЕНТРАЛЬНАЯ ДВОЙНАЯ ДОРОГА === */
+    g.appendChild(doubleRoad())
+
+    /* === БЛОК 2 === */
+    g.appendChild(rowCols('face-up'))
+    g.appendChild(rowSeparator())
+    g.appendChild(rowCols('face-down'))
+
+    g.appendChild(road('→ → → → →'))
+
+    /* === НИЖНЯЯ ЗОНА: 2 слева + 20 центральных + 2 справа === */
+    g.appendChild(createFullRow(20, 'face-down', 2, 2, false))
+}
+
+build()
+
+window.onload = function(){
+    if(localStorage.garageDB){
+        db = JSON.parse(localStorage.garageDB)
+        build()
+    }
+}
+window.onbeforeunload = function(){
+    localStorage.garageDB = JSON.stringify(db)
+}
+</script>
+
+</body>
+</html>
