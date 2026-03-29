@@ -3,43 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Garage Donskaya</title>
-    <script>
-        // Automatically save data every 5 seconds
-        setInterval(() => {
-            // Code to save data
-            console.log('Data saved!');
-        }, 5000);
-    </script>
+    <title>Garage Parking Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .parking-slot {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            background-color: #4CAF50;
+            display: inline-block;
+            text-align: center;
+            line-height: 100px;
+            color: white;
+            font-size: 20px;
+        }
+        .occupied {
+            background-color: #f44336;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1 aria-label="Garage Donskaya - Welcome">Welcome to Garage Donskaya</h1>
-    </header>
-    <main>
-        <form aria-label="User Input Form">
-            <label for="userInput">Input:</label>
-            <input type="text" id="userInput" required aria-label="User input field">
-            <button type="submit">Submit</button>
-        </form>
-        <div id="error-message" role="alert"></div>
-    </main>
-    <script>
-        // Improve error handling
-        const form = document.querySelector('form');
-        const errorMessage = document.getElementById('error-message');
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const input = document.getElementById('userInput').value;
-            if (input.trim() === '') {
-                errorMessage.textContent = 'Input cannot be empty!';
-                return;
-            }
-            errorMessage.textContent = '';
-            console.log('Form submitted:', input);
-            // You can add additional validation logic here.
-        });
-    </script>
+    <h1>Parking Slots</h1>
+    <div id="parking-container">
+        <div class="parking-slot">1</div>
+        <div class="parking-slot occupied">2</div>
+        <div class="parking-slot">3</div>
+        <div class="parking-slot">4</div>
+        <div class="parking-slot">5</div>
+        <div class="parking-slot">6</div>
+        <div class="parking-slot">7</div>
+        <div class="parking-slot">8</div>
+        <div class="parking-slot">9</div>
+        <div class="parking-slot">10</div>
+    </div>
 </body>
 </html>
