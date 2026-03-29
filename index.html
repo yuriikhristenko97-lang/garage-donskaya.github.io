@@ -34,7 +34,7 @@ body{
     overflow: hidden;
 }
 
-/* РЯД */
+/* РЯД - единый padding для выравнивания */
 .row-full{
     display:flex;
     align-items:center;
@@ -42,7 +42,7 @@ body{
     width:100%;
     margin: 1px 0;
     gap: 2px;
-    padding-left: 90px;
+    padding-left: 92px;
 }
 
 /* Боковые группы мест */
@@ -56,7 +56,14 @@ body{
     border:1px solid #444;
 }
 
-/* ЦЕНТРАЛЬНЫЙ БЛОК - без тёмного фона */
+/* Невидимый spacer для выравнивания */
+.spacer{
+    width: 92px;
+    flex-shrink: 0;
+    visibility: hidden;
+}
+
+/* ЦЕНТРАЛЬНЫЙ БЛОК - без фона */
 .center-block{
     display:flex;
     justify-content:center;
@@ -67,12 +74,12 @@ body{
 
 /* ПАРАМЕТРЫ МЕСТА */
 .spot{
-    width: 42px;
-    height: 60px;
+    width: 44px;
+    height: 62px;
     border:1px solid #555;
-    margin:0 1px;
-    padding:4px 2px;
-    font-size:6px;
+    margin:0 2px;
+    padding:5px 3px;
+    font-size:7px;
     display:flex;
     flex-direction:column;
     cursor:pointer;
@@ -101,10 +108,10 @@ body{
     border-style: solid;
 }
 .spot.empty-spot .empty-icon{
-    font-size: 16px;
+    font-size: 18px;
     color: #666;
     margin-top: auto;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     transition: all 0.2s;
 }
 .spot.empty-spot:hover .empty-icon{
@@ -128,49 +135,50 @@ body{
     top:2px;
     left:50%;
     transform:translateX(-50%);
-    font-size:5px;
-    color:#777;
+    font-size:6px;
+    color:#888;
     font-weight:bold;
-    background: rgba(0,0,0,0.3);
-    padding: 1px 3px;
+    background: rgba(0,0,0,0.4);
+    padding: 1px 4px;
     border-radius: 3px;
 }
 
-/* Информация об авто в месте */
+/* Информация об авто в месте - ЧИТАЕМАЯ */
 .spot .car-info{
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
     height:100%;
-    padding-top:10px;
-    gap: 2px;
+    padding-top:12px;
+    gap: 3px;
 }
 .spot .car-mark{
     color: #ffd700;
-    font-size: 7px;
+    font-size: 8px;
     font-weight: 700;
     word-break: break-word;
     max-width: 100%;
-    line-height: 1.1;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    line-height: 1.2;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
 }
+/* Разделитель в ячейке */
 .spot .car-separator{
-    width: 60%;
+    width: 70%;
     height: 1px;
     background: linear-gradient(90deg, transparent, #ffd700, transparent);
-    opacity: 0.5;
+    opacity: 0.6;
 }
 .spot .car-num{
     color: #fff;
-    font-size: 6px;
+    font-size: 7px;
     font-weight: 600;
     word-break: break-word;
     max-width: 100%;
-    line-height: 1.1;
-    background: rgba(0,0,0,0.4);
-    padding: 1px 3px;
-    border-radius: 2px;
+    line-height: 1.2;
+    background: rgba(0,0,0,0.5);
+    padding: 2px 4px;
+    border-radius: 3px;
     letter-spacing: 0.5px;
 }
 
@@ -193,41 +201,43 @@ body{
     border: 2px solid #40916c;
     border-radius: 10px;
     padding: 16px 24px;
-    min-width: 240px;
+    min-width: 250px;
     z-index: 1000;
     flex-direction: column;
     align-items: center;
     box-shadow: 0 15px 50px rgba(0,0,0,0.9);
     transition: all 0.2s ease;
-    white-space: nowrap;
 }
+/* Марка авто */
 .spot .car-info-hover .mark{
     color: #ffd700;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 10px;
     text-align: center;
     text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
+/* Разделитель между маркой и номером */
 .spot .car-info-hover .divider{
     width: 80%;
     height: 2px;
     background: linear-gradient(90deg, transparent, #4ade80, transparent);
-    margin: 8px 0;
+    margin: 10px 0;
 }
+/* Номер авто */
 .spot .car-info-hover .num{
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     background: rgba(255,255,255,0.15);
-    padding: 6px 18px;
+    padding: 6px 20px;
     border-radius: 5px;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
+/* ID места */
 .spot .car-info-hover .spot-id{
     color: #888;
-    font-size: 11px;
+    font-size: 10px;
     margin-top: 8px;
 }
 
@@ -237,8 +247,8 @@ body{
 
 /* КОЛОННЫ */
 .col{
-    width:24px;
-    height:66px;
+    width:26px;
+    height:68px;
     background:linear-gradient(90deg, #525252 0%, #626262 50%, #525252 100%);
     margin:0 2px;
     position:relative;
@@ -256,7 +266,7 @@ body{
 .col:after{bottom:6px}
 
 /* Фейк для выравнивания */
-.fake{width:24px;height:60px;margin:0 2px;visibility:hidden}
+.fake{width:26px;height:62px;margin:0 2px;visibility:hidden}
 
 /* ДОРОГИ */
 .road{
@@ -266,7 +276,7 @@ body{
     align-items:center;
     justify-content:center;
     margin: 2px 0;
-    padding-left: 90px;
+    padding-left: 92px;
 }
 .road .arrow{
     color: #ffd700;
@@ -276,16 +286,16 @@ body{
     text-shadow: 0 0 8px rgba(255,215,0,0.6);
 }
 
-/* ДВОЙНАЯ ДОРОГА С ВЪЕЗДОМ - 2 полосы по центру */
+/* ДВОЙНАЯ ДОРОГА С ВЪЕЗДОМ */
 .double-road{
     width: 100%;
-    height:40px;
+    height:42px;
     display:flex;
     align-items:center;
     justify-content:center;
     margin: 3px 0;
     position: relative;
-    padding-left: 90px;
+    padding-left: 92px;
 }
 .double-road .lanes{
     display:flex;
@@ -293,18 +303,16 @@ body{
     width: 100%;
     max-width: 600px;
 }
-/* Верхняя полоса - въезд (вправо) */
 .double-road .lane-top{
-    height:18px;
+    height:19px;
     display:flex;
     align-items:center;
     justify-content:flex-start;
     border-bottom: 1px dashed #444;
     padding-left: 20px;
 }
-/* Нижняя полоса - выезд (влево) */
 .double-road .lane-bottom{
-    height:18px;
+    height:19px;
     display:flex;
     align-items:center;
     justify-content:flex-end;
@@ -353,7 +361,7 @@ body{
     height: 1px;
     background:linear-gradient(90deg, transparent, #555, #666, #555, transparent);
     margin: 2px 0;
-    padding-left: 90px;
+    padding-left: 92px;
 }
 
 /* МОДАЛКА */
@@ -484,6 +492,11 @@ function fake(){
     e.className = 'fake'
     return e
 }
+function spacer(){
+    const e = document.createElement('div')
+    e.className = 'spacer'
+    return e
+}
 
 function createSideGroup(count, isLeft){
     const group = document.createElement('div')
@@ -514,12 +527,17 @@ function createCenterBlock(spotsCount, faceClass){
     return center
 }
 
-function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0){
+function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0, rightSpacer = false){
     const row = document.createElement('div')
     row.className = 'row-full'
     row.appendChild(createSideGroup(leftSideSpots, true))
     row.appendChild(createCenterBlock(spotsCount, faceClass))
-    row.appendChild(createSideGroup(rightSideSpots, false))
+    
+    if(rightSpacer){
+        row.appendChild(spacer())
+    } else {
+        row.appendChild(createSideGroup(rightSideSpots, false))
+    }
     return row
 }
 
@@ -556,7 +574,6 @@ function doubleRoad(){
     const d = document.createElement('div')
     d.className = 'double-road'
     
-    // ВЪЕЗД слева
     const entrance = document.createElement('div')
     entrance.className = 'entrance'
     entrance.innerHTML = `
@@ -565,11 +582,9 @@ function doubleRoad(){
     `
     d.appendChild(entrance)
     
-    // Полосы по центру
     const lanes = document.createElement('div')
     lanes.className = 'lanes'
     
-    // Верхняя полоса - въезд (вправо)
     const top = document.createElement('div')
     top.className = 'lane lane-top'
     const topArrow = document.createElement('span')
@@ -577,7 +592,6 @@ function doubleRoad(){
     topArrow.innerText = '► ► ► ► ►'
     top.appendChild(topArrow)
     
-    // Нижняя полоса - выезд (влево)
     const bottom = document.createElement('div')
     bottom.className = 'lane lane-bottom'
     const bottomArrow = document.createElement('span')
@@ -637,7 +651,7 @@ function build(){
     g.innerHTML = ''
 
     /* === ВЕРХНЯЯ ЗОНА: 2 слева + 20 центральных + 2 справа === */
-    g.appendChild(createFullRow(20, 'face-down', 2, 2))
+    g.appendChild(createFullRow(20, 'face-down', 2, 2, false))
     g.appendChild(road('→ → → → →'))
 
     /* === БЛОК 1 === */
@@ -655,8 +669,8 @@ function build(){
 
     g.appendChild(road('← ← ← ← ←'))
 
-    /* === НИЖНЯЯ ЗОНА: 2 слева + 20 центральных + 0 справа === */
-    g.appendChild(createFullRow(20, 'face-up', 2, 0))
+    /* === НИЖНЯЯ ЗОНА: 2 слева + 20 центральных + spacer справа (нет ячеек) === */
+    g.appendChild(createFullRow(20, 'face-up', 2, 0, true))
 }
 
 build()
