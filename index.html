@@ -38,10 +38,11 @@ body{
 .row-full{
     display:flex;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-start;
     width:100%;
     margin: 1px 0;
     gap: 2px;
+    padding-left: 90px;
 }
 
 /* Боковые группы мест */
@@ -55,22 +56,13 @@ body{
     border:1px solid #444;
 }
 
-/* Невидимый spacer для выравнивания */
-.spacer{
-    width: 88px;
-    flex-shrink: 0;
-    visibility: hidden;
-}
-
-/* ЦЕНТРАЛЬНЫЙ БЛОК */
+/* ЦЕНТРАЛЬНЫЙ БЛОК - без тёмного фона */
 .center-block{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(180deg, #3d3d3d 0%, #353535 100%);
     padding: 0 2px;
     border-radius: 6px;
-    border:1px solid #444;
 }
 
 /* ПАРАМЕТРЫ МЕСТА */
@@ -182,20 +174,21 @@ body{
     letter-spacing: 0.5px;
 }
 
-/* Увеличенная информация при наведении - КРУПНАЯ */
+/* Увеличенная информация при наведении - ПОВЕРХ МЕСТА */
 .spot.occupied:hover .car-info-hover{
     display: flex;
     opacity: 1;
     visibility: visible;
+    pointer-events: none;
 }
 .spot .car-info-hover{
     display: none;
     opacity: 0;
     visibility: hidden;
-    position: fixed;
+    position: absolute;
+    bottom: 100%;
     left: 50%;
-    top: 0;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(-8px);
     background: linear-gradient(180deg, #1b4332 0%, #0d2818 100%);
     border: 2px solid #40916c;
     border-radius: 10px;
@@ -206,7 +199,7 @@ body{
     align-items: center;
     box-shadow: 0 15px 50px rgba(0,0,0,0.9);
     transition: all 0.2s ease;
-    pointer-events: none;
+    white-space: nowrap;
 }
 .spot .car-info-hover .mark{
     color: #ffd700;
@@ -273,6 +266,7 @@ body{
     align-items:center;
     justify-content:center;
     margin: 2px 0;
+    padding-left: 90px;
 }
 .road .arrow{
     color: #ffd700;
@@ -282,33 +276,39 @@ body{
     text-shadow: 0 0 8px rgba(255,215,0,0.6);
 }
 
-/* ДВОЙНАЯ ДОРОГА С ВЪЕЗДОМ - 2 полосы */
+/* ДВОЙНАЯ ДОРОГА С ВЪЕЗДОМ - 2 полосы по центру */
 .double-road{
     width: 100%;
-    height:36px;
+    height:40px;
     display:flex;
-    flex-direction:column;
+    align-items:center;
     justify-content:center;
     margin: 3px 0;
     position: relative;
-    background: linear-gradient(180deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
-    border-radius: 6px;
-    border: 1px solid #333;
+    padding-left: 90px;
 }
+.double-road .lanes{
+    display:flex;
+    flex-direction:column;
+    width: 100%;
+    max-width: 600px;
+}
+/* Верхняя полоса - въезд (вправо) */
 .double-road .lane-top{
-    height:16px;
+    height:18px;
     display:flex;
     align-items:center;
     justify-content:flex-start;
-    padding-left: 60px;
     border-bottom: 1px dashed #444;
+    padding-left: 20px;
 }
+/* Нижняя полоса - выезд (влево) */
 .double-road .lane-bottom{
-    height:16px;
+    height:18px;
     display:flex;
     align-items:center;
     justify-content:flex-end;
-    padding-right: 60px;
+    padding-right: 20px;
 }
 .double-road .arrow{
     color:#ffd700;
@@ -353,6 +353,7 @@ body{
     height: 1px;
     background:linear-gradient(90deg, transparent, #555, #666, #555, transparent);
     margin: 2px 0;
+    padding-left: 90px;
 }
 
 /* МОДАЛКА */
@@ -461,15 +462,6 @@ function mkSpot(faceClass = '', isSideSpot = false){
             <div class="spot-id">Место №${i}</div>
         `
         el.appendChild(tooltip)
-        
-        el.addEventListener('mouseenter', () => {
-            const rect = el.getBoundingClientRect()
-            tooltip.style.top = (rect.bottom + 10) + 'px'
-            tooltip.style.display = 'flex'
-        })
-        el.addEventListener('mouseleave', () => {
-            tooltip.style.display = 'none'
-        })
     } else {
         el.className = className + ' empty-spot'
         el.innerHTML = `
@@ -490,11 +482,6 @@ function col(){
 function fake(){
     const e = document.createElement('div')
     e.className = 'fake'
-    return e
-}
-function spacer(){
-    const e = document.createElement('div')
-    e.className = 'spacer'
     return e
 }
 
@@ -527,18 +514,12 @@ function createCenterBlock(spotsCount, faceClass){
     return center
 }
 
-function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0, rightSpacer = false){
+function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0){
     const row = document.createElement('div')
     row.className = 'row-full'
     row.appendChild(createSideGroup(leftSideSpots, true))
     row.appendChild(createCenterBlock(spotsCount, faceClass))
-    
-    // Если нужен spacer справа вместо мест
-    if(rightSpacer){
-        row.appendChild(spacer())
-    } else {
-        row.appendChild(createSideGroup(rightSideSpots, false))
-    }
+    row.appendChild(createSideGroup(rightSideSpots, false))
     return row
 }
 
@@ -584,6 +565,10 @@ function doubleRoad(){
     `
     d.appendChild(entrance)
     
+    // Полосы по центру
+    const lanes = document.createElement('div')
+    lanes.className = 'lanes'
+    
     // Верхняя полоса - въезд (вправо)
     const top = document.createElement('div')
     top.className = 'lane lane-top'
@@ -600,8 +585,9 @@ function doubleRoad(){
     bottomArrow.innerText = '◄ ◄ ◄ ◄ ◄'
     bottom.appendChild(bottomArrow)
     
-    d.appendChild(top)
-    d.appendChild(bottom)
+    lanes.appendChild(top)
+    lanes.appendChild(bottom)
+    d.appendChild(lanes)
     return d
 }
 
@@ -650,8 +636,8 @@ function build(){
     const g = document.getElementById('g')
     g.innerHTML = ''
 
-    /* === ВЕРХНЯЯ ЗОНА: 2 слева + 20 центральных + 2 справа (реальные места) === */
-    g.appendChild(createFullRow(20, 'face-down', 2, 2, false))
+    /* === ВЕРХНЯЯ ЗОНА: 2 слева + 20 центральных + 2 справа === */
+    g.appendChild(createFullRow(20, 'face-down', 2, 2))
     g.appendChild(road('→ → → → →'))
 
     /* === БЛОК 1 === */
@@ -669,8 +655,8 @@ function build(){
 
     g.appendChild(road('← ← ← ← ←'))
 
-    /* === НИЖНЯЯ ЗОНА: 2 слева + 20 центральных + spacer справа (невидимый) === */
-    g.appendChild(createFullRow(20, 'face-up', 2, 0, true))
+    /* === НИЖНЯЯ ЗОНА: 2 слева + 20 центральных + 0 справа === */
+    g.appendChild(createFullRow(20, 'face-up', 2, 0))
 }
 
 build()
