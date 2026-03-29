@@ -78,7 +78,7 @@
         .center-block .face-down .spot{border-bottom:2px solid #ffd700;}
         .center-block .face-up .spot{border-top:2px solid #ffd700;}
         
-        /* КОЛОННЫ с буквой А */
+        /* КОЛОННЫ с буквой */
         .col{
             width:24px;
             height:66px;
@@ -89,18 +89,19 @@
             border:1px solid #444;
             flex-shrink:0;
         }
-        /* Буква А на колонне */
+        /* Буква на колонне - КРАСНЫЙ ЦВЕТ */
         .col .label{
             position:absolute;
             top:2px;
             left:50%;
             transform:translateX(-50%);
-            color:#ffd700;
+            color:#ff4444;
             font-size:11px;
             font-weight:bold;
             text-shadow:0 1px 3px rgba(0,0,0,0.9);
             z-index:10;
             pointer-events:none;
+            font-family:monospace;
         }
         .col:before,.col:after{
             content:'';
@@ -191,6 +192,7 @@
         let id = 0
         let active = null
         let tooltip = document.getElementById('tooltip')
+        let colCounter = 0  // Счётчик колонок для букв
 
         // Статус подключения
         db.ref('.info/connected').on('value', (snapshot) => {
@@ -208,6 +210,13 @@
             localDB = snapshot.val() || {}
             build()
         });
+
+        // Получить букву для колонны (каждые 6 колонок новая буква)
+        function getColLetter(index){
+            const group = Math.floor((index - 1) / 6)
+            const letters = ['A', 'B', 'C', 'D', 'E', 'F']
+            return letters[group] || '?'
+        }
 
         function mkSpot(faceClass = '', isSideSpot = false){
             const i = ++id
@@ -270,14 +279,15 @@
             positionTooltip(e.currentTarget)
         }
 
-        // КОЛОННА с буквой А
+        // КОЛОННА с буквой (A, B, C, D...)
         function col(){
             const e = document.createElement('div')
             e.className = 'col'
-            // Добавляем букву А
+            colCounter++
+            // Добавляем букву (красным цветом)
             const label = document.createElement('span')
             label.className = 'label'
-            label.innerText = 'А'
+            label.innerText = getColLetter(colCounter)
             e.appendChild(label)
             return e
         }
@@ -428,6 +438,7 @@
 
         function build(){
             id = 0
+            colCounter = 0  // Сбрасываем счётчик колонок при перерисовке
             const g = document.getElementById('g')
             g.innerHTML = ''
             g.appendChild(createFullRow(20, 'face-down', 2, 2, false))
