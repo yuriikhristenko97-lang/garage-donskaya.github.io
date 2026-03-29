@@ -57,7 +57,7 @@ body{
 
 /* Невидимый spacer для выравнивания */
 .spacer{
-    width: 90px;
+    width: 88px;
     flex-shrink: 0;
     visibility: hidden;
 }
@@ -182,7 +182,7 @@ body{
     letter-spacing: 0.5px;
 }
 
-/* Увеличенная информация при наведении */
+/* Увеличенная информация при наведении - КРУПНАЯ */
 .spot.occupied:hover .car-info-hover{
     display: flex;
     opacity: 1;
@@ -198,44 +198,44 @@ body{
     transform: translateX(-50%);
     background: linear-gradient(180deg, #1b4332 0%, #0d2818 100%);
     border: 2px solid #40916c;
-    border-radius: 8px;
-    padding: 14px 20px;
-    min-width: 200px;
+    border-radius: 10px;
+    padding: 16px 24px;
+    min-width: 240px;
     z-index: 1000;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.9);
     transition: all 0.2s ease;
     pointer-events: none;
 }
 .spot .car-info-hover .mark{
     color: #ffd700;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     text-align: center;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 .spot .car-info-hover .divider{
-    width: 70%;
+    width: 80%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #40916c, transparent);
-    margin: 6px 0;
+    background: linear-gradient(90deg, transparent, #4ade80, transparent);
+    margin: 8px 0;
 }
 .spot .car-info-hover .num{
     color: #fff;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 600;
     background: rgba(255,255,255,0.15);
-    padding: 5px 14px;
-    border-radius: 4px;
-    letter-spacing: 2px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    padding: 6px 18px;
+    border-radius: 5px;
+    letter-spacing: 3px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 .spot .car-info-hover .spot-id{
     color: #888;
-    font-size: 10px;
-    margin-top: 6px;
+    font-size: 11px;
+    margin-top: 8px;
 }
 
 /* Жёлтая полоска ТОЛЬКО у центральных мест */
@@ -282,63 +282,63 @@ body{
     text-shadow: 0 0 8px rgba(255,215,0,0.6);
 }
 
-/* ДВОЙНАЯ ДОРОГА С ВЪЕЗДОМ */
+/* ДВОЙНАЯ ДОРОГА С ВЪЕЗДОМ - 2 полосы */
 .double-road{
     width: 100%;
-    height:32px;
+    height:36px;
     display:flex;
-    align-items:center;
+    flex-direction:column;
     justify-content:center;
     margin: 3px 0;
     position: relative;
+    background: linear-gradient(180deg, #1a1a1a 0%, #1f1f1f 50%, #1a1a1a 100%);
+    border-radius: 6px;
+    border: 1px solid #333;
 }
-.double-road .lane{
-    height:12px;
+/* Верхняя полоса - въезд (вправо) */
+.double-road .lane-top{
+    height:16px;
     display:flex;
     align-items:center;
-    justify-content:center;
-}
-.double-road .lane-top{
     justify-content:flex-start;
-    padding-left: 50%;
+    padding-left: 60px;
+    border-bottom: 1px dashed #444;
 }
+/* Нижняя полоса - выезд (влево) */
 .double-road .lane-bottom{
+    height:16px;
+    display:flex;
+    align-items:center;
     justify-content:flex-end;
-    padding-right: 50%;
+    padding-right: 60px;
 }
 .double-road .arrow{
     color:#ffd700;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
-    letter-spacing: 4px;
+    letter-spacing: 5px;
     text-shadow: 0 0 8px rgba(255,215,0,0.6);
 }
-.double-road .divider{
-    height:1px;
-    background:linear-gradient(90deg, transparent, #666, #777, #666, transparent);
-    margin: 1px 0;
-}
-
 /* ВЪЕЗД - обозначение слева */
 .entrance{
     position: absolute;
-    left: 0;
+    left: 8px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 .entrance .arrow-in{
     color: #4ade80;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     text-shadow: 0 0 10px rgba(74,222,128,0.8);
     animation: pulse 1.5s infinite;
 }
 .entrance .label{
     color: #4ade80;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -365,31 +365,31 @@ body{
 }
 .modal-box{
     background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
-    padding:22px;border-radius:14px;width:350px;max-width:90vw;
+    padding:24px;border-radius:14px;width:360px;max-width:90vw;
     border:1px solid #555;
     box-shadow:0 15px 50px rgba(0,0,0,0.7);
 }
 .modal-box h3{margin-bottom:16px;color:#ffd700;text-align:center;font-size:17px;font-weight:600;}
 .modal-box input{
-    width:100%;margin:9px 0;padding:11px 13px;
+    width:100%;margin:9px 0;padding:12px 14px;
     background:#1a1a1a;border:1px solid #555;color:#eee;
     border-radius:6px;font-size:14px;
 }
 .modal-box input:focus{outline:none;border-color:#ffd700;box-shadow:0 0 10px rgba(255,215,0,0.2);}
 .modal-box .btn-group{
     display:grid;
-    grid-template-columns: 1fr 1fr 1.2fr;
+    grid-template-columns: 1fr 1fr 1fr;
     margin-top:16px;
-    gap: 7px;
+    gap: 8px;
 }
 .modal-box button{
-    padding:11px 10px;
+    padding:12px 8px;
     background:#555;color:#eee;
     border:none;border-radius:6px;cursor:pointer;font-size:12px;transition:all 0.2s;
     font-weight:600;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
+    text-overflow: clip;
 }
 .modal-box button:hover{transform:translateY(-1px);}
 .modal-box button.clear{
@@ -466,7 +466,7 @@ function mkSpot(faceClass = '', isSideSpot = false){
         
         el.addEventListener('mouseenter', () => {
             const rect = el.getBoundingClientRect()
-            tooltip.style.top = (rect.bottom + 8) + 'px'
+            tooltip.style.top = (rect.bottom + 10) + 'px'
             tooltip.style.display = 'flex'
         })
         el.addEventListener('mouseleave', () => {
@@ -529,10 +529,16 @@ function createCenterBlock(spotsCount, faceClass){
     return center
 }
 
-function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0){
+function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0, useSpacer = false){
     const row = document.createElement('div')
     row.className = 'row-full'
-    row.appendChild(createSideGroup(leftSideSpots, true))
+    
+    if(useSpacer){
+        row.appendChild(spacer())
+    } else {
+        row.appendChild(createSideGroup(leftSideSpots, true))
+    }
+    
     row.appendChild(createCenterBlock(spotsCount, faceClass))
     row.appendChild(createSideGroup(rightSideSpots, false))
     return row
@@ -576,11 +582,11 @@ function doubleRoad(){
     entrance.className = 'entrance'
     entrance.innerHTML = `
         <span class="arrow-in">➤</span>
-        <span class="label">ВЪЕЗД</span>
+        <span class="label">Въезд</span>
     `
     d.appendChild(entrance)
     
-    // Верхняя полоса - движение вправо
+    // Верхняя полоса - въезд (вправо)
     const top = document.createElement('div')
     top.className = 'lane lane-top'
     const topArrow = document.createElement('span')
@@ -588,11 +594,7 @@ function doubleRoad(){
     topArrow.innerText = '► ► ► ► ►'
     top.appendChild(topArrow)
     
-    // Разделитель
-    const divider = document.createElement('div')
-    divider.className = 'divider'
-    
-    // Нижняя полоса - движение влево
+    // Нижняя полоса - выезд (влево)
     const bottom = document.createElement('div')
     bottom.className = 'lane lane-bottom'
     const bottomArrow = document.createElement('span')
@@ -601,7 +603,6 @@ function doubleRoad(){
     bottom.appendChild(bottomArrow)
     
     d.appendChild(top)
-    d.appendChild(divider)
     d.appendChild(bottom)
     return d
 }
@@ -652,7 +653,7 @@ function build(){
     g.innerHTML = ''
 
     /* === ВЕРХНЯЯ ЗОНА: 2 слева + 20 центральных + 2 справа === */
-    g.appendChild(createFullRow(20, 'face-down', 2, 2))
+    g.appendChild(createFullRow(20, 'face-down', 2, 2, false))
     g.appendChild(road('→ → → → →'))
 
     /* === БЛОК 1 === */
@@ -670,8 +671,8 @@ function build(){
 
     g.appendChild(road('← ← ← ← ←'))
 
-    /* === НИЖНЯЯ ЗОНА: 2 слева + 20 центральных + 0 справа === */
-    g.appendChild(createFullRow(20, 'face-up', 2, 0))
+    /* === НИЖНЯЯ ЗОНА: 2 слева + 20 центральных + 0 справа (выровнено) === */
+    g.appendChild(createFullRow(20, 'face-up', 2, 0, false))
 }
 
 build()
