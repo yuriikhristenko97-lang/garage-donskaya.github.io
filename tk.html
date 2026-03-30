@@ -1,1 +1,996 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚌 ЧАТП — ИП "Донская"</title>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{
+            background:linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+            color:#eee;
+            font-family:'Segoe UI',Arial,sans-serif;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:10px;
+            overflow:hidden;
+        }
+        .garage{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            background:linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border:1px solid #475569;
+            padding:12px;
+            border-radius:12px;
+            box-shadow:0 10px 40px rgba(0,0,0,0.5);
+            max-width:98vw;
+            max-height:98vh;
+            overflow:auto;
+        }
+        
+        /* === ЛЕВАЯ ПАНЕЛЬ С ВЪЕЗДАМИ === */
+        .left-panel{
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            padding:10px;
+            background:linear-gradient(180deg, #334155 0%, #1e293b 100%);
+            border-radius:8px;
+            border:1px solid #475569;
+            margin-right:12px;
+            flex-shrink:0;
+        }
+        .gate{
+            width:50px;
+            height:70px;
+            background:linear-gradient(180deg, #475569 0%, #334155 100%);
+            border:2px solid #94a3b8;
+            border-radius:6px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            cursor:pointer;
+            transition:all 0.2s;
+        }
+        .gate:hover{
+            border-color:#0ea5e9;
+            box-shadow:0 0 15px rgba(14,165,233,0.4);
+        }
+        .gate .arrow{
+            color:#0ea5e9;
+            font-size:20px;
+            font-weight:bold;
+            text-shadow:0 0 10px rgba(14,165,233,0.6);
+        }
+        .gate .label{
+            position:absolute;
+            bottom:-20px;
+            left:50%;
+            transform:translateX(-50%);
+            font-size:10px;
+            color:#94a3b8;
+            white-space:nowrap;
+        }
+        
+        /* === ОСНОВНАЯ ЗОНА ПАРКОВКИ === */
+        .parking-area{
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+            flex:1;
+            min-width:0;
+        }
+        
+        /* === ВЕРХНИЙ РЯД: ОКОННЫЕ БЛОКИ + МЕСТА === */
+        .row-top, .row-bottom{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:15px;
+            width:100%;
+        }
+        
+        /* Оконный блок — 3 части */
+        .window-block{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:4px;
+        }
+        .window{
+            display:flex;
+            gap:2px;
+        }
+        .window-part{
+            width:36px;
+            height:28px;
+            background:linear-gradient(180deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
+            border:1px solid #93c5fd;
+            border-radius:3px;
+            position:relative;
+        }
+        .window-part::before{
+            content:'';
+            position:absolute;
+            top:4px;
+            left:4px;
+            right:4px;
+            bottom:4px;
+            background:rgba(255,255,255,0.2);
+            border-radius:2px;
+        }
+        
+        /* Тройное парковочное место */
+        .triple-spot{
+            display:flex;
+            gap:2px;
+            padding:4px;
+            background:linear-gradient(180deg, #334155 0%, #1e293b 100%);
+            border-radius:6px;
+            border:1px solid #475569;
+        }
+        .triple-spot .spot{
+            width:38px;
+            height:54px;
+            border:1px solid #64748b;
+            padding:3px 2px;
+            font-size:5px;
+            display:flex;
+            flex-direction:column;
+            cursor:pointer;
+            transition:all 0.25s ease;
+            text-align:center;
+            background:linear-gradient(180deg, #475569 0%, #334155 100%);
+            border-radius:4px;
+            position:relative;
+        }
+        .triple-spot .spot:hover{
+            transform:translateY(-2px) scale(1.05);
+            box-shadow:0 6px 20px rgba(0,0,0,0.6);
+            border-color:#94a3b8;
+            z-index:100;
+            background:linear-gradient(180deg, #54647a 0%, #405066 100%);
+        }
+        .triple-spot .spot.empty{
+            background:linear-gradient(180deg, #475569 0%, #3a4755 100%);
+            border-style:dashed;
+        }
+        .triple-spot .spot.occupied{
+            background:linear-gradient(180deg, #047857 0%, #065f46 100%);
+            border-color:#10b981;
+        }
+        .triple-spot .spot .num{
+            position:absolute;
+            top:2px;
+            left:50%;
+            transform:translateX(-50%);
+            font-size:4px;
+            color:#94a3b8;
+            font-weight:bold;
+            background:rgba(0,0,0,0.4);
+            padding:1px 3px;
+            border-radius:2px;
+            white-space:nowrap;
+        }
+        .triple-spot .spot .car-info{
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            height:100%;
+            padding-top:10px;
+            gap:1px;
+        }
+        .triple-spot .spot .car-mark{
+            color:#ffd700;
+            font-size:6px;
+            font-weight:700;
+            word-break:break-word;
+            max-width:100%;
+            line-height:1.1;
+            text-shadow:0 1px 2px rgba(0,0,0,0.8);
+            overflow:hidden;
+            text-overflow:ellipsis;
+            display:-webkit-box;
+            -webkit-line-clamp:2;
+            -webkit-box-orient:vertical;
+        }
+        .triple-spot .spot .car-num{
+            color:#fff;
+            font-size:5px;
+            font-weight:600;
+            word-break:break-word;
+            max-width:100%;
+            line-height:1.1;
+            background:rgba(0,0,0,0.5);
+            padding:1px 2px;
+            border-radius:2px;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .triple-spot .spot .empty-icon{
+            font-size:14px;
+            color:#64748b;
+            margin-top:auto;
+        }
+        
+        /* === ВСПЛЫВАЮЩАЯ ПОДСКАЗКА === */
+        .tooltip{
+            display:none;
+            position:fixed;
+            background:linear-gradient(180deg, #0f172a 0%, #020617 100%);
+            border:2px solid #0ea5e9;
+            border-radius:10px;
+            padding:16px 20px;
+            min-width:280px;
+            max-width:360px;
+            z-index:1000;
+            flex-direction:column;
+            align-items:flex-start;
+            box-shadow:0 15px 50px rgba(0,0,0,0.9);
+            pointer-events:none;
+            text-align:left;
+        }
+        .tooltip .header{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            width:100%;
+            margin-bottom:8px;
+            padding-bottom:8px;
+            border-bottom:1px solid rgba(255,255,255,0.1);
+        }
+        .tooltip .color-badge{
+            width:24px;
+            height:24px;
+            border-radius:50%;
+            border:2px solid #fff;
+            box-shadow:0 2px 6px rgba(0,0,0,0.4);
+            flex-shrink:0;
+            position:relative;
+        }
+        .tooltip .color-badge.auto-detected::after{
+            content:'✨';
+            position:absolute;
+            bottom:-4px;
+            right:-4px;
+            font-size:10px;
+            background:#0f172a;
+            border-radius:50%;
+            width:14px;
+            height:14px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border:1px solid #0ea5e9;
+        }
+        .tooltip .mark{
+            color:#60a5fa;
+            font-size:19px;
+            font-weight:700;
+            text-shadow:0 2px 6px rgba(0,0,0,0.6);
+            word-break:break-word;
+            line-height:1.2;
+            flex:1;
+            min-width:0;
+        }
+        .tooltip .route-badge{
+            background:linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+            color:#fff;
+            padding:4px 10px;
+            border-radius:12px;
+            font-size:12px;
+            font-weight:700;
+            white-space:nowrap;
+            margin-left:8px;
+        }
+        .tooltip .divider{width:100%;height:1px;background:linear-gradient(90deg, transparent, #0ea5e9, transparent);margin:8px 0;}
+        .tooltip .num{
+            color:#fff;
+            font-size:15px;
+            font-weight:600;
+            background:rgba(14,165,233,0.2);
+            padding:6px 14px;
+            border-radius:5px;
+            letter-spacing:1px;
+            text-shadow:0 2px 4px rgba(0,0,0,0.5);
+            white-space:nowrap;
+            width:100%;
+            text-align:center;
+            box-sizing:border-box;
+        }
+        .tooltip .extra-info{
+            margin-top:12px;
+            width:100%;
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+            color:#cbd5e1;
+            font-size:13px;
+        }
+        .tooltip .extra-info .row{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            width:100%;
+        }
+        .tooltip .extra-info .label{
+            color:#94a3b8;
+            font-size:12px;
+        }
+        .tooltip .extra-info .value{
+            color:#fff;
+            font-weight:600;
+            text-align:right;
+            word-break:break-word;
+            max-width:60%;
+        }
+        .tooltip .spot-id{
+            color:#64748b;
+            font-size:10px;
+            margin-top:10px;
+            text-align:center;
+            width:100%;
+        }
+        
+        /* === ВЫДЕЛЕНИЕ ПРИ ПОИСКЕ === */
+        .spot.spot-found{
+            border:2px solid #22c55e !important;
+            box-shadow:0 0 0 3px rgba(34,197,94,0.4) !important;
+            animation:pulse-found 2s infinite;
+        }
+        @keyframes pulse-found{
+            0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.4);}
+            50%{box-shadow:0 0 0 5px rgba(34,197,94,0.6);}
+        }
+        
+        /* === ВЕРХНИЙ/НИЖНИЙ БАР С КНОПКАМИ === */
+        .top-bar{
+            position:fixed;
+            top:10px;
+            left:10px;
+            display:flex;
+            gap:8px;
+            z-index:999;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+        .nav-btn, .edit-mode-btn, .search-input{
+            padding:10px 14px;
+            background:linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+            color:#fff;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:12px;
+            font-weight:600;
+            box-shadow:0 4px 15px rgba(14,165,233,0.4);
+            transition:all 0.2s;
+            display:flex;
+            align-items:center;
+            gap:5px;
+            text-decoration:none;
+            white-space:nowrap;
+        }
+        .nav-btn:hover, .edit-mode-btn:hover, .search-input:hover{
+            transform:translateY(-2px);
+            box-shadow:0 6px 20px rgba(14,165,233,0.5);
+        }
+        .nav-btn.main-garage{
+            background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+            box-shadow:0 4px 15px rgba(99,102,241,0.4);
+        }
+        .nav-btn.main-garage:hover{
+            box-shadow:0 6px 20px rgba(99,102,241,0.5);
+        }
+        .nav-btn.tk{
+            background:linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow:0 4px 15px rgba(139,92,246,0.4);
+        }
+        .nav-btn.tk:hover{
+            box-shadow:0 6px 20px rgba(139,92,246,0.5);
+        }
+        .edit-mode-btn.active{
+            background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+            box-shadow:0 4px 15px rgba(34,197,94,0.4);
+            animation:pulse-green 2s infinite;
+        }
+        @keyframes pulse-green{
+            0%,100%{box-shadow:0 4px 15px rgba(34,197,94,0.4);}
+            50%{box-shadow:0 4px 25px rgba(34,197,94,0.6);}
+        }
+        .search-input{
+            background:#0f172a;
+            color:#eee;
+            border:1px solid #475569;
+            padding:10px 12px;
+            width:160px;
+            font-size:13px;
+            font-weight:normal;
+        }
+        .search-input::placeholder{color:#94a3b8;}
+        .search-input:focus{
+            outline:none;
+            border-color:#0ea5e9;
+            box-shadow:0 0 10px rgba(14,165,233,0.3);
+            transform:translateY(0);
+        }
+        
+        /* === МОДАЛКА РЕДАКТИРОВАНИЯ === */
+        #modal{
+            display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.9);
+            align-items:center;
+            justify-content:center;
+            z-index:1000;
+            backdrop-filter:blur(8px);
+        }
+        .modal-box{
+            background:linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding:22px;
+            border-radius:14px;
+            width:380px;
+            max-width:90vw;
+            border:1px solid #475569;
+            box-shadow:0 15px 50px rgba(0,0,0,0.7);
+        }
+        .modal-box h3{
+            margin-bottom:14px;
+            color:#60a5fa;
+            text-align:center;
+            font-size:16px;
+            font-weight:600;
+        }
+        .modal-box input{
+            width:100%;
+            margin:8px 0;
+            padding:11px 12px;
+            background:#0f172a;
+            border:1px solid #475569;
+            color:#eee;
+            border-radius:6px;
+            font-size:13px;
+        }
+        .modal-box input:focus{
+            outline:none;
+            border-color:#0ea5e9;
+            box-shadow:0 0 10px rgba(14,165,233,0.2);
+        }
+        .modal-box .btn-group{
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr;
+            margin-top:14px;
+            gap:6px;
+        }
+        .modal-box button{
+            padding:10px 6px;
+            background:#334155;
+            color:#eee;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:11px;
+            transition:all 0.2s;
+            font-weight:600;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .modal-box button:hover{transform:translateY(-1px);}
+        .modal-box button.clear{background:linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);}
+        .modal-box button.clear:hover{background:linear-gradient(180deg, #ef4444 0%, #dc2626 100%);}
+        .modal-box button.save{background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);}
+        .modal-box button.save:hover{background:linear-gradient(180deg, #4ade80 0%, #22c55e 100%);}
+        .modal-box button.close{background:#334155;}
+        .modal-box button.close:hover{background:#475569;}
+        
+        /* === МОДАЛКА ПАРОЛЯ === */
+        #passwordModal{
+            display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.9);
+            align-items:center;
+            justify-content:center;
+            z-index:1001;
+            backdrop-filter:blur(8px);
+        }
+        .password-box{
+            background:linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding:24px;
+            border-radius:14px;
+            width:320px;
+            max-width:90vw;
+            border:1px solid #475569;
+            box-shadow:0 15px 50px rgba(0,0,0,0.7);
+        }
+        .password-box h3{
+            margin-bottom:16px;
+            color:#0ea5e9;
+            text-align:center;
+            font-size:17px;
+            font-weight:600;
+        }
+        .password-box input{
+            width:100%;
+            margin:10px 0;
+            padding:12px 14px;
+            background:#0f172a;
+            border:1px solid #475569;
+            color:#eee;
+            border-radius:6px;
+            font-size:14px;
+        }
+        .password-box input:focus{
+            outline:none;
+            border-color:#0ea5e9;
+            box-shadow:0 0 10px rgba(14,165,233,0.3);
+        }
+        .password-box .error{
+            color:#f87171;
+            font-size:12px;
+            margin:8px 0;
+            text-align:center;
+            display:none;
+        }
+        .password-box .btn-group{
+            display:flex;
+            gap:8px;
+            margin-top:16px;
+        }
+        .password-box button{
+            flex:1;
+            padding:11px;
+            background:#334155;
+            color:#eee;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:13px;
+            transition:all 0.2s;
+            font-weight:600;
+        }
+        .password-box button:hover{transform:translateY(-1px);}
+        .password-box button.confirm{background:linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);}
+        .password-box button.confirm:hover{background:linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%);}
+        .password-box button.cancel{background:#334155;}
+        .password-box button.cancel:hover{background:#475569;}
+        
+        .status{
+            position:fixed;
+            top:10px;
+            right:10px;
+            padding:8px 16px;
+            background:#1e293b;
+            border:1px solid #475569;
+            border-radius:6px;
+            font-size:12px;
+            z-index:999;
+        }
+        .status.connected{border-color:#22c55e;color:#22c55e;}
+        .status.disconnected{border-color:#f87171;color:#f87171;}
+        
+        /* Заголовок зоны */
+        .zone-title{
+            color:#94a3b8;
+            font-size:12px;
+            text-align:center;
+            margin:5px 0;
+            font-weight:600;
+            letter-spacing:1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">🔄 Подключение...</div>
+    
+    <div class="top-bar">
+        <a href="index.html" class="nav-btn main-garage" title="Вернуться в главное меню">🏠 Меню</a>
+        <a href="tk.html" class="nav-btn tk" title="Перейти в ТК">🛒 ТК</a>
+        <div style="width:1px;height:24px;background:#475569;margin:0 4px;"></div>
+        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Редактирование</button>
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
+    </div>
+    
+    <main>
+        <div class="garage">
+            <div style="display:flex;align-items:stretch;">
+                <!-- Левая панель с въездами -->
+                <div class="left-panel">
+                    <div class="gate" title="Въезд №1"><span class="arrow">➤</span><span class="label">Въезд 1</span></div>
+                    <div class="gate" title="Въезд №2"><span class="arrow">➤</span><span class="label">Въезд 2</span></div>
+                    <div class="gate" title="Въезд №3"><span class="arrow">➤</span><span class="label">Въезд 3</span></div>
+                    <div class="gate" title="Въезд №4"><span class="arrow">➤</span><span class="label">Въезд 4</span></div>
+                </div>
+                
+                <!-- Зона парковки -->
+                <div class="parking-area" id="g"></div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="tooltip" id="tooltip"></div>
+    
+    <!-- Модалка пароля -->
+    <div id="passwordModal">
+        <div class="password-box">
+            <h3>🔐 Введите пароль</h3>
+            <input type="password" id="passwordInput" placeholder="Пароль" onkeypress="if(event.key==='Enter')confirmPassword()">
+            <div class="error" id="passwordError">❌ Неверный пароль!</div>
+            <div class="btn-group">
+                <button class="cancel" onclick="closePasswordModal()">Отмена</button>
+                <button class="confirm" onclick="confirmPassword()">Войти</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модалка редактирования места -->
+    <div id="modal">
+        <div class="modal-box">
+            <h3 id="title">🚌 Место</h3>
+            <input id="car" placeholder="Марка авто">
+            <input id="num" placeholder="Гос. номер">
+            <input id="route" placeholder="№ маршрута">
+            <input id="color" placeholder="Цвет">
+            <input id="owner" placeholder="Владелец">
+            <input id="cost" placeholder="Стоимость">
+            <div class="btn-group">
+                <button class="clear" onclick="clearCar()">🗑️</button>
+                <button class="close" onclick="closeM()">✕</button>
+                <button class="save" onclick="save()">💾</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // 🔥 Firebase конфигурация
+        const firebaseConfig = {
+            apiKey: "AIzaSyC_9eS6hShP3Nujbf_AszF68OauqcAsH6I",
+            authDomain: "garage-parking-ff729.firebaseapp.com",
+            databaseURL: "https://garage-parking-ff729-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "garage-parking-ff729",
+            storageBucket: "garage-parking-ff729.firebasestorage.app",
+            messagingSenderId: "338709707407",
+            appId: "1:338709707407:web:212c6dbb979ecc931e0efa"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const statusEl = document.getElementById('status');
+        
+        // 🔐 Пароль и настройки
+        const EDIT_PASSWORD = 'ip-donskaya_2026';
+        const GARAGE_ID = 'catp';
+        let isEditMode = false;
+        let localDB = {};
+        let id = 0;
+        let active = null;
+        let tooltip = document.getElementById('tooltip');
+        let tooltipTimer;
+        let currentSearchTerm = '';
+
+        // Статус подключения
+        db.ref('.info/connected').on('value', (snapshot) => {
+            if(snapshot.val() === true){
+                statusEl.className = 'status connected';
+                statusEl.innerText = '✅ Онлайн';
+            } else {
+                statusEl.className = 'status disconnected';
+                statusEl.innerText = '❌ Офлайн';
+            }
+        });
+
+        // Подписка на данные ЧАТП
+        db.ref(`garages/${GARAGE_ID}/spots`).on('value', (snapshot) => {
+            localDB = snapshot.val() || {};
+            build();
+            if(currentSearchTerm) handleSearch();
+        });
+
+        // Переключение режима редактирования
+        function toggleEditMode(){
+            if(isEditMode){
+                isEditMode = false;
+                updateEditModeBtn();
+            } else {
+                document.getElementById('passwordModal').style.display = 'flex';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordError').style.display = 'none';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        function updateEditModeBtn(){
+            const btn = document.getElementById('editModeBtn');
+            if(isEditMode){
+                btn.className = 'edit-mode-btn active';
+                btn.innerHTML = '✅ Режим редактирования';
+            } else {
+                btn.className = 'edit-mode-btn';
+                btn.innerHTML = '✏️ Редактирование';
+            }
+        }
+
+        function closePasswordModal(){
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        function confirmPassword(){
+            const password = document.getElementById('passwordInput').value;
+            if(password === EDIT_PASSWORD){
+                isEditMode = true;
+                updateEditModeBtn();
+                closePasswordModal();
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        // 🎨 Умное определение цвета
+        const colorMap = {
+            'белый': '#ffffff', 'бел': '#ffffff', 'white': '#ffffff', 'wht': '#ffffff',
+            'чёрный': '#1a1a1a', 'черный': '#1a1a1a', 'чёр': '#1a1a1a', 'чер': '#1a1a1a', 'black': '#1a1a1a', 'blk': '#1a1a1a',
+            'красный': '#dc2626', 'крас': '#dc2626', 'red': '#dc2626', 'rd': '#dc2626',
+            'синий': '#2563eb', 'син': '#2563eb', 'blue': '#2563eb', 'blu': '#2563eb',
+            'серый': '#6b7280', 'сер': '#6b7280', 'gray': '#6b7280', 'grey': '#6b7280', 'gr': '#6b7280',
+            'серебро': '#c0c0c0', 'серебристый': '#c0c0c0', 'silver': '#c0c0c0', 'sil': '#c0c0c0',
+            'зелёный': '#16a34a', 'зеленый': '#16a34a', 'зел': '#16a34a', 'green': '#16a34a', 'grn': '#16a34a',
+            'жёлтый': '#f59e0b', 'желтый': '#f59e0b', 'жёл': '#f59e0b', 'жел': '#f59e0b', 'yellow': '#f59e0b', 'yel': '#f59e0b',
+            'оранжевый': '#ea580c', 'оранж': '#ea580c', 'orange': '#ea580c', 'org': '#ea580c',
+            'коричневый': '#92400e', 'кор': '#92400e', 'brown': '#92400e', 'brn': '#92400e',
+            'голубой': '#0ea5e9', 'голуб': '#0ea5e9', 'lightblue': '#0ea5e9', 'sky': '#0ea5e9',
+            'розовый': '#ec4899', 'розов': '#ec4899', 'pink': '#ec4899', 'pnk': '#ec4899',
+            'фиолетовый': '#8b5cf6', 'фиол': '#8b5cf6', 'purple': '#8b5cf6', 'prp': '#8b5cf6', 'violet': '#8b5cf6',
+            'бежевый': '#d4a574', 'беж': '#d4a574', 'beige': '#d4a574', 'bge': '#d4a574',
+            'золотой': '#fbbf24', 'зол': '#fbbf24', 'gold': '#fbbf24', 'gld': '#fbbf24',
+            'бордовый': '#991b1b', 'бор': '#991b1b', 'burgundy': '#991b1b',
+            'бирюзовый': '#0d9488', 'бир': '#0d9488', 'turquoise': '#0d9488',
+            'металлик': '#94a3b8', 'мет': '#94a3b8', 'metallic': '#94a3b8',
+        };
+
+        function getColorHex(colorName){
+            if(!colorName) return {hex: '#6b7280', auto: false};
+            const lower = colorName.toLowerCase().trim();
+            if(colorMap[lower]) return {hex: colorMap[lower], auto: false};
+            for(const [key, hex] of Object.entries(colorMap)){
+                if(lower.includes(key) || key.includes(lower)) return {hex, auto: true};
+            }
+            if(/^#[0-9a-f]{6}$/i.test(lower)) return {hex: lower, auto: false};
+            return {hex: '#6b7280', auto: false};
+        }
+
+        // Создание парковочного места
+        function mkSpot(spotId){
+            const d = localDB[spotId] || {};
+            const el = document.createElement('div');
+            el.className = 'spot' + (d.car ? ' occupied' : ' empty');
+            
+            if(d.car){
+                el.innerHTML = `
+                    <span class="num">${spotId}</span>
+                    <div class="car-info">
+                        <div class="car-mark">${d.car}</div>
+                        <div class="car-num">${d.num||''}</div>
+                    </div>
+                `;
+                el.addEventListener('mouseenter', (e) => {
+                    clearTimeout(tooltipTimer);
+                    tooltipTimer = setTimeout(() => showTooltip(e.currentTarget, d, spotId), 200);
+                });
+                el.addEventListener('mouseleave', () => {
+                    clearTimeout(tooltipTimer);
+                    tooltipTimer = setTimeout(hideTooltip, 100);
+                });
+                el.addEventListener('mousemove', (e) => {
+                    if(tooltip.style.display === 'flex') positionTooltip(e.currentTarget);
+                });
+            } else {
+                el.innerHTML = `<span class="num">${spotId}</span><div class="empty-icon">🅿️</div>`;
+            }
+            
+            el.onclick = () => { if(isEditMode) openM(spotId); };
+            el.dataset.spotId = spotId;
+            return el;
+        }
+
+        // Показать подсказку
+        function showTooltip(el, data, spotId){
+            const {car, num, route, color, owner, cost} = data;
+            const {hex: colorHex, auto} = getColorHex(color);
+            
+            let extraInfoHtml = '';
+            if(route) extraInfoHtml += `<div class="row"><span class="label">Маршрут:</span><span class="value">${route}</span></div>`;
+            if(color) {
+                const colorLabel = auto ? `${color} ✨` : color;
+                extraInfoHtml += `<div class="row"><span class="label">Цвет:</span><span class="value">${colorLabel}</span></div>`;
+            }
+            if(owner) extraInfoHtml += `<div class="row"><span class="label">Владелец:</span><span class="value">${owner}</span></div>`;
+            if(cost) extraInfoHtml += `<div class="row"><span class="label">Стоимость:</span><span class="value">${cost} ₽</span></div>`;
+            
+            const badgeClass = auto ? 'color-badge auto-detected' : 'color-badge';
+            const routeHtml = route ? `<span class="route-badge">№${route}</span>` : '';
+            
+            tooltip.innerHTML = `
+                <div class="header">
+                    <div class="${badgeClass}" style="background:${colorHex}" title="${auto ? 'Цвет определён автоматически' : ''}"></div>
+                    <div class="mark">${car||'—'}</div>
+                    ${routeHtml}
+                </div>
+                <div class="num">${num||'—'}</div>
+                ${extraInfoHtml ? `<div class="divider"></div><div class="extra-info">${extraInfoHtml}</div>` : ''}
+                <div class="spot-id">Место №${spotId} • ЧАТП</div>
+            `;
+            tooltip.style.display = 'flex';
+            positionTooltip(el);
+        }
+
+        function hideTooltip(){ tooltip.style.display = 'none'; }
+
+        function positionTooltip(el){
+            const rect = el.getBoundingClientRect();
+            const tooltipRect = tooltip.getBoundingClientRect();
+            let top = rect.top - tooltipRect.height - 12;
+            let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+            if(top < 10) top = rect.bottom + 12;
+            if(left < 10) left = 10;
+            if(left + tooltipRect.width > window.innerWidth - 10) left = window.innerWidth - tooltipRect.width - 10;
+            tooltip.style.top = top + 'px';
+            tooltip.style.left = left + 'px';
+        }
+
+        // Создание оконного блока с тройными местами
+        function createWindowBlock(baseId, position){
+            const block = document.createElement('div');
+            block.className = 'window-block';
+            
+            // Окно (3 части)
+            const window = document.createElement('div');
+            window.className = 'window';
+            for(let i=0; i<3; i++){
+                const part = document.createElement('div');
+                part.className = 'window-part';
+                window.appendChild(part);
+            }
+            block.appendChild(window);
+            
+            // Тройные места (под или над окном)
+            const triple = document.createElement('div');
+            triple.className = 'triple-spot';
+            for(let i=0; i<3; i++){
+                const spotId = position === 'top' ? baseId + i : baseId + 100 + i;
+                triple.appendChild(mkSpot(spotId));
+            }
+            if(position === 'top') block.appendChild(triple);
+            else { block.insertBefore(triple, window); }
+            
+            return block;
+        }
+
+        // Создание ряда с 5 оконными блоками
+        function createWindowRow(position){
+            const row = document.createElement('div');
+            row.className = position === 'top' ? 'row-top' : 'row-bottom';
+            
+            const title = document.createElement('div');
+            title.className = 'zone-title';
+            title.innerText = position === 'top' ? '▲ ВЕРХНЯЯ ЗОНА' : '▼ НИЖНЯЯ ЗОНА';
+            row.appendChild(title);
+            
+            // 5 оконных блоков с интервалом
+            for(let i=0; i<5; i++){
+                row.appendChild(createWindowBlock(i * 10, position));
+            }
+            return row;
+        }
+
+        // Открытие модалки редактирования
+        function openM(spotId){
+            if(!isEditMode) return;
+            active = spotId;
+            document.getElementById('title').innerText = `🚌 Место №${spotId}`;
+            const d = localDB[spotId] || {};
+            document.getElementById('car').value = d.car || '';
+            document.getElementById('num').value = d.num || '';
+            document.getElementById('route').value = d.route || '';
+            document.getElementById('color').value = d.color || '';
+            document.getElementById('owner').value = d.owner || '';
+            document.getElementById('cost').value = d.cost || '';
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('car').focus();
+        }
+        function closeM(){ document.getElementById('modal').style.display = 'none'; active = null; }
+
+        // Сохранение в Firebase
+        function save(){
+            if(!active || !isEditMode) return;
+            const car = document.getElementById('car').value.trim();
+            const num = document.getElementById('num').value.trim();
+            const route = document.getElementById('route').value.trim();
+            const color = document.getElementById('color').value.trim();
+            const owner = document.getElementById('owner').value.trim();
+            const cost = document.getElementById('cost').value.trim();
+            
+            if(car){
+                db.ref(`garages/${GARAGE_ID}/spots/` + active).set({car, num, route, color, owner, cost});
+            } else {
+                db.ref(`garages/${GARAGE_ID}/spots/` + active).remove();
+            }
+            closeM();
+        }
+
+        function clearCar(){
+            if(!active || !isEditMode) return;
+            ['car','num','route','color','owner','cost'].forEach(f => document.getElementById(f).value = '');
+            db.ref(`garages/${GARAGE_ID}/spots/` + active).remove();
+            closeM();
+        }
+
+        document.getElementById('modal').onclick = function(e){ if(e.target === this) closeM(); };
+
+        // Поиск
+        function handleSearch(){
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            currentSearchTerm = searchTerm;
+            document.querySelectorAll('.spot.occupied').forEach(spot => spot.classList.remove('spot-found'));
+            if(!searchTerm){ hideTooltip(); return; }
+            
+            let foundSpots = [];
+            document.querySelectorAll('.spot.occupied').forEach(spot => {
+                const sid = spot.dataset.spotId;
+                const data = localDB[sid];
+                if(!data) return;
+                const fields = [data.car, data.num, data.route, data.color, data.owner, data.cost].filter(f => f);
+                if(fields.some(f => f.toLowerCase().includes(searchTerm))){
+                    foundSpots.push(spot);
+                    spot.classList.add('spot-found');
+                }
+            });
+            
+            if(foundSpots.length > 0){
+                const first = foundSpots[0];
+                first.scrollIntoView({behavior:'smooth', block:'center'});
+                showTooltip(first, localDB[first.dataset.spotId], first.dataset.spotId);
+            } else { hideTooltip(); }
+        }
+
+        // Построение схемы
+        function build(){
+            id = 0;
+            const g = document.getElementById('g');
+            g.innerHTML = '';
+            g.appendChild(createWindowRow('top'));
+            g.appendChild(createWindowRow('bottom'));
+        }
+
+        build();
+        updateEditModeBtn();
+        
+        document.addEventListener('click', (e) => {
+            if(!e.target.closest('.spot') && !e.target.closest('.tooltip') && !e.target.closest('#searchInput')){
+                hideTooltip();
+            }
+        });
+        
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            if(e.target.value === ''){
+                document.querySelectorAll('.spot.occupied').forEach(spot => spot.classList.remove('spot-found'));
+            }
+        });
+    </script>
+</body>
+</html>
