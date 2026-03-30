@@ -68,8 +68,8 @@
         .parking-area{
             display:flex;
             flex-direction:column;
-            /* justify-content: space-between; Убрано для ручного контроля через spacer'ы */
-            /* gap:15px; */ /* Убрано, так как spacer'ы управляют пространством */
+            justify-content: space-between; /* Распределяем дочерние элементы по вертикали */
+            gap: 0; /* Убираем стандартный gap, т.к. flex-grow управляет пространством */
             flex:1;
             min-width:0;
             height: 100%; /* Занимает всю доступную высоту для гибкого распределения */
@@ -78,27 +78,25 @@
         /* === ВЕРХНИЙ И НИЖНИЙ РЯДЫ === */
         .row-top{
             display:flex;
-            align-items:flex-start; /* Выравнивание элементов вверху */
+            align-items:flex-start; /* Выравнивание окон сверху */
             justify-content:center;
             gap:15px;
             width:100%;
-            /* margin-top и margin-bottom теперь не нужны */
         }
         .row-bottom{
             display:flex;
-            align-items:flex-end; /* Выравнивание элементов внизу */
+            align-items:flex-end; /* Выравнивание окон снизу */
             justify-content:center;
             gap:15px;
             width:100%;
-            /* margin-top и margin-bottom теперь не нужны */
         }
 
-        /* Новый стиль для "пустых" рядов-прокладок */
-        .parking-spacer {
-            flex-grow: 1; /* Эти прокладки будут растягиваться */
-            min-height: 20px; /* Минимальная высота, чтобы они не схлопывались полностью, можно регулировать */
+        /* Новый стиль для пустых строк, которые будут заполнять пространство */
+        .empty-row {
+            flex-grow: 1; /* Растягивается, чтобы заполнить доступное пространство */
             width: 100%;
-            /* background: rgba(255,0,0,0.1); /* Для отладки, чтобы видеть прокладки, удалить в продакшене */ */
+            min-height: 20px; /* Минимальная высота, чтобы не схлопнуться полностью (можно регулировать) */
+            /* background: rgba(0,255,0,0.1); /* Для отладки */ */
         }
         
         /* Оконный блок — 3 части */
@@ -866,7 +864,7 @@
             const triple = document.createElement('div');
             triple.className = 'triple-spot';
             for(let i=0; i<3; i++){
-                const spotId = baseId + i; // spotId теперь просто baseId + i
+                const spotId = baseId + i; 
                 triple.appendChild(mkSpot(spotId));
             }
             
@@ -888,9 +886,7 @@
             const row = document.createElement('div');
             row.className = position === 'top' ? 'row-top' : 'row-bottom';
             
-            // 5 оконных блоков с интервалом
             for(let i=0; i<5; i++){
-                // baseId для каждого тройного блока в ряду
                 const blockBaseId = startBaseId + (i * 10);
                 row.appendChild(createWindowBlock(blockBaseId, position));
             }
@@ -973,27 +969,21 @@
             const g = document.getElementById('g');
             g.innerHTML = ''; // Очищаем существующее содержимое
             
-            // Создаем верхний ряд, напротив 1-го въезда
+            // 1. Верхний ряд парковки (напротив 1-го въезда)
             g.appendChild(createWindowRow('top', 0)); // baseId 0 для верхнего ряда (ID 0-49)
 
-            // Прокладка между 1-м и 2-м въездом
-            const spacer1 = document.createElement('div');
-            spacer1.className = 'parking-spacer';
-            g.appendChild(spacer1);
+            // 2. Пустая строка (растягивается напротив 2-го въезда)
+            const emptyRow2 = document.createElement('div');
+            emptyRow2.className = 'empty-row';
+            g.appendChild(emptyRow2);
 
-            // Пустое место напротив 2-го въезда
-            const spacer2 = document.createElement('div');
-            spacer2.className = 'parking-spacer';
-            g.appendChild(spacer2);
+            // 3. Пустая строка (растягивается напротив 3-го въезда)
+            const emptyRow3 = document.createElement('div');
+            emptyRow3.className = 'empty-row';
+            g.appendChild(emptyRow3);
 
-            // Пустое место напротив 3-го въезда
-            const spacer3 = document.createElement('div');
-            spacer3.className = 'parking-spacer';
-            g.appendChild(spacer3);
-
-            // Создаем нижний ряд, напротив 4-го въезда
-            // Используем baseId 50, чтобы места имели ID 50-99
-            g.appendChild(createWindowRow('bottom', 50)); 
+            // 4. Нижний ряд парковки (напротив 4-го въезда)
+            g.appendChild(createWindowRow('bottom', 50)); // baseId 50 для нижнего ряда (ID 50-99)
         }
 
         build();
