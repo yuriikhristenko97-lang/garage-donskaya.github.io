@@ -95,7 +95,7 @@
             background:rgba(0,0,0,0.5);
             padding:1px 3px;
             border-radius:2px;
-            letter-spacing:-0.5px; /* Уменьшен интервал между буквами */
+            letter-spacing:-0.5px;
             white-space:nowrap;
             overflow:hidden;
             text-overflow:ellipsis;
@@ -350,7 +350,7 @@
             outline:none;
             border-color:#ffd700;
             box-shadow:0 0 10px rgba(255,215,0,0.2);
-            transform:translateY(0); /* Отключаем hover эффект при фокусе */
+            transform:translateY(0);
         }
         
         #modal{
@@ -534,25 +534,27 @@
             color:#f87171;
         }
 
-        /* Стиль для подсветки найденных машин */
-        .spot.highlighted{
-            background:linear-gradient(180deg, #ffeb3b 0%, #fbc02d 100%); /* Желтая подсветка */
-            border-color:#ffd700;
-            box-shadow:0 0 15px rgba(255,215,0,0.8);
-            animation: pulse-highlight 1s infinite alternate;
-        }
-        .spot.highlighted .car-mark,
-        .spot.highlighted .car-num{
-            color:#333; /* Темный текст на желтом фоне */
-            text-shadow:none;
-        }
-        .spot.highlighted .car-separator{
-            background:linear-gradient(90deg, transparent, #333, transparent);
+        /* Новый стиль для временной, мягкой подсветки при поиске */
+        .spot.spot-found {
+            animation: highlight-found 1.5s ease-out forwards;
         }
 
-        @keyframes pulse-highlight {
-            from { box-shadow:0 0 15px rgba(255,215,0,0.8); }
-            to { box-shadow:0 0 25px rgba(255,215,0,1); }
+        @keyframes highlight-found {
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+                border-color: #4ade80;
+                transform: scale(1.02);
+            }
+            25% {
+                box-shadow: 0 0 10px 5px rgba(74, 222, 128, 0.5);
+                border-color: #4ade80;
+                transform: scale(1.05);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+                border-color: #555;
+                transform: scale(1);
+            }
         }
     </style>
 </head>
@@ -632,7 +634,8 @@
         let active = null
         let tooltip = document.getElementById('tooltip')
         let colCounter = 0
-        let tooltipTimer; // Для оптимизации подвисаний
+        let tooltipTimer;
+        let highlightTimeout;
 
         // Статус подключения
         db.ref('.info/connected').on('value', (snapshot) => {
@@ -649,7 +652,7 @@
         db.ref('spots').on('value', (snapshot) => {
             localDB = snapshot.val() || {}
             build()
-            handleSearch(); // Перерисовываем подсветку при изменении данных
+            handleSearch();
         });
 
         // Переключение режима редактирования
@@ -721,11 +724,11 @@
                 `
                 el.addEventListener('mouseenter', (e) => {
                     clearTimeout(tooltipTimer);
-                    tooltipTimer = setTimeout(() => showTooltip(e.currentTarget, d), 100); // Задержка для предотвращения "подвисаний"
+                    tooltipTimer = setTimeout(() => showTooltip(e.currentTarget, d), 250);
                 });
                 el.addEventListener('mouseleave', hideTooltip);
                 el.addEventListener('mousemove', (e) => {
-                    if (tooltip.style.display === 'flex') { // Обновляем позицию только если тултип уже виден
+                    if (tooltip.style.display === 'flex') {
                         positionTooltip(e.currentTarget);
                     }
                 });
@@ -743,7 +746,6 @@
                 }
             }
             
-            // Сохраняем ссылку на элемент в локальных данных для поиска
             el.dataset.spotId = i;
             return el
         }
@@ -798,12 +800,7 @@
             tooltip.style.left = left + 'px'
         }
 
-        // moveTooltip теперь вызывает positionTooltip только если тултип уже показан
         function moveTooltip(e){
-            // Optimisation: positionTooltip is called only if tooltip is already visible
-            // This prevents excessive recalculations if mouse moves without triggering actual showTooltip
-            // (e.g. if mouse rapidly crosses multiple spots)
-            // The actual show/hide is handled by mouseenter/mouseleave with a slight delay
             if (tooltip.style.display === 'flex') {
                 positionTooltip(e.currentTarget);
             }
@@ -977,12 +974,15 @@
             if(e.target === this) closeM()
         }
 
-        // Функция для обработки поиска
         function handleSearch(){
+            clearTimeout(highlightTimeout);
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const allSpots = document.querySelectorAll('.spot.occupied');
+            let foundSpotElement = null;
 
             allSpots.forEach(spot => {
+                spot.classList.remove('spot-found');
+
                 const spotId = spot.dataset.spotId;
                 const data = localDB[spotId];
                 if (data) {
@@ -992,13 +992,27 @@
                     const ownerMatch = data.owner ? data.owner.toLowerCase().includes(searchTerm) : false;
                     const costMatch = data.cost ? data.cost.toLowerCase().includes(searchTerm) : false;
 
-                    if (carMatch || numMatch || colorMatch || ownerMatch || costMatch) {
-                        spot.classList.add('highlighted');
-                    } else {
-                        spot.classList.remove('highlighted');
+                    if (searchTerm && (carMatch || numMatch || colorMatch || ownerMatch || costMatch)) {
+                        foundSpotElement = spot;
                     }
                 }
             });
+
+            if (foundSpotElement) {
+                foundSpotElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                foundSpotElement.classList.add('spot-found');
+                highlightTimeout = setTimeout(() => {
+                    foundSpotElement.classList.remove('spot-found');
+                }, 2000);
+
+                const spotId = foundSpotElement.dataset.spotId;
+                const data = localDB[spotId];
+                clearTimeout(tooltipTimer);
+                tooltipTimer = setTimeout(() => showTooltip(foundSpotElement, data), 100);
+            } else if (!searchTerm) {
+                hideTooltip();
+            }
         }
 
         function build(){
@@ -1009,7 +1023,7 @@
             
             // === ВЕРХНЯЯ ЗОНА (выезд) ===
             g.appendChild(createFullRow(20, 'face-down', 2, 2, false))
-            g.appendChild(road('← ← ← ← ←'))  // ВЛЕВО
+            g.appendChild(road('← ← ← ← ←'))
             
             // === БЛОК 1 ===
             g.appendChild(rowCols('face-up'))
@@ -1025,7 +1039,7 @@
             g.appendChild(rowCols('face-up'))
             
             // === НИЖНЯЯ ЗОНА (въезд) ===
-            g.appendChild(road('→ → → → →'))  // ВПРАВО
+            g.appendChild(road('→ → → → →'))
             g.appendChild(createFullRow(20, 'face-up', 2, 0, true))
         }
 
