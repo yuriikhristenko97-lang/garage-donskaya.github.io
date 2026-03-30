@@ -368,35 +368,46 @@
             overflow:hidden;
         }
         
-        /* КНОПКА РЕЖИМА РЕДАКТИРОВАНИЯ И ПОИСК */
+        /* КНОПКИ НАВИГАЦИИ И УПРАВЛЕНИЯ */
         .top-controls{
             position:fixed;
             top:10px;
             left:10px;
             display:flex;
-            gap:10px;
+            gap:8px;
             z-index:999;
             align-items:center;
             flex-wrap:wrap;
         }
-        .edit-mode-btn, .search-input{
-            padding:10px 16px;
+        .nav-btn, .edit-mode-btn, .search-input{
+            padding:10px 14px;
             background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
             color:#fff;
             border:none;
             border-radius:8px;
             cursor:pointer;
-            font-size:13px;
+            font-size:12px;
             font-weight:600;
             box-shadow:0 4px 15px rgba(99,102,241,0.4);
             transition:all 0.2s;
             display:flex;
             align-items:center;
-            gap:6px;
+            gap:5px;
+            text-decoration:none;
+            white-space:nowrap;
         }
-        .edit-mode-btn:hover, .search-input:hover{
+        .nav-btn:hover, .edit-mode-btn:hover, .search-input:hover{
             transform:translateY(-2px);
             box-shadow:0 6px 20px rgba(99,102,241,0.5);
+        }
+        /* Кнопки других гаражей - другой цвет */
+        .nav-btn.other-garage{
+            background:linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+            box-shadow:0 4px 15px rgba(14,165,233,0.4);
+        }
+        .nav-btn.other-garage:hover{
+            box-shadow:0 6px 20px rgba(14,165,233,0.5);
+            background:linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%);
         }
         .edit-mode-btn.active{
             background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
@@ -412,7 +423,7 @@
             color:#eee;
             border:1px solid #555;
             padding:10px 12px;
-            width:180px;
+            width:160px;
             font-size:13px;
             font-weight:normal;
         }
@@ -612,7 +623,17 @@
     <div class="status" id="status">🔄 Подключение...</div>
     
     <div class="top-controls">
+        <!-- Кнопки перехода в другие боксы -->
+        <a href="catp.html" class="nav-btn other-garage" title="Перейти в ЧАТП">🚌 ЧАТП</a>
+        <a href="tk.html" class="nav-btn other-garage" title="Перейти в ТК">🛒 ТК</a>
+        
+        <!-- Разделитель -->
+        <div style="width:1px;height:24px;background:#444;margin:0 4px;"></div>
+        
+        <!-- Кнопка режима редактирования -->
         <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Редактирование</button>
+        
+        <!-- Поле поиска -->
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
     </div>
     
