@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Онлайн гараж ИП "Донская"</title>
+    <title>🏎️Онлайн гараж ИП "Донская"</title>
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
         body{
@@ -136,6 +136,23 @@
             border:2px solid #fff;
             box-shadow:0 2px 6px rgba(0,0,0,0.4);
             flex-shrink:0;
+            position:relative;
+        }
+        /* Индикатор авто-цвета */
+        .tooltip .color-badge.auto-detected::after{
+            content:'✨';
+            position:absolute;
+            bottom:-4px;
+            right:-4px;
+            font-size:10px;
+            background:#1b4332;
+            border-radius:50%;
+            width:14px;
+            height:14px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border:1px solid #4ade80;
         }
         .tooltip .mark{
             color:#ffd700;
@@ -195,7 +212,7 @@
             text-align:center;
             width:100%;
         }
-        /* Выделение при поиске - остаётся */
+        /* Выделение при поиске */
         .spot.spot-found{
             border:2px solid #4ade80 !important;
             box-shadow:0 0 0 3px rgba(74,222,128,0.4) !important;
@@ -619,9 +636,9 @@
             <h3 id="title">🚗 Место</h3>
             <input id="car" placeholder="Марка автомобиля">
             <input id="num" placeholder="Гос. номер">
-            <input id="color" placeholder="Цвет авто">
+            <input id="color" placeholder="Цвет (красный, синий...)">
             <input id="owner" placeholder="Владелец">
-            <input id="cost" placeholder="Стоимость (₽)">
+            <input id="cost" placeholder="Стоимость">
             <div class="btn-group">
                 <button class="clear" onclick="clearCar()">🗑️</button>
                 <button class="close" onclick="closeM()">✕</button>
@@ -720,29 +737,48 @@
             return letters[group] || '?';
         }
 
-        // Цветовая палитра
+        // 🎨 Умное определение цвета - частичные совпадения
         const colorMap = {
-            'белый': '#ffffff', 'бел': '#ffffff', 'white': '#ffffff',
-            'чёрный': '#1a1a1a', 'черный': '#1a1a1a', 'чёр': '#1a1a1a', 'чер': '#1a1a1a', 'black': '#1a1a1a',
-            'красный': '#dc2626', 'крас': '#dc2626', 'red': '#dc2626',
-            'синий': '#2563eb', 'син': '#2563eb', 'blue': '#2563eb',
-            'серый': '#6b7280', 'сер': '#6b7280', 'gray': '#6b7280', 'grey': '#6b7280',
-            'серебро': '#c0c0c0', 'серебристый': '#c0c0c0', 'silver': '#c0c0c0',
-            'зелёный': '#16a34a', 'зеленый': '#16a34a', 'зел': '#16a34a', 'green': '#16a34a',
-            'жёлтый': '#f59e0b', 'желтый': '#f59e0b', 'жёл': '#f59e0b', 'жел': '#f59e0b', 'yellow': '#f59e0b',
-            'оранжевый': '#ea580c', 'оранж': '#ea580c', 'orange': '#ea580c',
-            'коричневый': '#92400e', 'кор': '#92400e', 'brown': '#92400e',
-            'голубой': '#0ea5e9', 'голуб': '#0ea5e9', 'lightblue': '#0ea5e9',
-            'розовый': '#ec4899', 'розов': '#ec4899', 'pink': '#ec4899',
-            'фиолетовый': '#8b5cf6', 'фиол': '#8b5cf6', 'purple': '#8b5cf6',
-            'бежевый': '#d4a574', 'беж': '#d4a574', 'beige': '#d4a574',
-            'золотой': '#fbbf24', 'зол': '#fbbf24', 'gold': '#fbbf24',
+            'белый': '#ffffff', 'бел': '#ffffff', 'white': '#ffffff', 'wht': '#ffffff',
+            'чёрный': '#1a1a1a', 'черный': '#1a1a1a', 'чёр': '#1a1a1a', 'чер': '#1a1a1a', 'black': '#1a1a1a', 'blk': '#1a1a1a',
+            'красный': '#dc2626', 'крас': '#dc2626', 'red': '#dc2626', 'rd': '#dc2626',
+            'синий': '#2563eb', 'син': '#2563eb', 'blue': '#2563eb', 'blu': '#2563eb',
+            'серый': '#6b7280', 'сер': '#6b7280', 'gray': '#6b7280', 'grey': '#6b7280', 'gr': '#6b7280',
+            'серебро': '#c0c0c0', 'серебристый': '#c0c0c0', 'silver': '#c0c0c0', 'sil': '#c0c0c0',
+            'зелёный': '#16a34a', 'зеленый': '#16a34a', 'зел': '#16a34a', 'green': '#16a34a', 'grn': '#16a34a',
+            'жёлтый': '#f59e0b', 'желтый': '#f59e0b', 'жёл': '#f59e0b', 'жел': '#f59e0b', 'yellow': '#f59e0b', 'yel': '#f59e0b',
+            'оранжевый': '#ea580c', 'оранж': '#ea580c', 'orange': '#ea580c', 'org': '#ea580c',
+            'коричневый': '#92400e', 'кор': '#92400e', 'brown': '#92400e', 'brn': '#92400e',
+            'голубой': '#0ea5e9', 'голуб': '#0ea5e9', 'lightblue': '#0ea5e9', 'sky': '#0ea5e9',
+            'розовый': '#ec4899', 'розов': '#ec4899', 'pink': '#ec4899', 'pnk': '#ec4899',
+            'фиолетовый': '#8b5cf6', 'фиол': '#8b5cf6', 'purple': '#8b5cf6', 'prp': '#8b5cf6', 'violet': '#8b5cf6',
+            'бежевый': '#d4a574', 'беж': '#d4a574', 'beige': '#d4a574', 'bge': '#d4a574',
+            'золотой': '#fbbf24', 'зол': '#fbbf24', 'gold': '#fbbf24', 'gld': '#fbbf24',
+            'бордовый': '#991b1b', 'бор': '#991b1b', 'burgundy': '#991b1b',
+            'бирюзовый': '#0d9488', 'бир': '#0d9488', 'turquoise': '#0d9488',
+            'металлик': '#94a3b8', 'мет': '#94a3b8', 'metallic': '#94a3b8',
         };
 
         function getColorHex(colorName){
-            if(!colorName) return '#6b7280';
+            if(!colorName) return {hex: '#6b7280', auto: false};
             const lower = colorName.toLowerCase().trim();
-            return colorMap[lower] || '#6b7280';
+            
+            // Точное совпадение
+            if(colorMap[lower]) return {hex: colorMap[lower], auto: false};
+            
+            // Частичное совпадение (авто-определение)
+            for(const [key, hex] of Object.entries(colorMap)){
+                if(lower.includes(key) || key.includes(lower)){
+                    return {hex, auto: true};
+                }
+            }
+            
+            // HEX код вручную
+            if(/^#[0-9a-f]{6}$/i.test(lower)){
+                return {hex: lower, auto: false};
+            }
+            
+            return {hex: '#6b7280', auto: false};
         }
 
         function mkSpot(faceClass = '', isSideSpot = false){
@@ -762,7 +798,6 @@
                     </div>
                 `;
                 
-                // Простая и надёжная логика наведения
                 el.addEventListener('mouseenter', (e) => {
                     clearTimeout(tooltipTimer);
                     showTooltip(e.currentTarget, d);
@@ -789,16 +824,21 @@
 
         function showTooltip(el, data){
             const {car, num, color, owner, cost} = data;
-            const colorHex = getColorHex(color);
+            const {hex: colorHex, auto} = getColorHex(color);
             
             let extraInfoHtml = '';
-            if(color) extraInfoHtml += `<div class="row"><span class="label">Цвет:</span><span class="value">${color}</span></div>`;
+            if(color) {
+                const colorLabel = auto ? `${color} ✨` : color;
+                extraInfoHtml += `<div class="row"><span class="label">Цвет:</span><span class="value">${colorLabel}</span></div>`;
+            }
             if(owner) extraInfoHtml += `<div class="row"><span class="label">Владелец:</span><span class="value">${owner}</span></div>`;
-            if(cost) extraInfoHtml += `<div class="row"><span class="label">Стоимость:</span><span class="value">${Number(cost).toLocaleString('ru-RU')} ₽</span></div>`;
+            if(cost) extraInfoHtml += `<div class="row"><span class="label">Стоимость:</span><span class="value">${cost} ₽</span></div>`;
+            
+            const badgeClass = auto ? 'color-badge auto-detected' : 'color-badge';
             
             tooltip.innerHTML = `
                 <div class="header">
-                    <div class="color-badge" style="background:${colorHex}"></div>
+                    <div class="${badgeClass}" style="background:${colorHex}" title="${auto ? 'Цвет определён автоматически' : ''}"></div>
                     <div class="mark">${car||'—'}</div>
                 </div>
                 <div class="num">${num||'—'}</div>
@@ -987,7 +1027,6 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             currentSearchTerm = searchTerm;
             
-            // Убираем выделение со всех
             document.querySelectorAll('.spot.occupied').forEach(spot => {
                 spot.classList.remove('spot-found');
             });
@@ -1012,7 +1051,6 @@
                 }
             });
             
-            // Показываем подсказку для первого найденного
             if(foundSpots.length > 0){
                 const firstSpot = foundSpots[0];
                 firstSpot.scrollIntoView({behavior:'smooth', block:'center'});
@@ -1046,14 +1084,12 @@
         build();
         updateEditModeBtn();
         
-        // Закрытие подсказки при клике вне
         document.addEventListener('click', (e) => {
             if(!e.target.closest('.spot') && !e.target.closest('.tooltip') && !e.target.closest('#searchInput')){
                 hideTooltip();
             }
         });
         
-        // Очистка выделения при очистке поиска
         document.getElementById('searchInput').addEventListener('input', (e) => {
             if(e.target.value === ''){
                 document.querySelectorAll('.spot.occupied').forEach(spot => {
