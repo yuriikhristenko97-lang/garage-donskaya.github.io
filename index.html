@@ -15,7 +15,7 @@
             align-items:center;
             justify-content:center;
             padding:10px;
-            overflow:hidden; /* Чтобы избежать лишних скроллов от градиента */
+            overflow:hidden;
         }
         .garage{
             display:flex;
@@ -29,7 +29,7 @@
             box-shadow:0 10px 40px rgba(0,0,0,0.5);
             max-width:98vw;
             max-height:98vh;
-            overflow:auto; /* Важно для мобильных, чтобы контент прокручивался */
+            overflow:auto;
         }
         .row-full{
             display:flex;
@@ -38,8 +38,7 @@
             width:100%;
             margin:1px 0;
             gap:2px;
-            /* overflow:hidden; */ /* Убираем, чтобы не обрезало при зуме или трансформации */
-            flex-wrap: nowrap; /* Важно, чтобы ряды не ломались на несколько строк */
+            flex-wrap: nowrap;
         }
         .side-group{
             display:flex;
@@ -49,7 +48,7 @@
             padding:0 2px;
             border-radius:6px;
             border:1px solid #444;
-            flex-shrink:0; /* Чтобы не уменьшался на маленьких экранах */
+            flex-shrink:0;
         }
         .spacer{width:96px;flex-shrink:0;visibility:hidden;}
         .center-block{display:flex;justify-content:center;align-items:center;padding:0 2px;border-radius:6px;flex-shrink:0;}
@@ -64,7 +63,7 @@
             transform:translateY(-2px) scale(1.05);
             box-shadow:0 6px 20px rgba(0,0,0,0.6);
             border-color:#aaa;
-            z-index:100; /* При наведении слот поднимается над другими */
+            z-index:100;
         }
         .spot.empty-spot{background:linear-gradient(180deg, #525252 0%, #484848 100%);border:1px dashed #777;}
         .spot.empty-spot:hover{background:linear-gradient(180deg, #5a5a5a 0%, #505050 100%);border-color:#999;border-style:solid;}
@@ -76,28 +75,27 @@
         .spot .car-info{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;padding-top:10px;gap:2px;}
         .spot .car-mark{
             color:#ffd700;
-            font-size:8px; /* Немного увеличен для лучшей читаемости */
+            font-size:8px;
             font-weight:700;
             word-break:break-word;
             max-width:100%;
-            line-height:1.1; /* Уменьшен интерлиньяж */
+            line-height:1.1;
             text-shadow:0 1px 2px rgba(0,0,0,0.8);
-            /* white-space: nowrap; */ /* Убран, чтобы текст мог переноситься */
-            overflow: hidden; /* Оставлен, чтобы обрезало, если не поместится после переноса */
-            text-overflow: ellipsis; /* Оставлен */
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .spot .car-separator{width:60%;height:1px;background:linear-gradient(90deg, transparent, #ffd700, transparent);opacity:0.6;}
         .spot .car-num{
             color:#fff;
-            font-size:7px; /* Немного увеличен для лучшей читаемости */
+            font-size:7px;
             font-weight:600;
             word-break:break-word;
             max-width:100%;
-            line-height:1.1; /* Уменьшен интерлиньяж */
+            line-height:1.1;
             background:rgba(0,0,0,0.5);
             padding:1px 3px;
             border-radius:2px;
-            letter-spacing:0.3px;
+            letter-spacing:-0.5px; /* Уменьшен интервал между буквами */
             white-space:nowrap;
             overflow:hidden;
             text-overflow:ellipsis;
@@ -109,8 +107,8 @@
             border:2px solid #40916c;
             border-radius:10px;
             padding:14px 20px;
-            min-width:240px; /* Увеличен */
-            max-width:320px; /* Увеличен */
+            min-width:240px;
+            max-width:320px;
             z-index:1000;
             flex-direction:column;
             align-items:center;
@@ -123,8 +121,8 @@
             font-weight:700;
             text-align:center;
             text-shadow:0 2px 6px rgba(0,0,0,0.6);
-            white-space:normal; /* Разрешаем перенос слов */
-            word-break: break-word; /* Разрешаем разрыв слов */
+            white-space:normal;
+            word-break: break-word;
             overflow:hidden;
             text-overflow:ellipsis;
             max-width:100%;
@@ -132,6 +130,25 @@
         .tooltip .divider{width:80%;height:2px;background:linear-gradient(90deg, transparent, #4ade80, transparent);margin:8px 0;}
         .tooltip .num{color:#fff;font-size:14px;font-weight:600;background:rgba(255,255,255,0.15);padding:5px 16px;border-radius:5px;letter-spacing:1.5px;text-shadow:0 2px 4px rgba(0,0,0,0.5);white-space:nowrap;}
         .tooltip .spot-id{color:#888;font-size:9px;margin-top:6px;}
+        .tooltip .extra-info{
+            margin-top:10px;
+            width:100%;
+            display:flex;
+            flex-direction:column;
+            gap:4px;
+            color:#ccc;
+            font-size:12px;
+        }
+        .tooltip .extra-info span{
+            display:flex;
+            justify-content:space-between;
+            width:100%;
+        }
+        .tooltip .extra-info span strong{
+            color:#fff;
+            font-weight:normal;
+        }
+
         .center-block .face-down .spot{border-bottom:2px solid #ffd700;}
         .center-block .face-up .spot{border-top:2px solid #ffd700;}
         
@@ -279,11 +296,17 @@
             overflow:hidden;
         }
         
-        /* КНОПКА РЕЖИМА РЕДАКТИРОВАНИЯ */
-        .edit-mode-btn{
+        /* КНОПКА РЕЖИМА РЕДАКТИРОВАНИЯ И ПОИСК */
+        .top-controls{
             position:fixed;
             top:10px;
             left:10px;
+            display:flex;
+            gap:10px;
+            z-index:999;
+            align-items:center;
+        }
+        .edit-mode-btn, .search-input{
             padding:10px 16px;
             background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
             color:#fff;
@@ -292,14 +315,13 @@
             cursor:pointer;
             font-size:13px;
             font-weight:600;
-            z-index:999;
             box-shadow:0 4px 15px rgba(99,102,241,0.4);
             transition:all 0.2s;
             display:flex;
             align-items:center;
             gap:6px;
         }
-        .edit-mode-btn:hover{
+        .edit-mode-btn:hover, .search-input:hover{
             transform:translateY(-2px);
             box-shadow:0 6px 20px rgba(99,102,241,0.5);
         }
@@ -311,6 +333,24 @@
         @keyframes pulse-green{
             0%, 100% { box-shadow:0 4px 15px rgba(34,197,94,0.4); }
             50% { box-shadow:0 4px 25px rgba(34,197,94,0.6); }
+        }
+        .search-input{
+            background:#1a1a1a;
+            color:#eee;
+            border:1px solid #555;
+            padding:10px 12px;
+            width:180px;
+            font-size:13px;
+            font-weight:normal;
+        }
+        .search-input::placeholder{
+            color:#aaa;
+        }
+        .search-input:focus{
+            outline:none;
+            border-color:#ffd700;
+            box-shadow:0 0 10px rgba(255,215,0,0.2);
+            transform:translateY(0); /* Отключаем hover эффект при фокусе */
         }
         
         #modal{
@@ -493,15 +533,40 @@
             border-color:#f87171;
             color:#f87171;
         }
+
+        /* Стиль для подсветки найденных машин */
+        .spot.highlighted{
+            background:linear-gradient(180deg, #ffeb3b 0%, #fbc02d 100%); /* Желтая подсветка */
+            border-color:#ffd700;
+            box-shadow:0 0 15px rgba(255,215,0,0.8);
+            animation: pulse-highlight 1s infinite alternate;
+        }
+        .spot.highlighted .car-mark,
+        .spot.highlighted .car-num{
+            color:#333; /* Темный текст на желтом фоне */
+            text-shadow:none;
+        }
+        .spot.highlighted .car-separator{
+            background:linear-gradient(90deg, transparent, #333, transparent);
+        }
+
+        @keyframes pulse-highlight {
+            from { box-shadow:0 0 15px rgba(255,215,0,0.8); }
+            to { box-shadow:0 0 25px rgba(255,215,0,1); }
+        }
     </style>
 </head>
 <body>
     <div class="status" id="status">🔄 Подключение...</div>
     
-    <!-- Кнопка режима редактирования -->
-    <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
-        ✏️ Редактирование
-    </button>
+    <div class="top-controls">
+        <!-- Кнопка режима редактирования -->
+        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
+            ✏️ Редактирование
+        </button>
+        <!-- Поле поиска -->
+        <input type="text" id="searchInput" class="search-input" placeholder="Поиск авто..." oninput="handleSearch()">
+    </div>
     
     <main><div class="garage" id="g"></div></main>
     <div class="tooltip" id="tooltip"></div>
@@ -525,6 +590,9 @@
             <h3 id="title">🚗 Место</h3>
             <input id="car" placeholder="Марка">
             <input id="num" placeholder="Номер">
+            <input id="color" placeholder="Цвет">
+            <input id="owner" placeholder="Владелец">
+            <input id="cost" placeholder="Гос. стоимость (₽)">
             <div class="btn-group">
                 <button class="clear" onclick="clearCar()">🗑️</button>
                 <button class="close" onclick="closeM()">✕</button>
@@ -564,6 +632,7 @@
         let active = null
         let tooltip = document.getElementById('tooltip')
         let colCounter = 0
+        let tooltipTimer; // Для оптимизации подвисаний
 
         // Статус подключения
         db.ref('.info/connected').on('value', (snapshot) => {
@@ -580,6 +649,7 @@
         db.ref('spots').on('value', (snapshot) => {
             localDB = snapshot.val() || {}
             build()
+            handleSearch(); // Перерисовываем подсветку при изменении данных
         });
 
         // Переключение режима редактирования
@@ -649,9 +719,16 @@
                         <div class="car-num">${d.num||''}</div>
                     </div>
                 `
-                el.addEventListener('mouseenter', (e) => showTooltip(e.currentTarget, d.car, d.num, i))
-                el.addEventListener('mouseleave', hideTooltip)
-                el.addEventListener('mousemove', (e) => moveTooltip(e))
+                el.addEventListener('mouseenter', (e) => {
+                    clearTimeout(tooltipTimer);
+                    tooltipTimer = setTimeout(() => showTooltip(e.currentTarget, d), 100); // Задержка для предотвращения "подвисаний"
+                });
+                el.addEventListener('mouseleave', hideTooltip);
+                el.addEventListener('mousemove', (e) => {
+                    if (tooltip.style.display === 'flex') { // Обновляем позицию только если тултип уже виден
+                        positionTooltip(e.currentTarget);
+                    }
+                });
             } else {
                 el.className = className + ' empty-spot'
                 el.innerHTML = `
@@ -666,43 +743,53 @@
                 }
             }
             
+            // Сохраняем ссылку на элемент в локальных данных для поиска
+            el.dataset.spotId = i;
             return el
         }
 
-        // Обновленная функция showTooltip для позиционирования относительно элемента
-        function showTooltip(el, car, num, spotId){
+        function showTooltip(el, data){
+            const {car, num, color, owner, cost} = data;
+            let extraInfoHtml = '';
+            if (color || owner || cost) {
+                extraInfoHtml = `
+                    <div class="extra-info">
+                        ${color ? `<span>Цвет: <strong>${color}</strong></span>` : ''}
+                        ${owner ? `<span>Владелец: <strong>${owner}</strong></span>` : ''}
+                        ${cost ? `<span>Стоимость: <strong>${cost} ₽</strong></span>` : ''}
+                    </div>
+                `;
+            }
+
             tooltip.innerHTML = `
                 <div class="mark">${car}</div>
                 <div class="divider"></div>
                 <div class="num">${num||'—'}</div>
-                <div class="spot-id">№${spotId}</div>
+                ${extraInfoHtml}
+                <div class="spot-id">№${el.dataset.spotId}</div>
             `
             tooltip.style.display = 'flex'
             positionTooltip(el)
         }
 
         function hideTooltip(){
+            clearTimeout(tooltipTimer);
             tooltip.style.display = 'none'
         }
 
-        // Обновленная функция positionTooltip для лучшего позиционирования
         function positionTooltip(el){
             const rect = el.getBoundingClientRect()
             const tooltipRect = tooltip.getBoundingClientRect()
             
-            // Пытаемся разместить тултип сверху
             let top = rect.top - tooltipRect.height - 10
             let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2)
 
-            // Если тултип выходит за верхний край окна, размещаем его снизу
             if(top < 10) {
                 top = rect.bottom + 10
             }
-            // Если тултип выходит за левый край окна, прижимаем к левому краю
             if(left < 10) {
                 left = 10
             }
-            // Если тултип выходит за правый край окна, прижимаем к правому краю
             if(left + tooltipRect.width > window.innerWidth - 10) {
                 left = window.innerWidth - tooltipRect.width - 10
             }
@@ -711,9 +798,15 @@
             tooltip.style.left = left + 'px'
         }
 
-        // Обновленная функция moveTooltip, которая вызывает positionTooltip
+        // moveTooltip теперь вызывает positionTooltip только если тултип уже показан
         function moveTooltip(e){
-            positionTooltip(e.currentTarget)
+            // Optimisation: positionTooltip is called only if tooltip is already visible
+            // This prevents excessive recalculations if mouse moves without triggering actual showTooltip
+            // (e.g. if mouse rapidly crosses multiple spots)
+            // The actual show/hide is handled by mouseenter/mouseleave with a slight delay
+            if (tooltip.style.display === 'flex') {
+                positionTooltip(e.currentTarget);
+            }
         }
 
         function col(){
@@ -842,6 +935,9 @@
             const d = localDB[i] || {}
             document.getElementById('car').value = d.car || ''
             document.getElementById('num').value = d.num || ''
+            document.getElementById('color').value = d.color || ''
+            document.getElementById('owner').value = d.owner || ''
+            document.getElementById('cost').value = d.cost || ''
             document.getElementById('modal').style.display = 'flex'
             document.getElementById('car').focus()
         }
@@ -854,9 +950,12 @@
             if(!active || !isEditMode) return
             const car = document.getElementById('car').value.trim()
             const num = document.getElementById('num').value.trim()
+            const color = document.getElementById('color').value.trim()
+            const owner = document.getElementById('owner').value.trim()
+            const cost = document.getElementById('cost').value.trim()
             
             if(car){
-                db.ref('spots/' + active).set({car, num})
+                db.ref('spots/' + active).set({car, num, color, owner, cost})
             } else {
                 db.ref('spots/' + active).remove()
             }
@@ -867,12 +966,39 @@
             if(!active || !isEditMode) return
             document.getElementById('car').value = ''
             document.getElementById('num').value = ''
+            document.getElementById('color').value = ''
+            document.getElementById('owner').value = ''
+            document.getElementById('cost').value = ''
             db.ref('spots/' + active).remove()
             closeM()
         }
 
         document.getElementById('modal').onclick = function(e){
             if(e.target === this) closeM()
+        }
+
+        // Функция для обработки поиска
+        function handleSearch(){
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const allSpots = document.querySelectorAll('.spot.occupied');
+
+            allSpots.forEach(spot => {
+                const spotId = spot.dataset.spotId;
+                const data = localDB[spotId];
+                if (data) {
+                    const carMatch = data.car ? data.car.toLowerCase().includes(searchTerm) : false;
+                    const numMatch = data.num ? data.num.toLowerCase().includes(searchTerm) : false;
+                    const colorMatch = data.color ? data.color.toLowerCase().includes(searchTerm) : false;
+                    const ownerMatch = data.owner ? data.owner.toLowerCase().includes(searchTerm) : false;
+                    const costMatch = data.cost ? data.cost.toLowerCase().includes(searchTerm) : false;
+
+                    if (carMatch || numMatch || colorMatch || ownerMatch || costMatch) {
+                        spot.classList.add('highlighted');
+                    } else {
+                        spot.classList.remove('highlighted');
+                    }
+                }
+            });
         }
 
         function build(){
