@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏎️Онлайн гараж ИП "Донская"</title>
+    <title>Онлайн гараж ИП "Донская"</title>
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
         body{
@@ -103,7 +103,7 @@
             overflow:hidden;
             text-overflow:ellipsis;
         }
-        /* Всплывающая подсказка - улучшенная */
+        /* Всплывающая подсказка */
         .tooltip{
             display:none;
             position:fixed;
@@ -195,16 +195,15 @@
             text-align:center;
             width:100%;
         }
-        /* Выделение при поиске */
+        /* Выделение при поиске - остаётся */
         .spot.spot-found{
-            animation:highlight-found 2s ease-out forwards;
             border:2px solid #4ade80 !important;
-            box-shadow:0 0 0 3px rgba(74,222,128,0.3) !important;
+            box-shadow:0 0 0 3px rgba(74,222,128,0.4) !important;
+            animation:pulse-found 2s infinite;
         }
-        @keyframes highlight-found{
-            0%{box-shadow:0 0 0 0 rgba(74,222,128,0.7);transform:scale(1.05);}
-            25%{box-shadow:0 0 15px 6px rgba(74,222,128,0.5);transform:scale(1.08);}
-            100%{box-shadow:0 0 0 3px rgba(74,222,128,0.2);transform:scale(1);}
+        @keyframes pulse-found{
+            0%,100%{box-shadow:0 0 0 3px rgba(74,222,128,0.4);}
+            50%{box-shadow:0 0 0 5px rgba(74,222,128,0.6);}
         }
         .center-block .face-down .spot{border-bottom:2px solid #ffd700;}
         .center-block .face-up .spot{border-top:2px solid #ffd700;}
@@ -258,7 +257,7 @@
         
         .fake{width:24px;height:60px;margin:0 2px;visibility:hidden;flex-shrink:0;}
         
-        /* ДОРОГИ - единый стиль стрелок */
+        /* ДОРОГИ */
         .road{
             width:100%;
             height:18px;
@@ -276,7 +275,6 @@
             text-shadow:0 0 8px rgba(255,215,0,0.6);
             white-space:nowrap;
         }
-        
         .double-road{
             width:100%;
             height:40px;
@@ -397,7 +395,7 @@
             color:#eee;
             border:1px solid #555;
             padding:10px 12px;
-            width:200px;
+            width:180px;
             font-size:13px;
             font-weight:normal;
         }
@@ -598,7 +596,7 @@
     
     <div class="top-controls">
         <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Редактирование</button>
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск: марка, номер, цвет..." oninput="handleSearch()">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
     </div>
     
     <main><div class="garage" id="g"></div></main>
@@ -658,7 +656,6 @@
         let tooltip = document.getElementById('tooltip');
         let colCounter = 0;
         let tooltipTimer;
-        let highlightTimeout;
         let currentSearchTerm = '';
 
         db.ref('.info/connected').on('value', (snapshot) => {
@@ -723,7 +720,7 @@
             return letters[group] || '?';
         }
 
-        // Цветовая палитра для отображения
+        // Цветовая палитра
         const colorMap = {
             'белый': '#ffffff', 'бел': '#ffffff', 'white': '#ffffff',
             'чёрный': '#1a1a1a', 'черный': '#1a1a1a', 'чёр': '#1a1a1a', 'чер': '#1a1a1a', 'black': '#1a1a1a',
@@ -765,16 +762,14 @@
                     </div>
                 `;
                 
-                // Наведение - показываем подсказку с задержкой
+                // Простая и надёжная логика наведения
                 el.addEventListener('mouseenter', (e) => {
                     clearTimeout(tooltipTimer);
-                    tooltipTimer = setTimeout(() => showTooltip(e.currentTarget, d), 200);
+                    showTooltip(e.currentTarget, d);
                 });
                 el.addEventListener('mouseleave', () => {
                     clearTimeout(tooltipTimer);
-                    tooltipTimer = setTimeout(() => {
-                        if(!tooltip.matches(':hover')) hideTooltip();
-                    }, 100);
+                    tooltipTimer = setTimeout(hideTooltip, 100);
                 });
                 el.addEventListener('mousemove', (e) => {
                     if(tooltip.style.display === 'flex') positionTooltip(e.currentTarget);
@@ -815,7 +810,6 @@
         }
 
         function hideTooltip(){
-            clearTimeout(tooltipTimer);
             tooltip.style.display = 'none';
         }
 
@@ -826,11 +820,8 @@
             let top = rect.top - tooltipRect.height - 12;
             let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
             
-            // Если не влезает сверху - показать снизу
             if(top < 10) top = rect.bottom + 12;
-            // Если не влезает слева
             if(left < 10) left = 10;
-            // Если не влезает справа
             if(left + tooltipRect.width > window.innerWidth - 10) left = window.innerWidth - tooltipRect.width - 10;
             
             tooltip.style.top = top + 'px';
@@ -993,7 +984,6 @@
         document.getElementById('modal').onclick = function(e){ if(e.target === this) closeM(); };
 
         function handleSearch(){
-            clearTimeout(highlightTimeout);
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             currentSearchTerm = searchTerm;
             
@@ -1029,13 +1019,7 @@
                 
                 const spotId = firstSpot.dataset.spotId;
                 const data = localDB[spotId];
-                clearTimeout(tooltipTimer);
                 showTooltip(firstSpot, data);
-                
-                // Убираем выделение через 3 секунды
-                highlightTimeout = setTimeout(() => {
-                    foundSpots.forEach(s => s.classList.remove('spot-found'));
-                }, 3000);
             } else {
                 hideTooltip();
             }
@@ -1064,8 +1048,17 @@
         
         // Закрытие подсказки при клике вне
         document.addEventListener('click', (e) => {
-            if(!e.target.closest('.spot') && !e.target.closest('.tooltip')){
+            if(!e.target.closest('.spot') && !e.target.closest('.tooltip') && !e.target.closest('#searchInput')){
                 hideTooltip();
+            }
+        });
+        
+        // Очистка выделения при очистке поиска
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            if(e.target.value === ''){
+                document.querySelectorAll('.spot.occupied').forEach(spot => {
+                    spot.classList.remove('spot-found');
+                });
             }
         });
     </script>
