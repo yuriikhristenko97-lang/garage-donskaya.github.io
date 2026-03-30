@@ -7,14 +7,14 @@
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
         body{
-            background:linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
-            color:#eee;
+            background:linear-gradient(135deg, #d8b4e2 0%, #c084fc 50%, #a855f7 100%);
+            color:#333;
             font-family:'Segoe UI',Arial,sans-serif;
             min-height:100vh;
             display:flex;
             align-items:center;
             justify-content:center;
-            padding:10px;
+            padding:20px;
             overflow:hidden;
         }
         .garage{
@@ -22,11 +22,11 @@
             flex-direction:column;
             align-items:center;
             justify-content:center;
-            background:linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-            border:1px solid #475569;
-            padding:12px;
-            border-radius:12px;
-            box-shadow:0 10px 40px rgba(0,0,0,0.5);
+            background:linear-gradient(180deg, #2d1b4e 0%, #1a0f2e 100%);
+            border:2px solid #7c3aed;
+            padding:20px;
+            border-radius:16px;
+            box-shadow:0 15px 50px rgba(124,58,237,0.4);
             max-width:98vw;
             max-height:98vh;
             overflow:auto;
@@ -38,29 +38,30 @@
             flex-direction:column;
             justify-content: space-between;
             height: 100%;
-            gap:8px;
-            padding:10px;
-            background:linear-gradient(180deg, #334155 0%, #1e293b 100%);
-            border-radius:8px;
-            border:1px solid #475569;
-            margin-right:12px;
+            gap:15px;
+            padding:15px;
+            background:linear-gradient(180deg, #4c1d95 0%, #2e1065 100%);
+            border-radius:12px;
+            border:2px solid #7c3aed;
+            margin-right:20px;
             flex-shrink:0;
         }
         .gate{
-            width:50px;
-            height:70px;
-            background:linear-gradient(180deg, #475569 0%, #334155 100%);
-            border:2px solid #64748b;
-            border-radius:6px;
+            width:70px;
+            height:100px;
+            background:linear-gradient(180deg, #6d28d9 0%, #5b21b6 100%);
+            border:3px solid #8b5cf6;
+            border-radius:10px;
             display:flex;
             align-items:center;
             justify-content:center;
             position:relative;
             cursor:default;
+            box-shadow:0 4px 15px rgba(139,92,246,0.3);
         }
         .gate .arrow{
-            color:#64748b;
-            font-size:20px;
+            color:#ddd6fe;
+            font-size:32px;
             font-weight:bold;
         }
         
@@ -68,35 +69,35 @@
         .parking-area{
             display:flex;
             flex-direction:column;
-            justify-content: space-between; /* Распределяем дочерние элементы по вертикали */
-            gap: 0; /* Убираем стандартный gap, т.к. flex-grow управляет пространством */
+            justify-content: space-between;
+            gap: 0;
             flex:1;
             min-width:0;
-            height: 100%; /* Занимает всю доступную высоту для гибкого распределения */
+            height: 100%;
         }
         
         /* === ВЕРХНИЙ И НИЖНИЙ РЯДЫ === */
         .row-top{
             display:flex;
-            align-items:flex-start; /* Выравнивание окон сверху */
+            align-items:flex-start;
             justify-content:center;
-            gap:15px;
+            gap:25px;
             width:100%;
+            margin-bottom:10px;
         }
         .row-bottom{
             display:flex;
-            align-items:flex-end; /* Выравнивание окон снизу */
+            align-items:flex-end;
             justify-content:center;
-            gap:15px;
+            gap:25px;
             width:100%;
+            margin-top:10px;
         }
 
-        /* Новый стиль для пустых строк, которые будут заполнять пространство */
         .empty-row {
-            flex-grow: 1; /* Растягивается, чтобы заполнить доступное пространство */
+            flex-grow: 1;
             width: 100%;
-            min-height: 20px; /* Минимальная высота, чтобы не схлопнуться полностью (можно регулировать) */
-            /* background: rgba(0,255,0,0.1); /* Для отладки */ */
+            min-height: 40px;
         }
         
         /* Оконный блок — 3 части */
@@ -104,81 +105,84 @@
             display:flex;
             flex-direction:column;
             align-items:center;
-            gap:4px;
+            gap:8px;
         }
         .window{
             display:flex;
-            gap:2px;
+            gap:4px;
         }
         .window-part{
-            width:36px;
-            height:28px;
-            background:linear-gradient(180deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
-            border:1px solid #93c5fd;
-            border-radius:3px;
+            width:60px;
+            height:45px;
+            background:linear-gradient(180deg, #a78bfa 0%, #8b5cf6 50%, #7c3aed 100%);
+            border:2px solid #c4b5fd;
+            border-radius:6px;
             position:relative;
+            box-shadow:0 2px 8px rgba(139,92,246,0.3);
         }
         .window-part::before{
             content:'';
             position:absolute;
-            top:4px;
-            left:4px;
-            right:4px;
-            bottom:4px;
-            background:rgba(255,255,255,0.2);
-            border-radius:2px;
+            top:6px;
+            left:6px;
+            right:6px;
+            bottom:6px;
+            background:rgba(255,255,255,0.3);
+            border-radius:4px;
         }
         
         /* Тройное парковочное место */
         .triple-spot{
             display:flex;
-            gap:2px;
-            padding:4px;
-            background:linear-gradient(180deg, #334155 0%, #1e293b 100%);
-            border-radius:6px;
-            border:1px solid #475569;
+            gap:4px;
+            padding:6px;
+            background:linear-gradient(180deg, #4c1d95 0%, #2e1065 100%);
+            border-radius:10px;
+            border:2px solid #7c3aed;
+            box-shadow:0 4px 15px rgba(124,58,237,0.2);
         }
         .triple-spot .spot{
-            width:38px;
-            height:54px;
-            border:1px solid #64748b;
-            padding:3px 2px;
-            font-size:5px;
+            width:65px;
+            height:90px;
+            border:2px solid #8b5cf6;
+            padding:5px 3px;
+            font-size:8px;
             display:flex;
             flex-direction:column;
             cursor:pointer;
-            transition:all 0.25s ease;
+            transition:all 0.3s ease;
             text-align:center;
-            background:linear-gradient(180deg, #475569 0%, #334155 100%);
-            border-radius:4px;
+            background:linear-gradient(180deg, #5b21b6 0%, #4c1d95 100%);
+            border-radius:8px;
             position:relative;
         }
         .triple-spot .spot:hover{
-            transform:translateY(-2px) scale(1.05);
-            box-shadow:0 6px 20px rgba(0,0,0,0.6);
-            border-color:#94a3b8;
+            transform:translateY(-3px) scale(1.08);
+            box-shadow:0 8px 25px rgba(139,92,246,0.5);
+            border-color:#a78bfa;
             z-index:100;
-            background:linear-gradient(180deg, #54647a 0%, #405066 100%);
+            background:linear-gradient(180deg, #6d28d9 0%, #5b21b6 100%);
         }
         .triple-spot .spot.empty{
-            background:linear-gradient(180deg, #475569 0%, #3a4755 100%);
+            background:linear-gradient(180deg, #5b21b6 0%, #4c1d95 100%);
             border-style:dashed;
         }
         .triple-spot .spot.occupied{
-            background:linear-gradient(180deg, #047857 0%, #065f46 100%);
-            border-color:#10b981;
+            background:linear-gradient(180deg, #059669 0%, #047857 100%);
+            border-color:#34d399;
+            box-shadow:0 4px 12px rgba(52,211,153,0.3);
         }
         .triple-spot .spot .num{
             position:absolute;
-            top:2px;
+            top:3px;
             left:50%;
             transform:translateX(-50%);
-            font-size:4px;
-            color:#94a3b8;
+            font-size:7px;
+            color:#ddd6fe;
             font-weight:bold;
-            background:rgba(0,0,0,0.4);
-            padding:1px 3px;
-            border-radius:2px;
+            background:rgba(0,0,0,0.5);
+            padding:2px 5px;
+            border-radius:4px;
             white-space:nowrap;
         }
         .triple-spot .spot .car-info{
@@ -187,17 +191,17 @@
             justify-content:center;
             align-items:center;
             height:100%;
-            padding-top:10px;
-            gap:1px;
+            padding-top:18px;
+            gap:2px;
         }
         .triple-spot .spot .car-mark{
-            color:#ffd700;
-            font-size:6px;
+            color:#fde047;
+            font-size:10px;
             font-weight:700;
             word-break:break-word;
             max-width:100%;
-            line-height:1.1;
-            text-shadow:0 1px 2px rgba(0,0,0,0.8);
+            line-height:1.2;
+            text-shadow:0 2px 4px rgba(0,0,0,0.8);
             overflow:hidden;
             text-overflow:ellipsis;
             display:-webkit-box;
@@ -206,21 +210,21 @@
         }
         .triple-spot .spot .car-num{
             color:#fff;
-            font-size:5px;
+            font-size:8px;
             font-weight:600;
             word-break:break-word;
             max-width:100%;
-            line-height:1.1;
-            background:rgba(0,0,0,0.5);
-            padding:1px 2px;
-            border-radius:2px;
+            line-height:1.2;
+            background:rgba(0,0,0,0.6);
+            padding:2px 4px;
+            border-radius:4px;
             white-space:nowrap;
             overflow:hidden;
             text-overflow:ellipsis;
         }
         .triple-spot .spot .empty-icon{
-            font-size:14px;
-            color:#64748b;
+            font-size:24px;
+            color:#a78bfa;
             margin-top:auto;
         }
         
@@ -228,95 +232,96 @@
         .tooltip{
             display:none;
             position:fixed;
-            background:linear-gradient(180deg, #0f172a 0%, #020617 100%);
-            border:2px solid #0ea5e9;
-            border-radius:10px;
-            padding:16px 20px;
-            min-width:280px;
-            max-width:360px;
+            background:linear-gradient(180deg, #2e1065 0%, #1e0b36 100%);
+            border:2px solid #a78bfa;
+            border-radius:12px;
+            padding:20px 24px;
+            min-width:320px;
+            max-width:400px;
             z-index:1000;
             flex-direction:column;
             align-items:flex-start;
-            box-shadow:0 15px 50px rgba(0,0,0,0.9);
+            box-shadow:0 20px 60px rgba(124,58,237,0.5);
             pointer-events:none;
             text-align:left;
         }
         .tooltip .header{
             display:flex;
             align-items:center;
-            gap:10px;
+            gap:12px;
             width:100%;
-            margin-bottom:8px;
-            padding-bottom:8px;
-            border-bottom:1px solid rgba(255,255,255,0.1);
+            margin-bottom:10px;
+            padding-bottom:10px;
+            border-bottom:2px solid rgba(167,139,250,0.3);
         }
         .tooltip .color-badge{
-            width:24px;
-            height:24px;
+            width:32px;
+            height:32px;
             border-radius:50%;
-            border:2px solid #fff;
-            box-shadow:0 2px 6px rgba(0,0,0,0.4);
+            border:3px solid #fff;
+            box-shadow:0 3px 8px rgba(0,0,0,0.4);
             flex-shrink:0;
             position:relative;
         }
         .tooltip .color-badge.auto-detected::after{
             content:'✨';
             position:absolute;
-            bottom:-4px;
-            right:-4px;
-            font-size:10px;
-            background:#0f172a;
+            bottom:-5px;
+            right:-5px;
+            font-size:12px;
+            background:#2e1065;
             border-radius:50%;
-            width:14px;
-            height:14px;
+            width:18px;
+            height:18px;
             display:flex;
             align-items:center;
             justify-content:center;
-            border:1px solid #0ea5e9;
+            border:2px solid #a78bfa;
         }
         .tooltip .mark{
-            color:#60a5fa;
-            font-size:19px;
+            color:#c4b5fd;
+            font-size:22px;
             font-weight:700;
-            text-shadow:0 2px 6px rgba(0,0,0,0.6);
+            text-shadow:0 3px 8px rgba(0,0,0,0.6);
             word-break:break-word;
             line-height:1.2;
             flex:1;
             min-width:0;
         }
         .tooltip .route-badge{
-            background:linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
-            color:#fff;
-            padding:4px 10px;
-            border-radius:12px;
-            font-size:12px;
+            background:linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+            color:#1e0b36;
+            padding:6px 14px;
+            border-radius:16px;
+            font-size:14px;
             font-weight:700;
             white-space:nowrap;
-            margin-left:8px;
+            margin-left:10px;
         }
-        .tooltip .divider{width:100%;height:1px;background:linear-gradient(90deg, transparent, #0ea5e9, transparent);margin:8px 0;}
+        .tooltip .divider{width:100%;height:2px;background:linear-gradient(90deg, transparent, #a78bfa, transparent);margin:10px 0;}
         .tooltip .num{
             color:#fff;
-            font-size:15px;
+            font-size:18px;
             font-weight:600;
-            background:rgba(14,165,233,0.2);
-            padding:6px 14px;
-            border-radius:5px;
+            background:rgba(167,139,250,0.2);
+            padding:8px 18px;
+            border-radius:8px;
             letter-spacing:1px;
-            text-shadow:0 2px 4px rgba(0,0,0,0.5);
+            text-shadow:0 2px 6px rgba(0,0,0,0.5);
             white-space:nowrap;
             width:100%;
             text-align:center;
             box-sizing:border-box;
+            border:1px solid rgba(167,139,250,0.3);
         }
         .tooltip .extra-info{
-            margin-top:12px;
+            margin-top:14px;
             width:100%;
             display:flex;
             flex-direction:column;
-            gap:6px;
-            color:#cbd5e1;
-            font-size:13px;
+            gap:8px;
+            color:#e9d5ff;
+            font-size:14px;
         }
         .tooltip .extra-info .row{
             display:flex;
@@ -325,8 +330,8 @@
             width:100%;
         }
         .tooltip .extra-info .label{
-            color:#94a3b8;
-            font-size:12px;
+            color:#a78bfa;
+            font-size:13px;
         }
         .tooltip .extra-info .value{
             color:#fff;
@@ -336,93 +341,93 @@
             max-width:60%;
         }
         .tooltip .spot-id{
-            color:#64748b;
-            font-size:10px;
-            margin-top:10px;
+            color:#8b5cf6;
+            font-size:11px;
+            margin-top:12px;
             text-align:center;
             width:100%;
         }
         
         /* === ВЫДЕЛЕНИЕ ПРИ ПОИСКЕ === */
         .spot.spot-found{
-            border:2px solid #22c55e !important;
-            box-shadow:0 0 0 3px rgba(34,197,94,0.4) !important;
+            border:3px solid #22c55e !important;
+            box-shadow:0 0 0 4px rgba(34,197,94,0.5) !important;
             animation:pulse-found 2s infinite;
         }
         @keyframes pulse-found{
-            0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.4);}
-            50%{box-shadow:0 0 0 5px rgba(34,197,94,0.6);}
+            0%,100%{box-shadow:0 0 0 4px rgba(34,197,94,0.5);}
+            50%{box-shadow:0 0 0 6px rgba(34,197,94,0.7);}
         }
         
         /* === ВЕРХНИЙ БАР С КНОПКАМИ === */
         .top-bar{
             position:fixed;
-            top:10px;
-            left:10px;
+            top:15px;
+            left:15px;
             display:flex;
-            gap:8px;
+            gap:10px;
             z-index:999;
             align-items:center;
             flex-wrap:wrap;
         }
         .nav-btn, .edit-mode-btn, .search-input{
-            padding:10px 14px;
-            background:linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+            padding:12px 18px;
+            background:linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
             color:#fff;
             border:none;
-            border-radius:8px;
+            border-radius:10px;
             cursor:pointer;
-            font-size:12px;
+            font-size:14px;
             font-weight:600;
-            box-shadow:0 4px 15px rgba(14,165,233,0.4);
-            transition:all 0.2s;
+            box-shadow:0 5px 20px rgba(139,92,246,0.4);
+            transition:all 0.3s;
             display:flex;
             align-items:center;
-            gap:5px;
+            gap:6px;
             text-decoration:none;
             white-space:nowrap;
         }
         .nav-btn:hover, .edit-mode-btn:hover, .search-input:hover{
-            transform:translateY(-2px);
-            box-shadow:0 6px 20px rgba(14,165,233,0.5);
+            transform:translateY(-3px);
+            box-shadow:0 8px 25px rgba(139,92,246,0.6);
         }
         .nav-btn.main-garage{
-            background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
-            box-shadow:0 4px 15px rgba(99,102,241,0.4);
+            background:linear-gradient(180deg, #a78bfa 0%, #8b5cf6 100%);
+            box-shadow:0 5px 20px rgba(167,139,250,0.4);
         }
         .nav-btn.main-garage:hover{
-            box-shadow:0 6px 20px rgba(99,102,241,0.5);
+            box-shadow:0 8px 25px rgba(167,139,250,0.6);
         }
         .nav-btn.tk{
-            background:linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
-            box-shadow:0 4px 15px rgba(139,92,246,0.4);
+            background:linear-gradient(180deg, #c084fc 0%, #a855f7 100%);
+            box-shadow:0 5px 20px rgba(192,132,252,0.4);
         }
         .nav-btn.tk:hover{
-            box-shadow:0 6px 20px rgba(139,92,246,0.5);
+            box-shadow:0 8px 25px rgba(192,132,252,0.6);
         }
         .edit-mode-btn.active{
             background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
-            box-shadow:0 4px 15px rgba(34,197,94,0.4);
+            box-shadow:0 5px 20px rgba(34,197,94,0.4);
             animation:pulse-green 2s infinite;
         }
         @keyframes pulse-green{
-            0%,100%{box-shadow:0 4px 15px rgba(34,197,94,0.4);}
-            50%{box-shadow:0 4px 25px rgba(34,197,94,0.6);}
+            0%,100%{box-shadow:0 5px 20px rgba(34,197,94,0.4);}
+            50%{box-shadow:0 5px 30px rgba(34,197,94,0.6);}
         }
         .search-input{
-            background:#0f172a;
-            color:#eee;
-            border:1px solid #475569;
-            padding:10px 12px;
-            width:160px;
-            font-size:13px;
+            background:#2e1065;
+            color:#e9d5ff;
+            border:2px solid #7c3aed;
+            padding:12px 16px;
+            width:200px;
+            font-size:14px;
             font-weight:normal;
         }
-        .search-input::placeholder{color:#94a3b8;}
+        .search-input::placeholder{color:#a78bfa;}
         .search-input:focus{
             outline:none;
-            border-color:#0ea5e9;
-            box-shadow:0 0 10px rgba(14,165,233,0.3);
+            border-color:#a78bfa;
+            box-shadow:0 0 15px rgba(167,139,250,0.4);
             transform:translateY(0);
         }
         
@@ -431,155 +436,156 @@
             display:none;
             position:fixed;
             inset:0;
-            background:rgba(0,0,0,.9);
+            background:rgba(30,11,54,.95);
             align-items:center;
             justify-content:center;
             z-index:1000;
-            backdrop-filter:blur(8px);
+            backdrop-filter:blur(10px);
         }
         .modal-box{
-            background:linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-            padding:22px;
-            border-radius:14px;
-            width:380px;
+            background:linear-gradient(180deg, #2e1065 0%, #1e0b36 100%);
+            padding:28px;
+            border-radius:16px;
+            width:420px;
             max-width:90vw;
-            border:1px solid #475569;
-            box-shadow:0 15px 50px rgba(0,0,0,0.7);
+            border:2px solid #8b5cf6;
+            box-shadow:0 20px 60px rgba(124,58,237,0.5);
         }
         .modal-box h3{
-            margin-bottom:14px;
-            color:#60a5fa;
+            margin-bottom:18px;
+            color:#c4b5fd;
             text-align:center;
-            font-size:16px;
+            font-size:20px;
             font-weight:600;
         }
         .modal-box input{
             width:100%;
-            margin:8px 0;
-            padding:11px 12px;
-            background:#0f172a;
-            border:1px solid #475569;
-            color:#eee;
-            border-radius:6px;
-            font-size:13px;
+            margin:10px 0;
+            padding:14px 16px;
+            background:#1e0b36;
+            border:2px solid #7c3aed;
+            color:#e9d5ff;
+            border-radius:8px;
+            font-size:15px;
         }
         .modal-box input:focus{
             outline:none;
-            border-color:#0ea5e9;
-            box-shadow:0 0 10px rgba(14,165,233,0.2);
+            border-color:#a78bfa;
+            box-shadow:0 0 12px rgba(167,139,250,0.3);
         }
         .modal-box .btn-group{
             display:grid;
             grid-template-columns:1fr 1fr 1fr;
-            margin-top:14px;
-            gap:6px;
+            margin-top:18px;
+            gap:8px;
         }
         .modal-box button{
-            padding:10px 6px;
-            background:#334155;
-            color:#eee;
+            padding:12px 8px;
+            background:#4c1d95;
+            color:#e9d5ff;
             border:none;
-            border-radius:6px;
+            border-radius:8px;
             cursor:pointer;
-            font-size:11px;
-            transition:all 0.2s;
+            font-size:13px;
+            transition:all 0.3s;
             font-weight:600;
             white-space:nowrap;
             overflow:hidden;
             text-overflow:ellipsis;
         }
-        .modal-box button:hover{transform:translateY(-1px);}
+        .modal-box button:hover{transform:translateY(-2px);}
         .modal-box button.clear{background:linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);}
         .modal-box button.clear:hover{background:linear-gradient(180deg, #ef4444 0%, #dc2626 100%);}
         .modal-box button.save{background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);}
         .modal-box button.save:hover{background:linear-gradient(180deg, #4ade80 0%, #22c55e 100%);}
-        .modal-box button.close{background:#334155;}
-        .modal-box button.close:hover{background:#475569;}
+        .modal-box button.close{background:#4c1d95;}
+        .modal-box button.close:hover{background:#5b21b6;}
         
         /* === МОДАЛКА ПАРОЛЯ === */
         #passwordModal{
             display:none;
             position:fixed;
             inset:0;
-            background:rgba(0,0,0,.9);
+            background:rgba(30,11,54,.95);
             align-items:center;
             justify-content:center;
             z-index:1001;
-            backdrop-filter:blur(8px);
+            backdrop-filter:blur(10px);
         }
         .password-box{
-            background:linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-            padding:24px;
-            border-radius:14px;
-            width:320px;
+            background:linear-gradient(180deg, #2e1065 0%, #1e0b36 100%);
+            padding:28px;
+            border-radius:16px;
+            width:360px;
             max-width:90vw;
-            border:1px solid #475569;
-            box-shadow:0 15px 50px rgba(0,0,0,0.7);
+            border:2px solid #8b5cf6;
+            box-shadow:0 20px 60px rgba(124,58,237,0.5);
         }
         .password-box h3{
-            margin-bottom:16px;
-            color:#0ea5e9;
+            margin-bottom:20px;
+            color:#c4b5fd;
             text-align:center;
-            font-size:17px;
+            font-size:20px;
             font-weight:600;
         }
         .password-box input{
             width:100%;
-            margin:10px 0;
-            padding:12px 14px;
-            background:#0f172a;
-            border:1px solid #475569;
-            color:#eee;
-            border-radius:6px;
-            font-size:14px;
+            margin:12px 0;
+            padding:14px 16px;
+            background:#1e0b36;
+            border:2px solid #7c3aed;
+            color:#e9d5ff;
+            border-radius:8px;
+            font-size:16px;
         }
         .password-box input:focus{
             outline:none;
-            border-color:#0ea5e9;
-            box-shadow:0 0 10px rgba(14,165,233,0.3);
+            border-color:#a78bfa;
+            box-shadow:0 0 12px rgba(167,139,250,0.4);
         }
         .password-box .error{
             color:#f87171;
-            font-size:12px;
-            margin:8px 0;
+            font-size:14px;
+            margin:10px 0;
             text-align:center;
             display:none;
         }
         .password-box .btn-group{
             display:flex;
-            gap:8px;
-            margin-top:16px;
+            gap:10px;
+            margin-top:20px;
         }
         .password-box button{
             flex:1;
-            padding:11px;
-            background:#334155;
-            color:#eee;
+            padding:14px;
+            background:#4c1d95;
+            color:#e9d5ff;
             border:none;
-            border-radius:6px;
+            border-radius:8px;
             cursor:pointer;
-            font-size:13px;
-            transition:all 0.2s;
+            font-size:15px;
+            transition:all 0.3s;
             font-weight:600;
         }
-        .password-box button:hover{transform:translateY(-1px);}
-        .password-box button.confirm{background:linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);}
-        .password-box button.confirm:hover{background:linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%);}
-        .password-box button.cancel{background:#334155;}
-        .password-box button.cancel:hover{background:#475569;}
+        .password-box button:hover{transform:translateY(-2px);}
+        .password-box button.confirm{background:linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);}
+        .password-box button.confirm:hover{background:linear-gradient(180deg, #a78bfa 0%, #8b5cf6 100%);}
+        .password-box button.cancel{background:#4c1d95;}
+        .password-box button.cancel:hover{background:#5b21b6;}
         
         .status{
             position:fixed;
-            top:10px;
-            right:10px;
-            padding:8px 16px;
-            background:#1e293b;
-            border:1px solid #475569;
-            border-radius:6px;
-            font-size:12px;
+            top:15px;
+            right:15px;
+            padding:10px 20px;
+            background:#2e1065;
+            border:2px solid #7c3aed;
+            border-radius:8px;
+            font-size:14px;
             z-index:999;
+            font-weight:600;
         }
-        .status.connected{border-color:#22c55e;color:#22c55e;}
+        .status.connected{border-color:#22c55e;color:#4ade80;}
         .status.disconnected{border-color:#f87171;color:#f87171;}
     </style>
 </head>
@@ -589,7 +595,7 @@
     <div class="top-bar">
         <a href="index.html" class="nav-btn main-garage" title="Вернуться в главное меню">🏠 Меню</a>
         <a href="tk.html" class="nav-btn tk" title="Перейти в ТК">🛒 ТК</a>
-        <div style="width:1px;height:24px;background:#475569;margin:0 4px;"></div>
+        <div style="width:2px;height:28px;background:#7c3aed;margin:0 6px;border-radius:1px;"></div>
         <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Редактирование</button>
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
     </div>
@@ -597,7 +603,7 @@
     <main>
         <div class="garage">
             <div style="display:flex;align-items:stretch; height: 100%;">
-                <!-- Левая панель с 4 въездами (без подписей) -->
+                <!-- Левая панель с 4 въездами -->
                 <div class="left-panel">
                     <div class="gate"><span class="arrow">➤</span></div>
                     <div class="gate"><span class="arrow">➤</span></div>
@@ -910,7 +916,7 @@
         }
         function closeM(){ document.getElementById('modal').style.display = 'none'; active = null; }
 
-        // Сохранение в Firebase
+        // Сохранение в Firebase с проверкой
         function save(){
             if(!active || !isEditMode) return;
             const car = document.getElementById('car').value.trim();
@@ -920,12 +926,29 @@
             const owner = document.getElementById('owner').value.trim();
             const cost = document.getElementById('cost').value.trim();
             
+            const spotRef = db.ref(`garages/${GARAGE_ID}/spots/` + active);
+            
             if(car){
-                db.ref(`garages/${GARAGE_ID}/spots/` + active).set({car, num, route, color, owner, cost});
+                spotRef.set({car, num, route, color, owner, cost})
+                    .then(() => {
+                        console.log('Данные сохранены:', {car, num, route, color, owner, cost});
+                        closeM();
+                    })
+                    .catch((error) => {
+                        console.error('Ошибка сохранения:', error);
+                        alert('Ошибка сохранения данных!');
+                    });
             } else {
-                db.ref(`garages/${GARAGE_ID}/spots/` + active).remove();
+                spotRef.remove()
+                    .then(() => {
+                        console.log('Место очищено');
+                        closeM();
+                    })
+                    .catch((error) => {
+                        console.error('Ошибка удаления:', error);
+                        alert('Ошибка удаления данных!');
+                    });
             }
-            closeM();
         }
 
         function clearCar(){
