@@ -48,24 +48,19 @@
             width:50px;
             height:70px;
             background:linear-gradient(180deg, #475569 0%, #334155 100%);
-            border:2px solid #94a3b8;
+            border:2px solid #64748b;
             border-radius:6px;
             display:flex;
             align-items:center;
             justify-content:center;
             position:relative;
-            cursor:pointer;
-            transition:all 0.2s;
-        }
-        .gate:hover{
-            border-color:#0ea5e9;
-            box-shadow:0 0 15px rgba(14,165,233,0.4);
+            /* Убраны ховер-эффекты */
+            cursor:default;
         }
         .gate .arrow{
-            color:#0ea5e9;
+            color:#64748b;
             font-size:20px;
             font-weight:bold;
-            text-shadow:0 0 10px rgba(14,165,233,0.6);
         }
         .gate .label{
             position:absolute;
@@ -81,12 +76,14 @@
         .parking-area{
             display:flex;
             flex-direction:column;
+            justify-content: space-between; /* Распределяет контент по краям */
             gap:15px;
             flex:1;
             min-width:0;
+            height: 100%;
         }
         
-        /* === ВЕРХНИЙ РЯД: ОКОННЫЕ БЛОКИ + МЕСТА === */
+        /* === ВЕРХНИЙ И НИЖНИЙ РЯДЫ === */
         .row-top, .row-bottom{
             display:flex;
             align-items:center;
@@ -350,7 +347,7 @@
             50%{box-shadow:0 0 0 5px rgba(34,197,94,0.6);}
         }
         
-        /* === ВЕРХНИЙ/НИЖНИЙ БАР С КНОПКАМИ === */
+        /* === ВЕРХНИЙ БАР С КНОПКАМИ === */
         .top-bar{
             position:fixed;
             top:10px;
@@ -577,16 +574,6 @@
         }
         .status.connected{border-color:#22c55e;color:#22c55e;}
         .status.disconnected{border-color:#f87171;color:#f87171;}
-        
-        /* Заголовок зоны */
-        .zone-title{
-            color:#94a3b8;
-            font-size:12px;
-            text-align:center;
-            margin:5px 0;
-            font-weight:600;
-            letter-spacing:1px;
-        }
     </style>
 </head>
 <body>
@@ -602,13 +589,13 @@
     
     <main>
         <div class="garage">
-            <div style="display:flex;align-items:stretch;">
+            <div style="display:flex;align-items:stretch; height: 100%;">
                 <!-- Левая панель с въездами -->
                 <div class="left-panel">
-                    <div class="gate" title="Въезд №1"><span class="arrow">➤</span><span class="label">Въезд 1</span></div>
-                    <div class="gate" title="Въезд №2"><span class="arrow">➤</span><span class="label">Въезд 2</span></div>
-                    <div class="gate" title="Въезд №3"><span class="arrow">➤</span><span class="label">Въезд 3</span></div>
-                    <div class="gate" title="Въезд №4"><span class="arrow">➤</span><span class="label">Въезд 4</span></div>
+                    <div class="gate"><span class="arrow">➤</span><span class="label">Въезд 1</span></div>
+                    <div class="gate"><span class="arrow">➤</span><span class="label">Въезд 2</span></div>
+                    <div class="gate"><span class="arrow">➤</span><span class="label">Въезд 3</span></div>
+                    <!-- Въезд 4 убран по запросу -->
                 </div>
                 
                 <!-- Зона парковки -->
@@ -885,11 +872,6 @@
             const row = document.createElement('div');
             row.className = position === 'top' ? 'row-top' : 'row-bottom';
             
-            const title = document.createElement('div');
-            title.className = 'zone-title';
-            title.innerText = position === 'top' ? '▲ ВЕРХНЯЯ ЗОНА' : '▼ НИЖНЯЯ ЗОНА';
-            row.appendChild(title);
-            
             // 5 оконных блоков с интервалом
             for(let i=0; i<5; i++){
                 row.appendChild(createWindowBlock(i * 10, position));
@@ -972,7 +954,9 @@
             id = 0;
             const g = document.getElementById('g');
             g.innerHTML = '';
+            // Верхний ряд (прижат к верху благодаря flex)
             g.appendChild(createWindowRow('top'));
+            // Нижний ряд (прижат к низу благодаря flex + justify-content: space-between)
             g.appendChild(createWindowRow('bottom'));
         }
 
