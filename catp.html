@@ -76,12 +76,21 @@
         }
         
         /* === ВЕРХНИЙ И НИЖНИЙ РЯДЫ === */
-        .row-top, .row-bottom{
+        .row-top{
             display:flex;
-            align-items:center;
+            align-items:flex-start;
             justify-content:center;
             gap:15px;
             width:100%;
+            margin-top: 0;
+        }
+        .row-bottom{
+            display:flex;
+            align-items:flex-end;
+            justify-content:center;
+            gap:15px;
+            width:100%;
+            margin-bottom: 0;
         }
         
         /* Оконный блок — 3 части */
@@ -844,17 +853,24 @@
                 part.className = 'window-part';
                 window.appendChild(part);
             }
-            block.appendChild(window);
             
-            // Тройные места (под или над окном)
+            // Тройные места
             const triple = document.createElement('div');
             triple.className = 'triple-spot';
             for(let i=0; i<3; i++){
                 const spotId = position === 'top' ? baseId + i : baseId + 100 + i;
                 triple.appendChild(mkSpot(spotId));
             }
-            if(position === 'top') block.appendChild(triple);
-            else { block.insertBefore(triple, window); }
+            
+            // Для верхнего ряда: окна сверху, места снизу
+            // Для нижнего ряда: места сверху, окна снизу
+            if(position === 'top'){
+                block.appendChild(window);
+                block.appendChild(triple);
+            } else {
+                block.appendChild(triple);
+                block.appendChild(window);
+            }
             
             return block;
         }
@@ -946,9 +962,9 @@
             id = 0;
             const g = document.getElementById('g');
             g.innerHTML = '';
-            // Верхний ряд (прижат к верху благодаря flex)
+            // Верхний ряд (напротив 1-го въезда)
             g.appendChild(createWindowRow('top'));
-            // Нижний ряд (прижат к низу благодаря flex + justify-content: space-between)
+            // Нижний ряд (напротив 4-го въезда, в самом низу)
             g.appendChild(createWindowRow('bottom'));
         }
 
