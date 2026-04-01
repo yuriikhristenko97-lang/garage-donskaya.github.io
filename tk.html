@@ -49,7 +49,44 @@
             margin-right:15px;
             flex-shrink:0;
             box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+            position:relative;
         }
+        
+        /* 🚛 ГРУЗОВИК НА ВЪЕЗДЕ (новый элемент) */
+        .truck-entrance{
+            position:absolute;
+            bottom:-55px;
+            left:50%;
+            transform:translateX(-50%);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:4px;
+            z-index:10;
+        }
+        .truck-entrance .truck-icon{
+            font-size:28px;
+            animation:truckBounce 2s infinite;
+            filter:drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+        }
+        .truck-entrance .label{
+            color:#4ade80;
+            font-size:9px;
+            font-weight:700;
+            letter-spacing:1px;
+            text-transform:uppercase;
+            text-shadow:0 0 8px rgba(74,222,128,0.6);
+            white-space:nowrap;
+            background:rgba(26,15,42,0.8);
+            padding:2px 6px;
+            border-radius:4px;
+            border:1px solid #4ade80;
+        }
+        @keyframes truckBounce{
+            0%,100%{transform:translateY(0);}
+            50%{transform:translateY(-4px);}
+        }
+        
         .gate{
             width:48px;
             height:72px;
@@ -86,16 +123,11 @@
             min-width:0;
         }
         
-        /* === ВЕРХНИЙ И НИЖНИЙ РЯДЫ === */
         .row-top{display:flex;align-items:flex-start;justify-content:center;gap:14px;width:100%;}
         .row-bottom{display:flex;align-items:flex-end;justify-content:center;gap:14px;width:100%;}
         
-        /* Оконный блок */
         .window-block{
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            gap:5px;
+            display:flex;flex-direction:column;align-items:center;gap:5px;
             animation:fadeIn 0.4s ease backwards;
         }
         .window-block:nth-child(1){animation-delay:0.05s;}
@@ -107,38 +139,23 @@
         
         .window{display:flex;gap:3px;}
         .row-top .window-part,
-.row-bottom .window-part {
-    width:42px;
-    height:32px;
-    background:linear-gradient(180deg, #9370db 0%, #7b5a9e 50%, #6b4c7a 100%) !important;
-    border:2px solid #b19cd9 !important;
-    border-radius:5px;
-    position:relative;
-    box-shadow:0 2px 6px rgba(147,112,219,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
-}
-.row-top .window-part::before,
-.row-bottom .window-part::before {
-    content:'';
-    position:absolute;
-    top:4px;
-    left:4px;
-    right:4px;
-    bottom:4px;
-    background:rgba(255,255,255,0.25);
-    border-radius:4px;
-}
-.row-top .window-part::after,
-.row-bottom .window-part::after {
-    content:'';
-    position:absolute;
-    top:50%;
-    left:8px;
-    right:8px;
-    height:1px;
-    background:rgba(255,255,255,0.3);
-}
+        .row-bottom .window-part {
+            width:42px;height:32px;
+            background:linear-gradient(180deg, #9370db 0%, #7b5a9e 50%, #6b4c7a 100%) !important;
+            border:2px solid #b19cd9 !important;border-radius:5px;position:relative;
+            box-shadow:0 2px 6px rgba(147,112,219,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .row-top .window-part::before,
+        .row-bottom .window-part::before {
+            content:'';position:absolute;top:4px;left:4px;right:4px;bottom:4px;
+            background:rgba(255,255,255,0.25);border-radius:4px;
+        }
+        .row-top .window-part::after,
+        .row-bottom .window-part::after {
+            content:'';position:absolute;top:50%;left:8px;right:8px;height:1px;
+            background:rgba(255,255,255,0.3);
+        }
         
-        /* Парковочное место для грузовиков */
         .triple-spot{
             display:flex;gap:3px;padding:4px;
             background:linear-gradient(180deg, #4a2f5e 0%, #2a1a3a 100%);
@@ -335,110 +352,111 @@
             transform:translateY(0);
         }
         
-        /* === МОДАЛКА === */
-        #modal{
-            display:none;position:fixed;inset:0;
-            background:rgba(26,15,42,.95);
-            align-items:center;justify-content:center;
-            z-index:1000;backdrop-filter:blur(10px);
+        /* ========== ЕДИНЫЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН ========== */
+        .modal-base {
+            display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.9);
+            align-items:center;
+            justify-content:center;
+            z-index:1000;
+            backdrop-filter:blur(8px);
         }
-        .modal-box{
-            background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
-            padding:24px;border-radius:14px;
-            width:360px;max-width:90vw;
-            border:2px solid #9370db;
-            box-shadow:0 15px 50px rgba(147,112,219,0.4);
-            animation:modalIn 0.3s ease;
+        .modal-content {
+            background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
+            padding:22px;
+            border-radius:14px;
+            width:360px;
+            max-width:90vw;
+            border:1px solid #555;
+            box-shadow:0 15px 50px rgba(0,0,0,0.7);
         }
-        @keyframes modalIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
-        .modal-box h3{
-            margin-bottom:14px;color:#d8c4e8;
-            text-align:center;font-size:18px;font-weight:600;
+        .modal-content h3 {
+            margin-bottom:14px;
+            color:#ffd700;
+            text-align:center;
+            font-size:16px;
+            font-weight:600;
         }
-        .modal-box input{
-            width:100%;margin:8px 0;padding:11px 13px;
-            background:#1a0f2a;border:2px solid #6b4c7a;
-            color:#e9d5ff;border-radius:6px;font-size:14px;
+        .modal-content input {
+            width:100%;
+            margin:8px 0;
+            padding:11px 12px;
+            background:#1a1a1a;
+            border:1px solid #555;
+            color:#eee;
+            border-radius:6px;
+            font-size:13px;
         }
-        .modal-box input:focus{
-            outline:none;border-color:#b19cd9;
-            box-shadow:0 0 10px rgba(177,156,217,0.35);
+        .modal-content input:focus {
+            outline:none;
+            border-color:#6366f1;
+            box-shadow:0 0 10px rgba(99,102,241,0.3);
         }
-        .modal-box .btn-group{
-            display:grid;grid-template-columns:1fr 1fr 1fr;
-            margin-top:14px;gap:6px;
+        .modal-content .btn-group {
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr;
+            margin-top:14px;
+            gap:6px;
         }
-        .modal-box button{
-            padding:10px 6px;background:#4a2f5e;
-            color:#e9d5ff;border:none;border-radius:6px;
-            cursor:pointer;font-size:12px;
-            transition:all 0.25s;font-weight:600;
-            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+        .modal-content button {
+            padding:10px 6px;
+            background:#555;
+            color:#eee;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:11px;
+            transition:all 0.2s;
+            font-weight:600;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
         }
-        .modal-box button:hover{transform:translateY(-1px);}
-        .modal-box button.clear{background:linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);}
-        .modal-box button.clear:hover{background:linear-gradient(180deg, #ef4444 0%, #dc2626 100%);}
-        .modal-box button.save{background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);}
-        .modal-box button.save:hover{background:linear-gradient(180deg, #4ade80 0%, #22c55e 100%);}
-        .modal-box button.close{background:#4a2f5e;}
-        .modal-box button.close:hover{background:#5a3d6e;}
-        
-        /* === ПАРОЛЬ === */
-        #passwordModal{
-            display:none;position:fixed;inset:0;
-            background:rgba(26,15,42,.95);
-            align-items:center;justify-content:center;
-            z-index:1001;backdrop-filter:blur(10px);
+        .modal-content button:hover { transform:translateY(-1px); }
+        .modal-content button.clear {
+            background:linear-gradient(180deg, #c0392b 0%, #922b21 100%);
         }
-        .password-box{
-            background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
-            padding:24px;border-radius:14px;
-            width:340px;max-width:90vw;
-            border:2px solid #9370db;
-            box-shadow:0 15px 50px rgba(147,112,219,0.4);
-            animation:modalIn 0.3s ease;
+        .modal-content button.clear:hover {
+            background:linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
         }
-        .password-box h3{
-            margin-bottom:16px;color:#d8c4e8;
-            text-align:center;font-size:18px;font-weight:600;
+        .modal-content button.save {
+            background:linear-gradient(180deg, #27ae60 0%, #1e8449 100%);
         }
-        .password-box input{
-            width:100%;margin:10px 0;padding:12px 14px;
-            background:#1a0f2a;border:2px solid #6b4c7a;
-            color:#e9d5ff;border-radius:6px;font-size:15px;
+        .modal-content button.save:hover {
+            background:linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
         }
-        .password-box input:focus{
-            outline:none;border-color:#b19cd9;
-            box-shadow:0 0 10px rgba(177,156,217,0.4);
+        .modal-content button.close,
+        .modal-content button.cancel {
+            background:#555;
         }
-        .password-box .error{
-            color:#f87171;font-size:13px;
-            margin:8px 0;text-align:center;display:none;
+        .modal-content button.close:hover,
+        .modal-content button.cancel:hover {
+            background:#666;
         }
-        .password-box .btn-group{
-            display:flex;gap:8px;margin-top:16px;
+        .modal-content button.confirm {
+            background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
         }
-        .password-box button{
-            flex:1;padding:12px;background:#4a2f5e;
-            color:#e9d5ff;border:none;border-radius:6px;
-            cursor:pointer;font-size:14px;
-            transition:all 0.25s;font-weight:600;
+        .modal-content button.confirm:hover {
+            background:linear-gradient(180deg, #818cf8 0%, #6366f1 100%);
         }
-        .password-box button:hover{transform:translateY(-1px);}
-        .password-box button.confirm{background:linear-gradient(180deg, #7b5a9e 0%, #6b4c7a 100%);}
-        .password-box button.confirm:hover{background:linear-gradient(180deg, #9370db 0%, #7b5a9e 100%);}
-        .password-box button.cancel{background:#4a2f5e;}
-        .password-box button.cancel:hover{background:#5a3d6e;}
+        .modal-content .error {
+            color:#f87171;
+            font-size:12px;
+            margin:8px 0;
+            text-align:center;
+            display:none;
+        }
+        /* ===================================================== */
         
         .status{
             position:fixed;top:10px;right:10px;
-            padding:8px 16px;background:#2a1a3a;
-            border:2px solid #9370db;border-radius:6px;
-            font-size:13px;z-index:999;font-weight:600;
-            animation:statusPulse 2s infinite;
+            padding:8px 16px;background:#2d2d2d;
+            border:1px solid #444;border-radius:6px;
+            font-size:12px;z-index:999;
         }
-        @keyframes statusPulse{0%,100%{opacity:1;}50%{opacity:0.85;}}
-        .status.connected{border-color:#22c55e;color:#4ade80;}
+        .status.connected{border-color:#4ade80;color:#4ade80;}
         .status.disconnected{border-color:#f87171;color:#f87171;}
         
         .garage::before{
@@ -454,6 +472,7 @@
     <div class="status" id="status">🔄 Подключение...</div>
     
     <div class="top-bar">
+        <!-- 📋 ЕДИНЫЙ БЛОК НАВИГАЦИИ -->
         <a href="index.html" class="nav-btn main-garage" title="Вернуться в главное меню">🏠 Меню</a>
         <a href="catp.html" class="nav-btn chatp" title="Перейти в ЧАТП">🚌 ЧАТП</a>
         <div style="width:2px;height:24px;background:#9370db;margin:0 4px;border-radius:1px;"></div>
@@ -464,11 +483,18 @@
     <main>
         <div class="garage">
             <div style="display:flex;align-items:stretch;">
+                <!-- Левая панель с въездами + грузовик -->
                 <div class="left-panel">
                     <div class="gate"><span class="arrow">🚛</span></div>
                     <div class="gate"><span class="arrow">🚛</span></div>
                     <div class="gate"><span class="arrow">🚛</span></div>
                     <div class="gate"><span class="arrow">🚛</span></div>
+                    
+                    <!-- 🚛 Грузовик на въезде -->
+                    <div class="truck-entrance">
+                        <span class="truck-icon">🚚</span>
+                        <span class="label">Въезд</span>
+                    </div>
                 </div>
                 <div class="parking-area" id="g"></div>
             </div>
@@ -477,8 +503,9 @@
     
     <div class="tooltip" id="tooltip"></div>
     
-    <div id="passwordModal">
-        <div class="password-box">
+    <!-- 🔐 Модальное окно пароля (единый стиль) -->
+    <div id="passwordModal" class="modal-base">
+        <div class="modal-content">
             <h3>🔐 Введите пароль</h3>
             <input type="password" id="passwordInput" placeholder="Пароль" onkeypress="if(event.key==='Enter')confirmPassword()">
             <div class="error" id="passwordError">❌ Неверный пароль!</div>
@@ -489,10 +516,10 @@
         </div>
     </div>
     
-    <div id="modal">
-        <div class="modal-box">
+    <!-- ✏️ Модальное окно редактирования (единый стиль, без поля "Маршрут") -->
+    <div id="modal" class="modal-base">
+        <div class="modal-content">
             <h3 id="title">🚛 Место</h3>
-            <!-- 🔥 НЕТ поля "Маршрут" для ТК -->
             <input id="car" placeholder="Марка грузовика">
             <input id="num" placeholder="Гос. номер">
             <input id="color" placeholder="Цвет">
@@ -506,29 +533,28 @@
         </div>
     </div>
 
-    <!-- Firebase -->
+    <!-- 🔥 FIREBASE (ЕДИНАЯ БАЗА ДЛЯ ВСЕХ ГАРАЖЕЙ) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // 🔥 Firebase конфигурация (ТА ЖЕ база, другой гараж)
+        // 🔥 ЕДИНЫЙ FIREBASE CONFIG (как в первом файле)
         const firebaseConfig = {
-            apiKey: "AIzaSyA3Q6cJweM_8mAW6uvrXUfvPIvgmjvW42s",
-            authDomain: "chatp-parking.firebaseapp.com",
-            databaseURL: "https://chatp-parking-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "chatp-parking",
-            storageBucket: "chatp-parking.firebasestorage.app",
-            messagingSenderId: "849469864277",
-            appId: "1:849469864277:web:1e29a79dbfd2f7a6c597dc"
+            apiKey: "AIzaSyC_9eS6hShP3Nujbf_AszF68OauqcAsH6I",
+            authDomain: "garage-parking-ff729.firebaseapp.com",
+            databaseURL: "https://garage-parking-ff729-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "garage-parking-ff729",
+            storageBucket: "garage-parking-ff729.firebasestorage.app",
+            messagingSenderId: "338709707407",
+            appId: "1:338709707407:web:212c6dbb979ecc931e0efa"
         };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const statusEl = document.getElementById('status');
         
-        // 🔐 Настройки для ТК
         const EDIT_PASSWORD = 'ip-donskaya_2026';
-        const GARAGE_ID = 'tk'; // 🔥 Другой гараж!
+        const GARAGE_ID = 'tk'; // 🔑 Уникальный ключ для ТК
         let isEditMode = false;
         let localDB = {};
         let active = null;
@@ -536,7 +562,6 @@
         let tooltipTimer;
         let currentSearchTerm = '';
 
-        // Статус подключения
         db.ref('.info/connected').on('value', (snapshot) => {
             if(snapshot.val() === true){
                 statusEl.className = 'status connected';
@@ -547,7 +572,7 @@
             }
         });
 
-        // Подписка на данные ТК
+        // 🔥 Читаем данные из "папки" ТК в общей базе
         db.ref(`garages/${GARAGE_ID}/spots`).on('value', (snapshot) => {
             localDB = snapshot.val() || {};
             build();
@@ -592,7 +617,6 @@
             }
         }
 
-        // 🎨 Цвета
         const colorMap = {
             'белый': '#ffffff', 'бел': '#ffffff', 'white': '#ffffff',
             'чёрный': '#1a1a1a', 'черный': '#1a1a1a', 'black': '#1a1a1a',
@@ -651,7 +675,7 @@
         }
 
         function showTooltip(el, data, spotId){
-            const {car, num, color, owner, cost} = data; // 🔥 Нет route
+            const {car, num, color, owner, cost} = data; // 🔥 Нет route для ТК
             const {hex: colorHex, auto} = getColorHex(color);
             
             let extraInfoHtml = '';
@@ -734,7 +758,6 @@
             const d = localDB[spotId] || {};
             document.getElementById('car').value = d.car || '';
             document.getElementById('num').value = d.num || '';
-            // 🔥 НЕТ route
             document.getElementById('color').value = d.color || '';
             document.getElementById('owner').value = d.owner || '';
             document.getElementById('cost').value = d.cost || '';
@@ -743,11 +766,11 @@
         }
         function closeM(){ document.getElementById('modal').style.display = 'none'; active = null; }
 
+        // 🔥 Сохраняем в "папку" ТК в общей базе (без поля route)
         function save(){
             if(!active || !isEditMode) return;
             const car = document.getElementById('car').value.trim();
             const num = document.getElementById('num').value.trim();
-            // 🔥 НЕТ route
             const color = document.getElementById('color').value.trim();
             const owner = document.getElementById('owner').value.trim();
             const cost = document.getElementById('cost').value.trim();
@@ -755,8 +778,8 @@
             const spotRef = db.ref(`garages/${GARAGE_ID}/spots/` + active);
             
             if(car){
-                spotRef.set({car, num, color, owner, cost}) // 🔥 Нет route
-                    .then(() => { console.log('✅ ТК сохранено:', {spotId: active}); closeM(); })
+                spotRef.set({car, num, color, owner, cost})
+                    .then(() => { console.log('✅ ТК сохранено:', active); closeM(); })
                     .catch((error) => { console.error('❌ Ошибка:', error); alert('Ошибка сохранения!'); });
             } else {
                 spotRef.remove().then(() => { console.log('🗑️ ТК очищено:', active); closeM(); });
@@ -772,6 +795,7 @@
 
         document.getElementById('modal').onclick = function(e){ if(e.target === this) closeM(); };
 
+        // 🔍 Поиск (без поля route)
         function handleSearch(){
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             currentSearchTerm = searchTerm;
@@ -782,7 +806,7 @@
                 const sid = spot.dataset.spotId;
                 const data = localDB[sid];
                 if(!data) return;
-                const fields = [data.car, data.num, data.color, data.owner, data.cost].filter(f => f); // 🔥 Нет route
+                const fields = [data.car, data.num, data.color, data.owner, data.cost].filter(f => f);
                 if(fields.some(f => f.toLowerCase().includes(searchTerm))){
                     foundSpots.push(spot);
                     spot.classList.add('spot-found');
