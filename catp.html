@@ -7,8 +7,11 @@
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
         body{
-            /* 🎨 Тёмный сиреневый фон — менее яркий */
-            background:linear-gradient(135deg, #6b4c7a 0%, #5a3d6e 50%, #4a2f5e 100%);
+            /* 🎨 Тёмный сиреневый фон с лёгкой текстурой */
+            background:
+                radial-gradient(ellipse at top, rgba(147,112,219,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse at bottom, rgba(107,76,122,0.2) 0%, transparent 70%),
+                linear-gradient(135deg, #4a2f5e 0%, #3a254e 50%, #2a1a3a 100%);
             color:#eee;
             font-family:'Segoe UI',Arial,sans-serif;
             min-height:100vh;
@@ -25,15 +28,12 @@
             justify-content:center;
             background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
             border:2px solid #9370db;
-            padding:20px;
+            padding:16px;
             border-radius:14px;
-            box-shadow:0 12px 50px rgba(147,112,219,0.3);
+            box-shadow:0 10px 40px rgba(147,112,219,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
             max-width:98vw;
             max-height:98vh;
             overflow:auto;
-            /* 📐 Увеличенный масштаб контейнера */
-            transform:scale(1.15);
-            transform-origin:center center;
         }
         
         /* === ЛЕВАЯ ПАНЕЛЬ С ВЪЕЗДАМИ === */
@@ -42,31 +42,42 @@
             flex-direction:column;
             justify-content: space-between;
             height: 100%;
-            gap:12px;
-            padding:12px;
+            gap:10px;
+            padding:10px;
             background:linear-gradient(180deg, #4a2f5e 0%, #2a1a3a 100%);
             border-radius:10px;
             border:2px solid #9370db;
-            margin-right:18px;
+            margin-right:15px;
             flex-shrink:0;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
         }
         .gate{
-            width:60px;
-            height:90px;
-            background:linear-gradient(180deg, #6b4c7a 0%, #5a3d6e 100%);
+            width:48px;
+            height:72px;
+            background:linear-gradient(180deg, #6b4c7a 0%, #4a2f5e 100%);
             border:2px solid #9370db;
-            border-radius:10px;
+            border-radius:8px;
             display:flex;
             align-items:center;
             justify-content:center;
             position:relative;
             cursor:default;
-            box-shadow:0 4px 12px rgba(147,112,219,0.3);
+            box-shadow:0 3px 10px rgba(147,112,219,0.3);
+            transition:transform 0.2s, box-shadow 0.2s;
+        }
+        .gate:hover{
+            transform:translateX(2px);
+            box-shadow:0 5px 15px rgba(147,112,219,0.5);
         }
         .gate .arrow{
             color:#d8c4e8;
-            font-size:28px;
+            font-size:22px;
             font-weight:bold;
+            animation:arrowPulse 2s infinite;
+        }
+        @keyframes arrowPulse{
+            0%,100%{opacity:1;}
+            50%{opacity:0.7;}
         }
         
         /* === ОСНОВНАЯ ЗОНА ПАРКОВКИ === */
@@ -74,7 +85,7 @@
             display:flex;
             flex-direction:column;
             justify-content: space-between;
-            gap: 25px;
+            gap: 20px;
             flex:1;
             min-width:0;
         }
@@ -84,14 +95,14 @@
             display:flex;
             align-items:flex-start;
             justify-content:center;
-            gap:18px;
+            gap:14px;
             width:100%;
         }
         .row-bottom{
             display:flex;
             align-items:flex-end;
             justify-content:center;
-            gap:18px;
+            gap:14px;
             width:100%;
         }
         
@@ -100,61 +111,91 @@
             display:flex;
             flex-direction:column;
             align-items:center;
-            gap:6px;
+            gap:5px;
+            animation:fadeIn 0.4s ease backwards;
         }
+        .window-block:nth-child(1){animation-delay:0.05s;}
+        .window-block:nth-child(2){animation-delay:0.1s;}
+        .window-block:nth-child(3){animation-delay:0.15s;}
+        .window-block:nth-child(4){animation-delay:0.2s;}
+        .window-block:nth-child(5){animation-delay:0.25s;}
+        
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(10px);}
+            to{opacity:1;transform:translateY(0);}
+        }
+        
         .window{
             display:flex;
-            gap:4px;
+            gap:3px;
         }
         /* 🪟 Одинаковый стиль окон для верхнего и нижнего ряда */
         .window-part{
-            width:52px;
-            height:39px;
+            width:42px;
+            height:32px;
             background:linear-gradient(180deg, #9370db 0%, #7b5a9e 50%, #6b4c7a 100%);
             border:2px solid #b19cd9;
             border-radius:5px;
             position:relative;
-            box-shadow:0 3px 8px rgba(147,112,219,0.4);
+            box-shadow:0 2px 6px rgba(147,112,219,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
         }
         .window-part::before{
             content:'';
             position:absolute;
-            top:5px;
-            left:5px;
-            right:5px;
-            bottom:5px;
+            top:4px;
+            left:4px;
+            right:4px;
+            bottom:4px;
             background:rgba(255,255,255,0.25);
             border-radius:4px;
+        }
+        .window-part::after{
+            content:'';
+            position:absolute;
+            top:50%;
+            left:8px;
+            right:8px;
+            height:1px;
+            background:rgba(255,255,255,0.3);
         }
         
         /* Тройное парковочное место */
         .triple-spot{
             display:flex;
-            gap:4px;
-            padding:5px;
+            gap:3px;
+            padding:4px;
             background:linear-gradient(180deg, #4a2f5e 0%, #2a1a3a 100%);
-            border-radius:10px;
+            border-radius:8px;
             border:2px solid #9370db;
-            box-shadow:0 4px 12px rgba(147,112,219,0.25);
+            box-shadow:0 3px 10px rgba(147,112,219,0.25);
         }
         .triple-spot .spot{
-            width:58px;
-            height:84px;
+            width:48px;
+            height:70px;
             border:2px solid #9370db;
-            padding:4px 3px;
-            font-size:9px;
+            padding:3px 2px;
+            font-size:8px;
             display:flex;
             flex-direction:column;
             cursor:pointer;
             transition:all 0.25s ease;
             text-align:center;
             background:linear-gradient(180deg, #5a3d6e 0%, #4a2f5e 100%);
-            border-radius:7px;
+            border-radius:6px;
             position:relative;
+            overflow:hidden;
+        }
+        .triple-spot .spot::before{
+            content:'';
+            position:absolute;
+            top:0;left:0;right:0;bottom:0;
+            background:linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events:none;
+            border-radius:6px;
         }
         .triple-spot .spot:hover{
-            transform:translateY(-2px) scale(1.05);
-            box-shadow:0 7px 18px rgba(147,112,219,0.5);
+            transform:translateY(-2px) scale(1.04);
+            box-shadow:0 6px 16px rgba(147,112,219,0.5);
             border-color:#b19cd9;
             z-index:100;
             background:linear-gradient(180deg, #6b4c7a 0%, #5a3d6e 100%);
@@ -162,24 +203,30 @@
         .triple-spot .spot.empty{
             background:linear-gradient(180deg, #5a3d6e 0%, #4a2f5e 100%);
             border-style:dashed;
+            animation:pulseEmpty 3s infinite;
+        }
+        @keyframes pulseEmpty{
+            0%,100%{box-shadow:0 3px 10px rgba(147,112,219,0.25);}
+            50%{box-shadow:0 3px 18px rgba(147,112,219,0.45);}
         }
         .triple-spot .spot.occupied{
             background:linear-gradient(180deg, #059669 0%, #047857 100%);
             border-color:#34d399;
-            box-shadow:0 4px 10px rgba(52,211,153,0.35);
+            box-shadow:0 3px 10px rgba(52,211,153,0.35);
         }
         .triple-spot .spot .num{
             position:absolute;
-            top:3px;
+            top:2px;
             left:50%;
             transform:translateX(-50%);
-            font-size:8px;
+            font-size:7px;
             color:#d8c4e8;
             font-weight:bold;
             background:rgba(0,0,0,0.5);
-            padding:2px 5px;
-            border-radius:4px;
+            padding:1px 4px;
+            border-radius:3px;
             white-space:nowrap;
+            z-index:2;
         }
         .triple-spot .spot .car-info{
             display:flex;
@@ -187,12 +234,13 @@
             justify-content:center;
             align-items:center;
             height:100%;
-            padding-top:16px;
+            padding-top:14px;
             gap:2px;
+            z-index:2;
         }
         .triple-spot .spot .car-mark{
             color:#fde047;
-            font-size:10px;
+            font-size:9px;
             font-weight:700;
             word-break:break-word;
             max-width:100%;
@@ -206,22 +254,27 @@
         }
         .triple-spot .spot .car-num{
             color:#fff;
-            font-size:9px;
+            font-size:8px;
             font-weight:600;
             word-break:break-word;
             max-width:100%;
             line-height:1.15;
             background:rgba(0,0,0,0.6);
-            padding:2px 4px;
-            border-radius:4px;
+            padding:1px 3px;
+            border-radius:3px;
             white-space:nowrap;
             overflow:hidden;
             text-overflow:ellipsis;
         }
         .triple-spot .spot .empty-icon{
-            font-size:22px;
+            font-size:20px;
             color:#b19cd9;
             margin-top:auto;
+            animation:bounce 2s infinite;
+        }
+        @keyframes bounce{
+            0%,100%{transform:translateY(0);}
+            50%{transform:translateY(-3px);}
         }
         
         /* === ВСПЛЫВАЮЩАЯ ПОДСКАЗКА === */
@@ -231,44 +284,49 @@
             background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
             border:2px solid #b19cd9;
             border-radius:12px;
-            padding:18px 22px;
-            min-width:320px;
-            max-width:400px;
+            padding:16px 20px;
+            min-width:300px;
+            max-width:380px;
             z-index:1000;
             flex-direction:column;
             align-items:flex-start;
-            box-shadow:0 18px 60px rgba(147,112,219,0.4);
+            box-shadow:0 15px 50px rgba(147,112,219,0.4);
             pointer-events:none;
             text-align:left;
+            animation:tooltipIn 0.2s ease;
+        }
+        @keyframes tooltipIn{
+            from{opacity:0;transform:scale(0.95);}
+            to{opacity:1;transform:scale(1);}
         }
         .tooltip .header{
             display:flex;
             align-items:center;
-            gap:12px;
+            gap:10px;
             width:100%;
-            margin-bottom:10px;
-            padding-bottom:10px;
+            margin-bottom:8px;
+            padding-bottom:8px;
             border-bottom:1px solid rgba(177,156,217,0.3);
         }
         .tooltip .color-badge{
-            width:32px;
-            height:32px;
+            width:28px;
+            height:28px;
             border-radius:50%;
             border:2px solid #fff;
-            box-shadow:0 3px 8px rgba(0,0,0,0.4);
+            box-shadow:0 2px 6px rgba(0,0,0,0.4);
             flex-shrink:0;
             position:relative;
         }
         .tooltip .color-badge.auto-detected::after{
             content:'✨';
             position:absolute;
-            bottom:-5px;
-            right:-5px;
-            font-size:11px;
+            bottom:-4px;
+            right:-4px;
+            font-size:10px;
             background:#2a1a3a;
             border-radius:50%;
-            width:18px;
-            height:18px;
+            width:16px;
+            height:16px;
             display:flex;
             align-items:center;
             justify-content:center;
@@ -276,9 +334,9 @@
         }
         .tooltip .mark{
             color:#d8c4e8;
-            font-size:20px;
+            font-size:18px;
             font-weight:700;
-            text-shadow:0 3px 8px rgba(0,0,0,0.6);
+            text-shadow:0 2px 6px rgba(0,0,0,0.6);
             word-break:break-word;
             line-height:1.2;
             flex:1;
@@ -287,23 +345,23 @@
         .tooltip .route-badge{
             background:linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
             color:#1a0f2a;
-            padding:5px 12px;
-            border-radius:14px;
-            font-size:13px;
+            padding:4px 10px;
+            border-radius:12px;
+            font-size:12px;
             font-weight:700;
             white-space:nowrap;
-            margin-left:10px;
+            margin-left:8px;
         }
-        .tooltip .divider{width:100%;height:1px;background:linear-gradient(90deg, transparent, #b19cd9, transparent);margin:10px 0;}
+        .tooltip .divider{width:100%;height:1px;background:linear-gradient(90deg, transparent, #b19cd9, transparent);margin:8px 0;}
         .tooltip .num{
             color:#fff;
-            font-size:17px;
+            font-size:16px;
             font-weight:600;
             background:rgba(147,112,219,0.25);
-            padding:7px 16px;
-            border-radius:7px;
+            padding:6px 14px;
+            border-radius:6px;
             letter-spacing:1px;
-            text-shadow:0 2px 5px rgba(0,0,0,0.5);
+            text-shadow:0 2px 4px rgba(0,0,0,0.5);
             white-space:nowrap;
             width:100%;
             text-align:center;
@@ -311,13 +369,13 @@
             border:1px solid rgba(177,156,217,0.4);
         }
         .tooltip .extra-info{
-            margin-top:12px;
+            margin-top:10px;
             width:100%;
             display:flex;
             flex-direction:column;
-            gap:7px;
+            gap:6px;
             color:#e9d5ff;
-            font-size:14px;
+            font-size:13px;
         }
         .tooltip .extra-info .row{
             display:flex;
@@ -327,7 +385,7 @@
         }
         .tooltip .extra-info .label{
             color:#b19cd9;
-            font-size:13px;
+            font-size:12px;
         }
         .tooltip .extra-info .value{
             color:#fff;
@@ -338,10 +396,11 @@
         }
         .tooltip .spot-id{
             color:#9370db;
-            font-size:11px;
-            margin-top:12px;
+            font-size:10px;
+            margin-top:10px;
             text-align:center;
             width:100%;
+            opacity:0.8;
         }
         
         /* === ВЫДЕЛЕНИЕ ПРИ ПОИСКЕ === */
@@ -352,78 +411,78 @@
         }
         @keyframes pulse-found{
             0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.4);}
-            50%{box-shadow:0 0 0 4px rgba(34,197,94,0.6);}
+            50%{box-shadow:0 0 0 5px rgba(34,197,94,0.6);}
         }
         
         /* === ВЕРХНИЙ БАР С КНОПКАМИ === */
         .top-bar{
             position:fixed;
-            top:12px;
-            left:12px;
+            top:10px;
+            left:10px;
             display:flex;
-            gap:10px;
+            gap:8px;
             z-index:999;
             align-items:center;
             flex-wrap:wrap;
         }
         .nav-btn, .edit-mode-btn, .search-input{
-            padding:11px 16px;
+            padding:10px 14px;
             background:linear-gradient(180deg, #7b5a9e 0%, #6b4c7a 100%);
             color:#fff;
             border:none;
-            border-radius:9px;
+            border-radius:8px;
             cursor:pointer;
-            font-size:14px;
+            font-size:13px;
             font-weight:600;
-            box-shadow:0 5px 18px rgba(147,112,219,0.4);
+            box-shadow:0 4px 15px rgba(147,112,219,0.4);
             transition:all 0.25s;
             display:flex;
             align-items:center;
-            gap:6px;
+            gap:5px;
             text-decoration:none;
             white-space:nowrap;
         }
         .nav-btn:hover, .edit-mode-btn:hover, .search-input:hover{
             transform:translateY(-2px);
-            box-shadow:0 7px 22px rgba(147,112,219,0.55);
+            box-shadow:0 6px 20px rgba(147,112,219,0.55);
         }
         .nav-btn.main-garage{
             background:linear-gradient(180deg, #9370db 0%, #7b5a9e 100%);
-            box-shadow:0 5px 18px rgba(147,112,219,0.4);
+            box-shadow:0 4px 15px rgba(147,112,219,0.4);
         }
         .nav-btn.main-garage:hover{
-            box-shadow:0 7px 22px rgba(147,112,219,0.55);
+            box-shadow:0 6px 20px rgba(147,112,219,0.55);
         }
         .nav-btn.tk{
             background:linear-gradient(180deg, #a78bfa 0%, #9370db 100%);
-            box-shadow:0 5px 18px rgba(167,139,250,0.4);
+            box-shadow:0 4px 15px rgba(167,139,250,0.4);
         }
         .nav-btn.tk:hover{
-            box-shadow:0 7px 22px rgba(167,139,250,0.55);
+            box-shadow:0 6px 20px rgba(167,139,250,0.55);
         }
         .edit-mode-btn.active{
             background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
-            box-shadow:0 5px 18px rgba(34,197,94,0.4);
+            box-shadow:0 4px 15px rgba(34,197,94,0.4);
             animation:pulse-green 2s infinite;
         }
         @keyframes pulse-green{
-            0%,100%{box-shadow:0 5px 18px rgba(34,197,94,0.4);}
-            50%{box-shadow:0 5px 25px rgba(34,197,94,0.6);}
+            0%,100%{box-shadow:0 4px 15px rgba(34,197,94,0.4);}
+            50%{box-shadow:0 4px 22px rgba(34,197,94,0.6);}
         }
         .search-input{
             background:#2a1a3a;
             color:#e9d5ff;
             border:2px solid #9370db;
-            padding:11px 14px;
-            width:200px;
-            font-size:14px;
+            padding:10px 12px;
+            width:190px;
+            font-size:13px;
             font-weight:normal;
         }
         .search-input::placeholder{color:#b19cd9;}
         .search-input:focus{
             outline:none;
             border-color:#b19cd9;
-            box-shadow:0 0 12px rgba(177,156,217,0.4);
+            box-shadow:0 0 10px rgba(177,156,217,0.4);
             transform:translateY(0);
         }
         
@@ -440,56 +499,61 @@
         }
         .modal-box{
             background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
-            padding:26px;
-            border-radius:16px;
-            width:420px;
+            padding:24px;
+            border-radius:14px;
+            width:400px;
             max-width:90vw;
             border:2px solid #9370db;
-            box-shadow:0 18px 60px rgba(147,112,219,0.4);
+            box-shadow:0 15px 50px rgba(147,112,219,0.4);
+            animation:modalIn 0.3s ease;
+        }
+        @keyframes modalIn{
+            from{opacity:0;transform:scale(0.95);}
+            to{opacity:1;transform:scale(1);}
         }
         .modal-box h3{
-            margin-bottom:16px;
+            margin-bottom:14px;
             color:#d8c4e8;
             text-align:center;
-            font-size:20px;
+            font-size:18px;
             font-weight:600;
         }
         .modal-box input{
             width:100%;
-            margin:9px 0;
-            padding:12px 14px;
+            margin:8px 0;
+            padding:11px 13px;
             background:#1a0f2a;
             border:2px solid #6b4c7a;
             color:#e9d5ff;
-            border-radius:7px;
-            font-size:15px;
+            border-radius:6px;
+            font-size:14px;
         }
         .modal-box input:focus{
             outline:none;
             border-color:#b19cd9;
-            box-shadow:0 0 12px rgba(177,156,217,0.35);
+            box-shadow:0 0 10px rgba(177,156,217,0.35);
         }
         .modal-box .btn-group{
             display:grid;
             grid-template-columns:1fr 1fr 1fr;
-            margin-top:16px;
-            gap:7px;
+            margin-top:14px;
+            gap:6px;
         }
         .modal-box button{
-            padding:11px 7px;
+            padding:10px 6px;
             background:#4a2f5e;
             color:#e9d5ff;
             border:none;
-            border-radius:7px;
+            border-radius:6px;
             cursor:pointer;
-            font-size:13px;
+            font-size:12px;
             transition:all 0.25s;
             font-weight:600;
             white-space:nowrap;
             overflow:hidden;
             text-overflow:ellipsis;
         }
-        .modal-box button:hover{transform:translateY(-2px);}
+        .modal-box button:hover{transform:translateY(-1px);}
         .modal-box button.clear{background:linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);}
         .modal-box button.clear:hover{background:linear-gradient(180deg, #ef4444 0%, #dc2626 100%);}
         .modal-box button.save{background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);}
@@ -510,60 +574,61 @@
         }
         .password-box{
             background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
-            padding:26px;
-            border-radius:16px;
-            width:360px;
+            padding:24px;
+            border-radius:14px;
+            width:340px;
             max-width:90vw;
             border:2px solid #9370db;
-            box-shadow:0 18px 60px rgba(147,112,219,0.4);
+            box-shadow:0 15px 50px rgba(147,112,219,0.4);
+            animation:modalIn 0.3s ease;
         }
         .password-box h3{
-            margin-bottom:18px;
+            margin-bottom:16px;
             color:#d8c4e8;
             text-align:center;
-            font-size:20px;
+            font-size:18px;
             font-weight:600;
         }
         .password-box input{
             width:100%;
-            margin:11px 0;
-            padding:13px 16px;
+            margin:10px 0;
+            padding:12px 14px;
             background:#1a0f2a;
             border:2px solid #6b4c7a;
             color:#e9d5ff;
-            border-radius:7px;
-            font-size:16px;
+            border-radius:6px;
+            font-size:15px;
         }
         .password-box input:focus{
             outline:none;
             border-color:#b19cd9;
-            box-shadow:0 0 12px rgba(177,156,217,0.4);
+            box-shadow:0 0 10px rgba(177,156,217,0.4);
         }
         .password-box .error{
             color:#f87171;
-            font-size:14px;
-            margin:9px 0;
+            font-size:13px;
+            margin:8px 0;
             text-align:center;
             display:none;
         }
         .password-box .btn-group{
             display:flex;
-            gap:9px;
-            margin-top:18px;
+            gap:8px;
+            margin-top:16px;
         }
         .password-box button{
             flex:1;
-            padding:13px;
+            padding:12px;
             background:#4a2f5e;
             color:#e9d5ff;
             border:none;
-            border-radius:7px;
+            border-radius:6px;
             cursor:pointer;
-            font-size:15px;
+            font-size:14px;
             transition:all 0.25s;
             font-weight:600;
         }
-        .password-box button:hover{transform:translateY(-2px);}
+        .password-box button:hover{transform:translateY(-1px);}
         .password-box button.confirm{background:linear-gradient(180deg, #7b5a9e 0%, #6b4c7a 100%);}
         .password-box button.confirm:hover{background:linear-gradient(180deg, #9370db 0%, #7b5a9e 100%);}
         .password-box button.cancel{background:#4a2f5e;}
@@ -571,18 +636,34 @@
         
         .status{
             position:fixed;
-            top:12px;
-            right:12px;
-            padding:9px 18px;
+            top:10px;
+            right:10px;
+            padding:8px 16px;
             background:#2a1a3a;
             border:2px solid #9370db;
-            border-radius:7px;
-            font-size:14px;
+            border-radius:6px;
+            font-size:13px;
             z-index:999;
             font-weight:600;
+            animation:statusPulse 2s infinite;
+        }
+        @keyframes statusPulse{
+            0%,100%{opacity:1;}
+            50%{opacity:0.85;}
         }
         .status.connected{border-color:#22c55e;color:#4ade80;}
         .status.disconnected{border-color:#f87171;color:#f87171;}
+        
+        /* === ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ === */
+        .garage::before{
+            content:'';
+            position:absolute;
+            top:-50%;left:-50%;right:-50%;bottom:-50%;
+            background:radial-gradient(circle at 30% 20%, rgba(147,112,219,0.08) 0%, transparent 50%),
+                       radial-gradient(circle at 70% 80%, rgba(107,76,122,0.1) 0%, transparent 50%);
+            pointer-events:none;
+            z-index:-1;
+        }
     </style>
 </head>
 <body>
@@ -591,7 +672,7 @@
     <div class="top-bar">
         <a href="index.html" class="nav-btn main-garage" title="Вернуться в главное меню">🏠 Меню</a>
         <a href="tk.html" class="nav-btn tk" title="Перейти в ТК">🛒 ТК</a>
-        <div style="width:2px;height:26px;background:#9370db;margin:0 5px;border-radius:1px;"></div>
+        <div style="width:2px;height:24px;background:#9370db;margin:0 4px;border-radius:1px;"></div>
         <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Редактирование</button>
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
     </div>
@@ -653,14 +734,14 @@
     <script>
         // 🔥 Firebase конфигурация
         const firebaseConfig = {
-  apiKey: "AIzaSyA3Q6cJweM_8mAW6uvrXUfvPIvgmjvW42s",
-  authDomain: "chatp-parking.firebaseapp.com",
-  databaseURL: "https://chatp-parking-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "chatp-parking",
-  storageBucket: "chatp-parking.firebasestorage.app",
-  messagingSenderId: "849469864277",
-  appId: "1:849469864277:web:1e29a79dbfd2f7a6c597dc"
-};
+            apiKey: "AIzaSyA3Q6cJweM_8mAW6uvrXUfvPIvgmjvW42s",
+            authDomain: "chatp-parking.firebaseapp.com",
+            databaseURL: "https://chatp-parking-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "chatp-parking",
+            storageBucket: "chatp-parking.firebasestorage.app",
+            messagingSenderId: "849469864277",
+            appId: "1:849469864277:web:1e29a79dbfd2f7a6c597dc"
+        };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -671,7 +752,6 @@
         const GARAGE_ID = 'catp';
         let isEditMode = false;
         let localDB = {};
-        let id = 0;
         let active = null;
         let tooltip = document.getElementById('tooltip');
         let tooltipTimer;
@@ -884,13 +964,14 @@
         }
 
         // Создание ряда с 5 оконными блоками
-        function createWindowRow(position, startBaseId){
+        function createWindowRow(position, startId){
             const row = document.createElement('div');
             row.className = position === 'top' ? 'row-top' : 'row-bottom';
             
             for(let i=0; i<5; i++){
-                const blockBaseId = startBaseId + (i * 10);
-                row.appendChild(createWindowBlock(blockBaseId, position));
+                // 🔢 Последовательная нумерация: каждое место +1
+                const blockStartId = startId + (i * 3);
+                row.appendChild(createWindowBlock(blockStartId, position));
             }
             return row;
         }
@@ -984,15 +1065,14 @@
 
         // Построение схемы
         function build(){
-            id = 0;
             const g = document.getElementById('g');
             g.innerHTML = '';
             
-            // ВЕРХНИЙ РЯД
-            g.appendChild(createWindowRow('top', 0));
+            // 🔢 ВЕРХНИЙ РЯД: места 1-15 (слева направо)
+            g.appendChild(createWindowRow('top', 1));
             
-            // НИЖНИЙ РЯД
-            g.appendChild(createWindowRow('bottom', 50));
+            // 🔢 НИЖНИЙ РЯД: места 16-30 (слева направо)
+            g.appendChild(createWindowRow('bottom', 16));
         }
 
         build();
