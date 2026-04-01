@@ -106,21 +106,37 @@
         @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
         
         .window{display:flex;gap:3px;}
-        .row-top .window-part,.row-bottom .window-part{
-            width:42px;height:32px;
-            background:linear-gradient(180deg, #9370db 0%, #7b5a9e 50%, #6b4c7a 100%) !important;
-            border:2px solid #b19cd9 !important;
-            border-radius:5px;position:relative;
-            box-shadow:0 2px 6px rgba(147,112,219,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
-        }
-        .row-top .window-part::before,.row-bottom .window-part::before{
-            content:'';position:absolute;top:4px;left:4px;right:4px;bottom:4px;
-            background:rgba(255,255,255,0.25);border-radius:4px;
-        }
-        .row-top .window-part::after,.row-bottom .window-part::after{
-            content:'';position:absolute;top:50%;left:8px;right:8px;height:1px;
-            background:rgba(255,255,255,0.3);
-        }
+        .row-top .window-part,
+.row-bottom .window-part {
+    width:42px;
+    height:32px;
+    background:linear-gradient(180deg, #9370db 0%, #7b5a9e 50%, #6b4c7a 100%) !important;
+    border:2px solid #b19cd9 !important;
+    border-radius:5px;
+    position:relative;
+    box-shadow:0 2px 6px rgba(147,112,219,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.row-top .window-part::before,
+.row-bottom .window-part::before {
+    content:'';
+    position:absolute;
+    top:4px;
+    left:4px;
+    right:4px;
+    bottom:4px;
+    background:rgba(255,255,255,0.25);
+    border-radius:4px;
+}
+.row-top .window-part::after,
+.row-bottom .window-part::after {
+    content:'';
+    position:absolute;
+    top:50%;
+    left:8px;
+    right:8px;
+    height:1px;
+    background:rgba(255,255,255,0.3);
+}
         
         /* Парковочное место для грузовиков */
         .triple-spot{
