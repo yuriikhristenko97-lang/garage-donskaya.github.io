@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Онлайн гараж ИП "Донская"</title>
+    <title>🚗Онлайн гараж ИП "Донская"</title>
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
         body{
@@ -103,6 +103,7 @@
             overflow:hidden;
             text-overflow:ellipsis;
         }
+        /* Всплывающая подсказка */
         .tooltip{
             display:none;
             position:fixed;
@@ -210,6 +211,7 @@
             text-align:center;
             width:100%;
         }
+        /* Выделение при поиске */
         .spot.spot-found{
             border:2px solid #4ade80 !important;
             box-shadow:0 0 0 3px rgba(74,222,128,0.4) !important;
@@ -222,6 +224,7 @@
         .center-block .face-down .spot{border-bottom:2px solid #ffd700;}
         .center-block .face-up .spot{border-top:2px solid #ffd700;}
         
+        /* КОЛОННЫ с буквой */
         .col{
             width:24px;
             height:66px;
@@ -270,6 +273,7 @@
         
         .fake{width:24px;height:60px;margin:0 2px;visibility:hidden;flex-shrink:0;}
         
+        /* ДОРОГИ */
         .road{
             width:100%;
             height:18px;
@@ -363,6 +367,7 @@
             overflow:hidden;
         }
         
+        /* ========== ЕДИНЫЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН (применяем ко всем файлам) ========== */
         .modal-base {
             display:none;
             position:fixed;
@@ -458,7 +463,9 @@
             text-align:center;
             display:none;
         }
+        /* ===================================================== */
         
+        /* КНОПКИ НАВИГАЦИИ И УПРАВЛЕНИЯ */
         .top-controls{
             position:fixed;
             top:10px;
@@ -537,61 +544,37 @@
         }
         .status.connected{ border-color:#4ade80; color:#4ade80; }
         .status.disconnected{ border-color:#f87171; color:#f87171; }
-        
-        /* Кнопка выхода */
-        .logout-btn{
-            background:linear-gradient(180deg, #dc2626 0%, #b91c1c 100%)!important;
-            box-shadow:0 4px 15px rgba(220,38,38,0.4)!important;
-        }
-        .logout-btn:hover{
-            box-shadow:0 6px 20px rgba(220,38,38,0.5)!important;
-            background:linear-gradient(180deg, #ef4444 0%, #dc2626 100%)!important;
-        }
-        
-        /* Индикатор авторизации */
-        .auth-status{
-            padding:8px 12px;
-            background:rgba(34,197,94,0.2);
-            border:1px solid #22c55e;
-            border-radius:6px;
-            font-size:11px;
-            color:#4ade80;
-            display:none;
-        }
-        .auth-status.visible{ display:flex; align-items:center; gap:5px; }
     </style>
 </head>
 <body>
     <div class="status" id="status">🔄 Подключение...</div>
     
     <div class="top-controls">
+        <!-- 📋 НАВИГАЦИЯ НА ДРУГИЕ ГАРАЖИ -->
         <a href="catp.html" class="nav-btn other-garage" title="Перейти в ЧАТП">🚌 ЧАТП</a>
-        <a href="tk.html" class="nav-btn other-garage" title="Перейти в ТК">🛒 ТК</a>
+        <a href="tk.html" class="nav-btn other-garage" title="Перейти в ТК">🚛 ТК</a>
         <div style="width:1px;height:24px;background:#444;margin:0 4px;"></div>
-        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Вход</button>
-        <div class="auth-status" id="authStatus">🔐 Админ</div>
-        <button class="nav-btn logout-btn" id="logoutBtn" onclick="logout()" style="display:none;">🚪 Выход</button>
+        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Редактирование</button>
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
     </div>
     
     <main><div class="garage" id="g"></div></main>
     <div class="tooltip" id="tooltip"></div>
     
-    <!-- 🔐 Модальное окно ВХОДА (Firebase Auth) -->
-    <div id="loginModal" class="modal-base">
+    <!-- 🔐 Модальное окно пароля (единый стиль) -->
+    <div id="passwordModal" class="modal-base">
         <div class="modal-content">
-            <h3>🔐 Вход для администратора</h3>
-            <input type="email" id="loginEmail" placeholder="Email">
-            <input type="password" id="loginPassword" placeholder="Пароль" onkeypress="if(event.key==='Enter')login()">
-            <div class="error" id="loginError">❌ Неверный email или пароль!</div>
+            <h3>🔐 Введите пароль</h3>
+            <input type="password" id="passwordInput" placeholder="Пароль" onkeypress="if(event.key==='Enter')confirmPassword()">
+            <div class="error" id="passwordError">❌ Неверный пароль!</div>
             <div class="btn-group">
-                <button class="cancel" onclick="closeLoginModal()">Отмена</button>
-                <button class="confirm" onclick="login()">Войти</button>
+                <button class="cancel" onclick="closePasswordModal()">Отмена</button>
+                <button class="confirm" onclick="confirmPassword()">Войти</button>
             </div>
         </div>
     </div>
     
-    <!-- ✏️ Модальное окно редактирования -->
+    <!-- ✏️ Модальное окно редактирования (единый стиль) -->
     <div id="modal" class="modal-base">
         <div class="modal-content">
             <h3 id="title">🚗 Место</h3>
@@ -608,29 +591,28 @@
         </div>
     </div>
 
-    <!-- 🔥 FIREBASE -->
+    <!-- 🔥 FIREBASE (ЕДИНАЯ БАЗА) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
     <script>
-        // ⚠️ ВСТАВЬ СЮДА СВОЙ КОНФИГ ИЗ FIREBASE CONSOLE!
-        const firebaseConfig = {
-            apiKey: "AIzaSyC_9eS6hShP3Nujbf_AszF68OauqcAsH6I",
-            authDomain: "garage-parking-ff729.firebaseapp.com",
-            databaseURL: "https://garage-parking-ff729-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "garage-parking-ff729",
-            storageBucket: "garage-parking-ff729.firebasestorage.app",
-            messagingSenderId: "338709707407",
-            appId: "1:338709707407:web:212c6dbb979ecc931e0efa"
-        };
+        // 🔥 ЕДИНЫЙ КОНФИГ ДЛЯ ВСЕХ ГАРАЖЕЙ
+      const firebaseConfig = {
+  apiKey: "AIzaSyDV_fO2Mj6uNfEXJnAmSl9OgebQ40Itgbk",
+  authDomain: "ip-donskaya-garage.firebaseapp.com",
+  databaseURL: "https://ip-donskaya-garage-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "ip-donskaya-garage",
+  storageBucket: "ip-donskaya-garage.firebasestorage.app",
+  messagingSenderId: "220796652736",
+  appId: "1:220796652736:web:ff7f6d58bba85bc09e7125"
+};
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const auth = firebase.auth();
         const statusEl = document.getElementById('status');
 
-        const GARAGE_ID = 'main';
+        const EDIT_PASSWORD = 'ip-donskaya_2026';
+        const GARAGE_ID = 'main'; // 🔑 Уникальный ключ для главного гаража
         let isEditMode = false;
         let localDB = {};
         let id = 0;
@@ -639,22 +621,6 @@
         let colCounter = 0;
         let tooltipTimer;
         let currentSearchTerm = '';
-
-        // 🔐 Отслеживание состояния авторизации
-        auth.onAuthStateChanged((user) => {
-            if(user){
-                isEditMode = true;
-                updateEditModeBtn();
-                document.getElementById('authStatus').classList.add('visible');
-                document.getElementById('logoutBtn').style.display = 'flex';
-                console.log('✅ Авторизован:', user.email);
-            } else {
-                isEditMode = false;
-                updateEditModeBtn();
-                document.getElementById('authStatus').classList.remove('visible');
-                document.getElementById('logoutBtn').style.display = 'none';
-            }
-        });
 
         db.ref('.info/connected').on('value', (snapshot) => {
             if(snapshot.val() === true){
@@ -666,6 +632,7 @@
             }
         });
 
+        // 🔥 Читаем данные из "папки" главного гаража
         db.ref(`garages/${GARAGE_ID}/spots`).on('value', (snapshot) => {
             localDB = snapshot.val() || {};
             build();
@@ -674,14 +641,13 @@
 
         function toggleEditMode(){
             if(isEditMode){
-                // Уже авторизован — ничего не делаем
-                return;
+                isEditMode = false;
+                updateEditModeBtn();
             } else {
-                document.getElementById('loginModal').style.display = 'flex';
-                document.getElementById('loginEmail').value = '';
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('loginError').style.display = 'none';
-                document.getElementById('loginEmail').focus();
+                document.getElementById('passwordModal').style.display = 'flex';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordError').style.display = 'none';
+                document.getElementById('passwordInput').focus();
             }
         }
 
@@ -689,55 +655,28 @@
             const btn = document.getElementById('editModeBtn');
             if(isEditMode){
                 btn.className = 'edit-mode-btn active';
-                btn.innerHTML = '✅ Админ';
+                btn.innerHTML = '✅ Режим редактирования';
             } else {
                 btn.className = 'edit-mode-btn';
-                btn.innerHTML = '✏️ Вход';
+                btn.innerHTML = '✏️ Редактирование';
             }
         }
 
-        function closeLoginModal(){
-            document.getElementById('loginModal').style.display = 'none';
+        function closePasswordModal(){
+            document.getElementById('passwordModal').style.display = 'none';
         }
 
-        // 🔐 Вход через Firebase Auth
-        function login(){
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    console.log('✅ Вход успешен');
-                    closeLoginModal();
-                })
-                .catch((error) => {
-                    console.error('❌ Ошибка входа:', error.code, error.message);
-                    document.getElementById('loginError').style.display = 'block';
-                    document.getElementById('loginError').innerText = '❌ ' + getAuthErrorMessage(error.code);
-                });
-        }
-
-        function getAuthErrorMessage(code){
-            const messages = {
-                'auth/user-not-found': 'Пользователь не найден',
-                'auth/wrong-password': 'Неверный пароль',
-                'auth/invalid-email': 'Неверный email',
-                'auth/too-many-requests': 'Слишком много попыток. Попробуйте позже',
-                'auth/network-request-failed': 'Ошибка сети. Проверьте интернет'
-            };
-            return messages[code] || 'Ошибка входа';
-        }
-
-        // 🔐 Выход
-        function logout(){
-            auth.signOut().then(() => {
-                console.log('✅ Выход выполнен');
-                isEditMode = false;
+        function confirmPassword(){
+            const password = document.getElementById('passwordInput').value;
+            if(password === EDIT_PASSWORD){
+                isEditMode = true;
                 updateEditModeBtn();
-                closeM();
-            }).catch((error) => {
-                console.error('❌ Ошибка выхода:', error);
-            });
+                closePasswordModal();
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
         }
 
         function getColLetter(index){
@@ -993,6 +932,7 @@
             active = null;
         }
 
+        // 🔥 Сохраняем в "папку" главного гаража
         function save(){
             if(!active || !isEditMode) return;
             const car = document.getElementById('car').value.trim();
@@ -1004,20 +944,11 @@
             const spotRef = db.ref(`garages/${GARAGE_ID}/spots/` + active);
             
             if(car){
-                spotRef.set({car, num, color, owner, cost})
-                    .then(() => { console.log('✅ Сохранено:', active); closeM(); })
-                    .catch((error) => {
-                        console.error('❌ Ошибка сохранения:', error);
-                        alert('Ошибка сохранения! Проверьте подключение.');
-                    });
+                spotRef.set({car, num, color, owner, cost});
             } else {
-                spotRef.remove()
-                    .then(() => { console.log('🗑️ Удалено:', active); closeM(); })
-                    .catch((error) => {
-                        console.error('❌ Ошибка удаления:', error);
-                        alert('Ошибка удаления!');
-                    });
+                spotRef.remove();
             }
+            closeM();
         }
 
         function clearCar(){
@@ -1073,6 +1004,7 @@
             }
         }
 
+        // 🔥 ОРИГИНАЛЬНАЯ СТРУКТУРА ГЛАВНОГО ГАРАЖА (восстановлена!)
         function build(){
             id = 0;
             colCounter = 0;
