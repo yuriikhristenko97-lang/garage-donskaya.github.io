@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Онлайн гараж ИП "Донская"</title>
+    <title>🚌 ЧАТП — ИП "Донская"</title>
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
         body{
-            background:linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #8b5cf6 100%);
+            /* 🎨 Тёмный сиреневый фон с лёгкой текстурой */
+            background:
+                radial-gradient(ellipse at top, rgba(147,112,219,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse at bottom, rgba(107,76,122,0.2) 0%, transparent 70%),
+                linear-gradient(135deg, #4a2f5e 0%, #3a254e 50%, #2a1a3a 100%);
             color:#eee;
             font-family:'Segoe UI',Arial,sans-serif;
             min-height:100vh;
             display:flex;
             align-items:center;
             justify-content:center;
-            padding:10px;
+            padding:20px;
             overflow:hidden;
         }
         .garage{
@@ -22,103 +26,281 @@
             flex-direction:column;
             align-items:center;
             justify-content:center;
-            background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
-            border:1px solid #555;
-            padding:10px;
-            border-radius:12px;
-            box-shadow:0 10px 40px rgba(0,0,0,0.5);
+            background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
+            border:2px solid #9370db;
+            padding:16px;
+            border-radius:14px;
+            box-shadow:0 10px 40px rgba(147,112,219,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
             max-width:98vw;
             max-height:98vh;
             overflow:auto;
         }
-        .row-full{
+        
+        /* === ЛЕВАЯ ПАНЕЛЬ С ВЪЕЗДАМИ === */
+        .left-panel{
             display:flex;
-            align-items:center;
-            justify-content:center;
-            width:100%;
-            margin:1px 0;
-            gap:2px;
-            flex-wrap: nowrap;
-        }
-        .side-group{
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:linear-gradient(180deg, #3d3d3d 0%, #353535 100%);
-            padding:0 2px;
-            border-radius:6px;
-            border:1px solid #444;
+            flex-direction:column;
+            justify-content: space-between;
+            height: 100%;
+            gap:10px;
+            padding:10px;
+            background:linear-gradient(180deg, #4a2f5e 0%, #2a1a3a 100%);
+            border-radius:10px;
+            border:2px solid #9370db;
+            margin-right:15px;
             flex-shrink:0;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
         }
-        .spacer{width:96px;flex-shrink:0;visibility:hidden;}
-        .center-block{display:flex;justify-content:center;align-items:center;padding:0 2px;border-radius:6px;flex-shrink:0;}
-        .spot{
-            width:42px;height:60px;border:1px solid #555;margin:0 1px;padding:4px 2px;
-            font-size:6px;display:flex;flex-direction:column;cursor:pointer;
-            transition:all 0.25s ease;text-align:center;
-            background:linear-gradient(180deg, #4a4a4a 0%, #424242 100%);
-            border-radius:4px;position:relative;flex-shrink:0;
+        .gate{
+            width:48px;
+            height:72px;
+            background:linear-gradient(180deg, #6b4c7a 0%, #4a2f5e 100%);
+            border:2px solid #9370db;
+            border-radius:8px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            cursor:default;
+            box-shadow:0 3px 10px rgba(147,112,219,0.3);
+            transition:transform 0.2s, box-shadow 0.2s;
         }
-        .spot:hover{
-            transform:translateY(-2px) scale(1.05);
-            box-shadow:0 6px 20px rgba(0,0,0,0.6);
-            border-color:#aaa;
-            z-index:100;
+        .gate:hover{
+            transform:translateX(2px);
+            box-shadow:0 5px 15px rgba(147,112,219,0.5);
         }
-        .spot.empty-spot{background:linear-gradient(180deg, #525252 0%, #484848 100%);border:1px dashed #777;}
-        .spot.empty-spot:hover{background:linear-gradient(180deg, #5a5a5a 0%, #505050 100%);border-color:#999;border-style:solid;}
-        .spot.empty-spot .empty-icon{font-size:16px;color:#666;margin-top:auto;margin-bottom:3px;transition:all 0.2s;}
-        .spot.empty-spot:hover .empty-icon{color:#ffd700;transform:scale(1.2);}
-        .spot.occupied{background:linear-gradient(180deg, #2d6a4f 0%, #1b4332 100%);border-color:#40916c;border-style:solid;}
-        .spot.occupied:hover{background:linear-gradient(180deg, #40916c 0%, #2d6a4f 100%);}
-        .spot .num{position:absolute;top:2px;left:50%;transform:translateX(-50%);font-size:5px;color:#888;font-weight:bold;background:rgba(0,0,0,0.4);padding:1px 3px;border-radius:3px;white-space:nowrap;}
-        .spot .car-info{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;padding-top:10px;gap:2px;}
-        .spot .car-mark{
-            color:#ffd700;
+        .gate .arrow{
+            color:#d8c4e8;
+            font-size:22px;
+            font-weight:bold;
+            animation:arrowPulse 2s infinite;
+        }
+        @keyframes arrowPulse{
+            0%,100%{opacity:1;}
+            50%{opacity:0.7;}
+        }
+        
+        /* === ОСНОВНАЯ ЗОНА ПАРКОВКИ === */
+        .parking-area{
+            display:flex;
+            flex-direction:column;
+            justify-content: space-between;
+            gap: 20px;
+            flex:1;
+            min-width:0;
+        }
+        
+        /* === ВЕРХНИЙ И НИЖНИЙ РЯДЫ === */
+        .row-top{
+            display:flex;
+            align-items:flex-start;
+            justify-content:center;
+            gap:14px;
+            width:100%;
+        }
+        .row-bottom{
+            display:flex;
+            align-items:flex-end;
+            justify-content:center;
+            gap:14px;
+            width:100%;
+        }
+        
+        /* Оконный блок — 3 части */
+        .window-block{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:5px;
+            animation:fadeIn 0.4s ease backwards;
+        }
+        .window-block:nth-child(1){animation-delay:0.05s;}
+        .window-block:nth-child(2){animation-delay:0.1s;}
+        .window-block:nth-child(3){animation-delay:0.15s;}
+        .window-block:nth-child(4){animation-delay:0.2s;}
+        .window-block:nth-child(5){animation-delay:0.25s;}
+        
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(10px);}
+            to{opacity:1;transform:translateY(0);}
+        }
+        
+        .window{
+            display:flex;
+            gap:3px;
+        }
+        /* 🪟 Одинаковый стиль окон для верхнего и нижнего ряда */
+      .row-top .window-part,
+.row-bottom .window-part {
+    width:42px;
+    height:32px;
+    background:linear-gradient(180deg, #9370db 0%, #7b5a9e 50%, #6b4c7a 100%) !important;
+    border:2px solid #b19cd9 !important;
+    border-radius:5px;
+    position:relative;
+    box-shadow:0 2px 6px rgba(147,112,219,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.row-top .window-part::before,
+.row-bottom .window-part::before {
+    content:'';
+    position:absolute;
+    top:4px;
+    left:4px;
+    right:4px;
+    bottom:4px;
+    background:rgba(255,255,255,0.25);
+    border-radius:4px;
+}
+.row-top .window-part::after,
+.row-bottom .window-part::after {
+    content:'';
+    position:absolute;
+    top:50%;
+    left:8px;
+    right:8px;
+    height:1px;
+    background:rgba(255,255,255,0.3);
+}
+        
+        /* Тройное парковочное место */
+        .triple-spot{
+            display:flex;
+            gap:3px;
+            padding:4px;
+            background:linear-gradient(180deg, #4a2f5e 0%, #2a1a3a 100%);
+            border-radius:8px;
+            border:2px solid #9370db;
+            box-shadow:0 3px 10px rgba(147,112,219,0.25);
+        }
+        .triple-spot .spot{
+            width:48px;
+            height:70px;
+            border:2px solid #9370db;
+            padding:3px 2px;
             font-size:8px;
+            display:flex;
+            flex-direction:column;
+            cursor:pointer;
+            transition:all 0.25s ease;
+            text-align:center;
+            background:linear-gradient(180deg, #5a3d6e 0%, #4a2f5e 100%);
+            border-radius:6px;
+            position:relative;
+            overflow:hidden;
+        }
+        .triple-spot .spot::before{
+            content:'';
+            position:absolute;
+            top:0;left:0;right:0;bottom:0;
+            background:linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events:none;
+            border-radius:6px;
+        }
+        .triple-spot .spot:hover{
+            transform:translateY(-2px) scale(1.04);
+            box-shadow:0 6px 16px rgba(147,112,219,0.5);
+            border-color:#b19cd9;
+            z-index:100;
+            background:linear-gradient(180deg, #6b4c7a 0%, #5a3d6e 100%);
+        }
+        .triple-spot .spot.empty{
+            background:linear-gradient(180deg, #5a3d6e 0%, #4a2f5e 100%);
+            border-style:dashed;
+            animation:pulseEmpty 3s infinite;
+        }
+        @keyframes pulseEmpty{
+            0%,100%{box-shadow:0 3px 10px rgba(147,112,219,0.25);}
+            50%{box-shadow:0 3px 18px rgba(147,112,219,0.45);}
+        }
+        .triple-spot .spot.occupied{
+            background:linear-gradient(180deg, #059669 0%, #047857 100%);
+            border-color:#34d399;
+            box-shadow:0 3px 10px rgba(52,211,153,0.35);
+        }
+        .triple-spot .spot .num{
+            position:absolute;
+            top:2px;
+            left:50%;
+            transform:translateX(-50%);
+            font-size:7px;
+            color:#d8c4e8;
+            font-weight:bold;
+            background:rgba(0,0,0,0.5);
+            padding:1px 4px;
+            border-radius:3px;
+            white-space:nowrap;
+            z-index:2;
+        }
+        .triple-spot .spot .car-info{
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            height:100%;
+            padding-top:14px;
+            gap:2px;
+            z-index:2;
+        }
+        .triple-spot .spot .car-mark{
+            color:#fde047;
+            font-size:9px;
             font-weight:700;
             word-break:break-word;
             max-width:100%;
-            line-height:1.1;
-            text-shadow:0 1px 2px rgba(0,0,0,0.8);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            line-height:1.15;
+            text-shadow:0 2px 4px rgba(0,0,0,0.8);
+            overflow:hidden;
+            text-overflow:ellipsis;
+            display:-webkit-box;
+            -webkit-line-clamp:2;
+            -webkit-box-orient:vertical;
         }
-        .spot .car-separator{width:60%;height:1px;background:linear-gradient(90deg, transparent, #ffd700, transparent);opacity:0.6;}
-        .spot .car-num{
+        .triple-spot .spot .car-num{
             color:#fff;
-            font-size:7px;
+            font-size:8px;
             font-weight:600;
             word-break:break-word;
             max-width:100%;
-            line-height:1.1;
-            background:rgba(0,0,0,0.5);
+            line-height:1.15;
+            background:rgba(0,0,0,0.6);
             padding:1px 3px;
-            border-radius:2px;
-            letter-spacing:-0.5px;
+            border-radius:3px;
             white-space:nowrap;
             overflow:hidden;
             text-overflow:ellipsis;
         }
-        /* Всплывающая подсказка */
+        .triple-spot .spot .empty-icon{
+            font-size:20px;
+            color:#b19cd9;
+            margin-top:auto;
+            animation:bounce 2s infinite;
+        }
+        @keyframes bounce{
+            0%,100%{transform:translateY(0);}
+            50%{transform:translateY(-3px);}
+        }
+        
+        /* === ВСПЛЫВАЮЩАЯ ПОДСКАЗКА === */
         .tooltip{
             display:none;
             position:fixed;
-            background:linear-gradient(180deg, #1b4332 0%, #0d2818 100%);
-            border:2px solid #40916c;
-            border-radius:10px;
+            background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
+            border:2px solid #b19cd9;
+            border-radius:12px;
             padding:16px 20px;
-            min-width:260px;
-            max-width:340px;
+            min-width:300px;
+            max-width:380px;
             z-index:1000;
             flex-direction:column;
             align-items:flex-start;
-            box-shadow:0 15px 50px rgba(0,0,0,0.9);
+            box-shadow:0 15px 50px rgba(147,112,219,0.4);
             pointer-events:none;
             text-align:left;
+            animation:tooltipIn 0.2s ease;
+        }
+        @keyframes tooltipIn{
+            from{opacity:0;transform:scale(0.95);}
+            to{opacity:1;transform:scale(1);}
         }
         .tooltip .header{
             display:flex;
@@ -127,36 +309,35 @@
             width:100%;
             margin-bottom:8px;
             padding-bottom:8px;
-            border-bottom:1px solid rgba(255,255,255,0.1);
+            border-bottom:1px solid rgba(177,156,217,0.3);
         }
         .tooltip .color-badge{
-            width:24px;
-            height:24px;
+            width:28px;
+            height:28px;
             border-radius:50%;
             border:2px solid #fff;
             box-shadow:0 2px 6px rgba(0,0,0,0.4);
             flex-shrink:0;
             position:relative;
         }
-        /* Индикатор авто-цвета */
         .tooltip .color-badge.auto-detected::after{
             content:'✨';
             position:absolute;
             bottom:-4px;
             right:-4px;
             font-size:10px;
-            background:#1b4332;
+            background:#2a1a3a;
             border-radius:50%;
-            width:14px;
-            height:14px;
+            width:16px;
+            height:16px;
             display:flex;
             align-items:center;
             justify-content:center;
-            border:1px solid #4ade80;
+            border:1px solid #b19cd9;
         }
         .tooltip .mark{
-            color:#ffd700;
-            font-size:19px;
+            color:#d8c4e8;
+            font-size:18px;
             font-weight:700;
             text-shadow:0 2px 6px rgba(0,0,0,0.6);
             word-break:break-word;
@@ -164,28 +345,39 @@
             flex:1;
             min-width:0;
         }
-        .tooltip .divider{width:100%;height:1px;background:linear-gradient(90deg, transparent, #4ade80, transparent);margin:8px 0;}
+        .tooltip .route-badge{
+            background:linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+            color:#1a0f2a;
+            padding:4px 10px;
+            border-radius:12px;
+            font-size:12px;
+            font-weight:700;
+            white-space:nowrap;
+            margin-left:8px;
+        }
+        .tooltip .divider{width:100%;height:1px;background:linear-gradient(90deg, transparent, #b19cd9, transparent);margin:8px 0;}
         .tooltip .num{
             color:#fff;
-            font-size:15px;
+            font-size:16px;
             font-weight:600;
-            background:rgba(255,255,255,0.15);
+            background:rgba(147,112,219,0.25);
             padding:6px 14px;
-            border-radius:5px;
+            border-radius:6px;
             letter-spacing:1px;
             text-shadow:0 2px 4px rgba(0,0,0,0.5);
             white-space:nowrap;
             width:100%;
             text-align:center;
             box-sizing:border-box;
+            border:1px solid rgba(177,156,217,0.4);
         }
         .tooltip .extra-info{
-            margin-top:12px;
+            margin-top:10px;
             width:100%;
             display:flex;
             flex-direction:column;
             gap:6px;
-            color:#ccc;
+            color:#e9d5ff;
             font-size:13px;
         }
         .tooltip .extra-info .row{
@@ -195,7 +387,7 @@
             width:100%;
         }
         .tooltip .extra-info .label{
-            color:#888;
+            color:#b19cd9;
             font-size:12px;
         }
         .tooltip .extra-info .value{
@@ -206,170 +398,27 @@
             max-width:60%;
         }
         .tooltip .spot-id{
-            color:#666;
+            color:#9370db;
             font-size:10px;
             margin-top:10px;
             text-align:center;
             width:100%;
+            opacity:0.8;
         }
-        /* Выделение при поиске */
+        
+        /* === ВЫДЕЛЕНИЕ ПРИ ПОИСКЕ === */
         .spot.spot-found{
-            border:2px solid #4ade80 !important;
-            box-shadow:0 0 0 3px rgba(74,222,128,0.4) !important;
+            border:2px solid #22c55e !important;
+            box-shadow:0 0 0 3px rgba(34,197,94,0.4) !important;
             animation:pulse-found 2s infinite;
         }
         @keyframes pulse-found{
-            0%,100%{box-shadow:0 0 0 3px rgba(74,222,128,0.4);}
-            50%{box-shadow:0 0 0 5px rgba(74,222,128,0.6);}
-        }
-        .center-block .face-down .spot{border-bottom:2px solid #ffd700;}
-        .center-block .face-up .spot{border-top:2px solid #ffd700;}
-        
-        /* КОЛОННЫ с буквой */
-        .col{
-            width:24px;
-            height:66px;
-            background:linear-gradient(90deg, #525252 0%, #626262 50%, #525252 100%);
-            margin:0 2px;
-            position:relative;
-            border-radius:4px;
-            border:1px solid #444;
-            flex-shrink:0;
-        }
-        .col .label{
-            position:absolute;
-            top:50%;
-            left:50%;
-            transform:translate(-50%, -50%);
-            color:#fff;
-            background:linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
-            font-size:13px;
-            font-weight:bold;
-            width:20px;
-            height:20px;
-            border-radius:50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            border:2px solid #ff6b6b;
-            box-shadow:0 2px 6px rgba(0,0,0,0.5), 0 0 0 2px rgba(220,38,38,0.3);
-            z-index:10;
-            pointer-events:none;
-            font-family:monospace;
-            text-shadow:0 1px 2px rgba(0,0,0,0.8);
-        }
-        .col:before,.col:after{
-            content:'';
-            position:absolute;
-            left:2px;
-            right:2px;
-            height:7px;
-            background:linear-gradient(90deg, #ffd700 0%, #ffec8b 50%, #ffd700 100%);
-            transform:skewY(-20deg);
-            border-radius:2px;
-            box-shadow:0 2px 4px rgba(0,0,0,0.3);
-        }
-        .col:before{top:6px}
-        .col:after{bottom:6px}
-        
-        .fake{width:24px;height:60px;margin:0 2px;visibility:hidden;flex-shrink:0;}
-        
-        /* ДОРОГИ */
-        .road{
-            width:100%;
-            height:18px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            margin:2px 0;
-            overflow:hidden;
-        }
-        .road .arrow{
-            color:#ffd700;
-            font-size:14px;
-            font-weight:bold;
-            letter-spacing:5px;
-            text-shadow:0 0 8px rgba(255,215,0,0.6);
-            white-space:nowrap;
-        }
-        .double-road{
-            width:100%;
-            height:40px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            margin:3px 0;
-            position:relative;
-            overflow:hidden;
-        }
-        .double-road .lanes{
-            display:flex;
-            flex-direction:column;
-            width:100%;
-            max-width:550px;
-        }
-        .double-road .lane-top{
-            height:18px;
-            display:flex;
-            align-items:center;
-            justify-content:flex-start;
-            border-bottom:1px dashed #444;
-            padding-left:15px;
-        }
-        .double-road .lane-bottom{
-            height:18px;
-            display:flex;
-            align-items:center;
-            justify-content:flex-end;
-            padding-right:15px;
-        }
-        .double-road .arrow{
-            color:#ffd700;
-            font-size:14px;
-            font-weight:bold;
-            letter-spacing:5px;
-            text-shadow:0 0 8px rgba(255,215,0,0.6);
-            white-space:nowrap;
-        }
-        .entrance{
-            position:absolute;
-            left:5px;
-            top:50%;
-            transform:translateY(-50%);
-            display:flex;
-            align-items:center;
-            gap:4px;
-        }
-        .entrance .arrow-in{
-            color:#4ade80;
-            font-size:14px;
-            font-weight:bold;
-            text-shadow:0 0 10px rgba(74,222,128,0.8);
-            animation:pulse 1.5s infinite;
-        }
-        .entrance .label{
-            color:#4ade80;
-            font-size:9px;
-            font-weight:700;
-            letter-spacing:1px;
-            text-transform:uppercase;
-            text-shadow:0 0 8px rgba(74,222,128,0.6);
-            white-space:nowrap;
-        }
-        @keyframes pulse{
-            0%,100%{opacity:1;transform:translateX(0);}
-            50%{opacity:0.7;transform:translateX(3px);}
-        }
-        .row-separator{
-            width:100%;
-            height:1px;
-            background:linear-gradient(90deg, transparent, #555, #666, #555, transparent);
-            margin:2px 0;
-            overflow:hidden;
+            0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.4);}
+            50%{box-shadow:0 0 0 5px rgba(34,197,94,0.6);}
         }
         
-        /* КНОПКИ НАВИГАЦИИ И УПРАВЛЕНИЯ */
-        .top-controls{
+        /* === ВЕРХНИЙ БАР С КНОПКАМИ === */
+        .top-bar{
             position:fixed;
             top:10px;
             left:10px;
@@ -381,15 +430,15 @@
         }
         .nav-btn, .edit-mode-btn, .search-input{
             padding:10px 14px;
-            background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+            background:linear-gradient(180deg, #7b5a9e 0%, #6b4c7a 100%);
             color:#fff;
             border:none;
             border-radius:8px;
             cursor:pointer;
-            font-size:12px;
+            font-size:13px;
             font-weight:600;
-            box-shadow:0 4px 15px rgba(99,102,241,0.4);
-            transition:all 0.2s;
+            box-shadow:0 4px 15px rgba(147,112,219,0.4);
+            transition:all 0.25s;
             display:flex;
             align-items:center;
             gap:5px;
@@ -398,16 +447,21 @@
         }
         .nav-btn:hover, .edit-mode-btn:hover, .search-input:hover{
             transform:translateY(-2px);
-            box-shadow:0 6px 20px rgba(99,102,241,0.5);
+            box-shadow:0 6px 20px rgba(147,112,219,0.55);
         }
-        /* Кнопки других гаражей - другой цвет */
-        .nav-btn.other-garage{
-            background:linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
-            box-shadow:0 4px 15px rgba(14,165,233,0.4);
+        .nav-btn.main-garage{
+            background:linear-gradient(180deg, #9370db 0%, #7b5a9e 100%);
+            box-shadow:0 4px 15px rgba(147,112,219,0.4);
         }
-        .nav-btn.other-garage:hover{
-            box-shadow:0 6px 20px rgba(14,165,233,0.5);
-            background:linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%);
+        .nav-btn.main-garage:hover{
+            box-shadow:0 6px 20px rgba(147,112,219,0.55);
+        }
+        .nav-btn.tk{
+            background:linear-gradient(180deg, #a78bfa 0%, #9370db 100%);
+            box-shadow:0 4px 15px rgba(167,139,250,0.4);
+        }
+        .nav-btn.tk:hover{
+            box-shadow:0 6px 20px rgba(167,139,250,0.55);
         }
         .edit-mode-btn.active{
             background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
@@ -415,68 +469,72 @@
             animation:pulse-green 2s infinite;
         }
         @keyframes pulse-green{
-            0%, 100% { box-shadow:0 4px 15px rgba(34,197,94,0.4); }
-            50% { box-shadow:0 4px 25px rgba(34,197,94,0.6); }
+            0%,100%{box-shadow:0 4px 15px rgba(34,197,94,0.4);}
+            50%{box-shadow:0 4px 22px rgba(34,197,94,0.6);}
         }
         .search-input{
-            background:#1a1a1a;
-            color:#eee;
-            border:1px solid #555;
+            background:#2a1a3a;
+            color:#e9d5ff;
+            border:2px solid #9370db;
             padding:10px 12px;
-            width:160px;
+            width:190px;
             font-size:13px;
             font-weight:normal;
         }
-        .search-input::placeholder{
-            color:#aaa;
-        }
+        .search-input::placeholder{color:#b19cd9;}
         .search-input:focus{
             outline:none;
-            border-color:#ffd700;
-            box-shadow:0 0 10px rgba(255,215,0,0.2);
+            border-color:#b19cd9;
+            box-shadow:0 0 10px rgba(177,156,217,0.4);
             transform:translateY(0);
         }
         
+        /* === МОДАЛКА РЕДАКТИРОВАНИЯ === */
         #modal{
             display:none;
             position:fixed;
             inset:0;
-            background:rgba(0,0,0,.9);
+            background:rgba(26,15,42,.95);
             align-items:center;
             justify-content:center;
             z-index:1000;
-            backdrop-filter:blur(8px);
+            backdrop-filter:blur(10px);
         }
         .modal-box{
-            background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
-            padding:22px;
+            background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
+            padding:24px;
             border-radius:14px;
-            width:360px;
+            width:400px;
             max-width:90vw;
-            border:1px solid #555;
-            box-shadow:0 15px 50px rgba(0,0,0,0.7);
+            border:2px solid #9370db;
+            box-shadow:0 15px 50px rgba(147,112,219,0.4);
+            animation:modalIn 0.3s ease;
+        }
+        @keyframes modalIn{
+            from{opacity:0;transform:scale(0.95);}
+            to{opacity:1;transform:scale(1);}
         }
         .modal-box h3{
             margin-bottom:14px;
-            color:#ffd700;
+            color:#d8c4e8;
             text-align:center;
-            font-size:16px;
+            font-size:18px;
             font-weight:600;
         }
         .modal-box input{
             width:100%;
             margin:8px 0;
-            padding:11px 12px;
-            background:#1a1a1a;
-            border:1px solid #555;
-            color:#eee;
+            padding:11px 13px;
+            background:#1a0f2a;
+            border:2px solid #6b4c7a;
+            color:#e9d5ff;
             border-radius:6px;
-            font-size:13px;
+            font-size:14px;
         }
         .modal-box input:focus{
             outline:none;
-            border-color:#ffd700;
-            box-shadow:0 0 10px rgba(255,215,0,0.2);
+            border-color:#b19cd9;
+            box-shadow:0 0 10px rgba(177,156,217,0.35);
         }
         .modal-box .btn-group{
             display:grid;
@@ -486,83 +544,72 @@
         }
         .modal-box button{
             padding:10px 6px;
-            background:#555;
-            color:#eee;
+            background:#4a2f5e;
+            color:#e9d5ff;
             border:none;
             border-radius:6px;
             cursor:pointer;
-            font-size:11px;
-            transition:all 0.2s;
+            font-size:12px;
+            transition:all 0.25s;
             font-weight:600;
             white-space:nowrap;
             overflow:hidden;
             text-overflow:ellipsis;
         }
         .modal-box button:hover{transform:translateY(-1px);}
-        .modal-box button.clear{
-            background:linear-gradient(180deg, #c0392b 0%, #922b21 100%);
-        }
-        .modal-box button.clear:hover{
-            background:linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
-        }
-        .modal-box button.save{
-            background:linear-gradient(180deg, #27ae60 0%, #1e8449 100%);
-        }
-        .modal-box button.save:hover{
-            background:linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
-        }
-        .modal-box button.close{
-            background:#555;
-        }
-        .modal-box button.close:hover{
-            background:#666;
-        }
+        .modal-box button.clear{background:linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);}
+        .modal-box button.clear:hover{background:linear-gradient(180deg, #ef4444 0%, #dc2626 100%);}
+        .modal-box button.save{background:linear-gradient(180deg, #22c55e 0%, #16a34a 100%);}
+        .modal-box button.save:hover{background:linear-gradient(180deg, #4ade80 0%, #22c55e 100%);}
+        .modal-box button.close{background:#4a2f5e;}
+        .modal-box button.close:hover{background:#5a3d6e;}
         
-        /* МОДАЛКА ПАРОЛЯ */
+        /* === МОДАЛКА ПАРОЛЯ === */
         #passwordModal{
             display:none;
             position:fixed;
             inset:0;
-            background:rgba(0,0,0,.9);
+            background:rgba(26,15,42,.95);
             align-items:center;
             justify-content:center;
             z-index:1001;
-            backdrop-filter:blur(8px);
+            backdrop-filter:blur(10px);
         }
         .password-box{
-            background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
+            background:linear-gradient(180deg, #2a1a3a 0%, #1a0f2a 100%);
             padding:24px;
             border-radius:14px;
-            width:320px;
+            width:340px;
             max-width:90vw;
-            border:1px solid #555;
-            box-shadow:0 15px 50px rgba(0,0,0,0.7);
+            border:2px solid #9370db;
+            box-shadow:0 15px 50px rgba(147,112,219,0.4);
+            animation:modalIn 0.3s ease;
         }
         .password-box h3{
             margin-bottom:16px;
-            color:#6366f1;
+            color:#d8c4e8;
             text-align:center;
-            font-size:17px;
+            font-size:18px;
             font-weight:600;
         }
         .password-box input{
             width:100%;
             margin:10px 0;
             padding:12px 14px;
-            background:#1a1a1a;
-            border:1px solid #555;
-            color:#eee;
+            background:#1a0f2a;
+            border:2px solid #6b4c7a;
+            color:#e9d5ff;
             border-radius:6px;
-            font-size:14px;
+            font-size:15px;
         }
         .password-box input:focus{
             outline:none;
-            border-color:#6366f1;
-            box-shadow:0 0 10px rgba(99,102,241,0.3);
+            border-color:#b19cd9;
+            box-shadow:0 0 10px rgba(177,156,217,0.4);
         }
         .password-box .error{
             color:#f87171;
-            font-size:12px;
+            font-size:13px;
             margin:8px 0;
             text-align:center;
             display:none;
@@ -574,72 +621,85 @@
         }
         .password-box button{
             flex:1;
-            padding:11px;
-            background:#555;
-            color:#eee;
+            padding:12px;
+            background:#4a2f5e;
+            color:#e9d5ff;
             border:none;
             border-radius:6px;
             cursor:pointer;
-            font-size:13px;
-            transition:all 0.2s;
+            font-size:14px;
+            transition:all 0.25s;
             font-weight:600;
         }
         .password-box button:hover{transform:translateY(-1px);}
-        .password-box button.confirm{
-            background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
-        }
-        .password-box button.confirm:hover{
-            background:linear-gradient(180deg, #818cf8 0%, #6366f1 100%);
-        }
-        .password-box button.cancel{
-            background:#555;
-        }
-        .password-box button.cancel:hover{
-            background:#666;
-        }
+        .password-box button.confirm{background:linear-gradient(180deg, #7b5a9e 0%, #6b4c7a 100%);}
+        .password-box button.confirm:hover{background:linear-gradient(180deg, #9370db 0%, #7b5a9e 100%);}
+        .password-box button.cancel{background:#4a2f5e;}
+        .password-box button.cancel:hover{background:#5a3d6e;}
         
         .status{
             position:fixed;
             top:10px;
             right:10px;
             padding:8px 16px;
-            background:#2d2d2d;
-            border:1px solid #444;
+            background:#2a1a3a;
+            border:2px solid #9370db;
             border-radius:6px;
-            font-size:12px;
+            font-size:13px;
             z-index:999;
+            font-weight:600;
+            animation:statusPulse 2s infinite;
         }
-        .status.connected{
-            border-color:#4ade80;
-            color:#4ade80;
+        @keyframes statusPulse{
+            0%,100%{opacity:1;}
+            50%{opacity:0.85;}
         }
-        .status.disconnected{
-            border-color:#f87171;
-            color:#f87171;
+        .status.connected{border-color:#22c55e;color:#4ade80;}
+        .status.disconnected{border-color:#f87171;color:#f87171;}
+        
+        /* === ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ === */
+        .garage::before{
+            content:'';
+            position:absolute;
+            top:-50%;left:-50%;right:-50%;bottom:-50%;
+            background:radial-gradient(circle at 30% 20%, rgba(147,112,219,0.08) 0%, transparent 50%),
+                       radial-gradient(circle at 70% 80%, rgba(107,76,122,0.1) 0%, transparent 50%);
+            pointer-events:none;
+            z-index:-1;
         }
     </style>
 </head>
 <body>
     <div class="status" id="status">🔄 Подключение...</div>
     
-    <div class="top-controls">
-        <!-- Кнопки перехода в другие боксы -->
-        <a href="catp.html" class="nav-btn other-garage" title="Перейти в ЧАТП">🚌 ЧАТП</a>
-        <a href="tk.html" class="nav-btn other-garage" title="Перейти в ТК">🛒 ТК</a>
-        
-        <!-- Разделитель -->
-        <div style="width:1px;height:24px;background:#444;margin:0 4px;"></div>
-        
-        <!-- Кнопка режима редактирования -->
+    <div class="top-bar">
+        <a href="index.html" class="nav-btn main-garage" title="Вернуться в главное меню">🏠 Меню</a>
+        <a href="tk.html" class="nav-btn tk" title="Перейти в ТК">🛒 ТК</a>
+        <div style="width:2px;height:24px;background:#9370db;margin:0 4px;border-radius:1px;"></div>
         <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Редактирование</button>
-        
-        <!-- Поле поиска -->
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
     </div>
     
-    <main><div class="garage" id="g"></div></main>
+    <main>
+        <div class="garage">
+            <div style="display:flex;align-items:stretch;">
+                <!-- Левая панель с 4 въездами -->
+                <div class="left-panel">
+                    <div class="gate"><span class="arrow">➤</span></div>
+                    <div class="gate"><span class="arrow">➤</span></div>
+                    <div class="gate"><span class="arrow">➤</span></div>
+                    <div class="gate"><span class="arrow">➤</span></div>
+                </div>
+                
+                <!-- Зона парковки -->
+                <div class="parking-area" id="g"></div>
+            </div>
+        </div>
+    </main>
+    
     <div class="tooltip" id="tooltip"></div>
     
+    <!-- Модалка пароля -->
     <div id="passwordModal">
         <div class="password-box">
             <h3>🔐 Введите пароль</h3>
@@ -652,12 +712,14 @@
         </div>
     </div>
     
+    <!-- Модалка редактирования места -->
     <div id="modal">
         <div class="modal-box">
-            <h3 id="title">🚗 Место</h3>
-            <input id="car" placeholder="Марка автомобиля">
+            <h3 id="title">🚌 Место</h3>
+            <input id="car" placeholder="Марка авто">
             <input id="num" placeholder="Гос. номер">
-            <input id="color" placeholder="Цвет (красный, синий...)">
+            <input id="route" placeholder="№ маршрута">
+            <input id="color" placeholder="Цвет">
             <input id="owner" placeholder="Владелец">
             <input id="cost" placeholder="Стоимость">
             <div class="btn-group">
@@ -668,34 +730,37 @@
         </div>
     </div>
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
+        // 🔥 Firebase конфигурация
         const firebaseConfig = {
-            apiKey: "AIzaSyC_9eS6hShP3Nujbf_AszF68OauqcAsH6I",
-            authDomain: "garage-parking-ff729.firebaseapp.com",
-            databaseURL: "https://garage-parking-ff729-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "garage-parking-ff729",
-            storageBucket: "garage-parking-ff729.firebasestorage.app",
-            messagingSenderId: "338709707407",
-            appId: "1:338709707407:web:212c6dbb979ecc931e0efa"
+            apiKey: "AIzaSyA3Q6cJweM_8mAW6uvrXUfvPIvgmjvW42s",
+            authDomain: "chatp-parking.firebaseapp.com",
+            databaseURL: "https://chatp-parking-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "chatp-parking",
+            storageBucket: "chatp-parking.firebasestorage.app",
+            messagingSenderId: "849469864277",
+            appId: "1:849469864277:web:1e29a79dbfd2f7a6c597dc"
         };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const statusEl = document.getElementById('status');
-
+        
+        // 🔐 Пароль и настройки
         const EDIT_PASSWORD = 'ip-donskaya_2026';
+        const GARAGE_ID = 'catp';
         let isEditMode = false;
         let localDB = {};
-        let id = 0;
         let active = null;
         let tooltip = document.getElementById('tooltip');
-        let colCounter = 0;
         let tooltipTimer;
         let currentSearchTerm = '';
 
+        // Статус подключения
         db.ref('.info/connected').on('value', (snapshot) => {
             if(snapshot.val() === true){
                 statusEl.className = 'status connected';
@@ -706,12 +771,14 @@
             }
         });
 
-        db.ref('spots').on('value', (snapshot) => {
+        // Подписка на данные ЧАТП
+        db.ref(`garages/${GARAGE_ID}/spots`).on('value', (snapshot) => {
             localDB = snapshot.val() || {};
             build();
             if(currentSearchTerm) handleSearch();
         });
 
+        // Переключение режима редактирования
         function toggleEditMode(){
             if(isEditMode){
                 isEditMode = false;
@@ -752,13 +819,7 @@
             }
         }
 
-        function getColLetter(index){
-            const group = Math.floor((index - 1) / 6);
-            const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
-            return letters[group] || '?';
-        }
-
-        // 🎨 Умное определение цвета - частичные совпадения
+        // 🎨 Умное определение цвета
         const colorMap = {
             'белый': '#ffffff', 'бел': '#ffffff', 'white': '#ffffff', 'wht': '#ffffff',
             'чёрный': '#1a1a1a', 'черный': '#1a1a1a', 'чёр': '#1a1a1a', 'чер': '#1a1a1a', 'black': '#1a1a1a', 'blk': '#1a1a1a',
@@ -783,45 +844,31 @@
         function getColorHex(colorName){
             if(!colorName) return {hex: '#6b7280', auto: false};
             const lower = colorName.toLowerCase().trim();
-            
-            // Точное совпадение
             if(colorMap[lower]) return {hex: colorMap[lower], auto: false};
-            
-            // Частичное совпадение (авто-определение)
             for(const [key, hex] of Object.entries(colorMap)){
-                if(lower.includes(key) || key.includes(lower)){
-                    return {hex, auto: true};
-                }
+                if(lower.includes(key) || key.includes(lower)) return {hex, auto: true};
             }
-            
-            // HEX код вручную
-            if(/^#[0-9a-f]{6}$/i.test(lower)){
-                return {hex: lower, auto: false};
-            }
-            
+            if(/^#[0-9a-f]{6}$/i.test(lower)) return {hex: lower, auto: false};
             return {hex: '#6b7280', auto: false};
         }
 
-        function mkSpot(faceClass = '', isSideSpot = false){
-            const i = ++id;
-            const d = localDB[i] || {};
+        // Создание парковочного места
+        function mkSpot(spotId){
+            const d = localDB[spotId] || {};
             const el = document.createElement('div');
-            const className = isSideSpot ? 'spot' : 'spot ' + faceClass;
+            el.className = 'spot' + (d.car ? ' occupied' : ' empty');
             
             if(d.car){
-                el.className = className + ' occupied';
                 el.innerHTML = `
-                    <span class="num">${i}</span>
+                    <span class="num">${spotId}</span>
                     <div class="car-info">
                         <div class="car-mark">${d.car}</div>
-                        <div class="car-separator"></div>
                         <div class="car-num">${d.num||''}</div>
                     </div>
                 `;
-                
                 el.addEventListener('mouseenter', (e) => {
                     clearTimeout(tooltipTimer);
-                    showTooltip(e.currentTarget, d);
+                    tooltipTimer = setTimeout(() => showTooltip(e.currentTarget, d, spotId), 200);
                 });
                 el.addEventListener('mouseleave', () => {
                     clearTimeout(tooltipTimer);
@@ -831,23 +878,21 @@
                     if(tooltip.style.display === 'flex') positionTooltip(e.currentTarget);
                 });
             } else {
-                el.className = className + ' empty-spot';
-                el.innerHTML = `
-                    <span class="num">${i}</span>
-                    <div class="empty-icon">🅿️</div>
-                `;
+                el.innerHTML = `<span class="num">${spotId}</span><div class="empty-icon">🅿️</div>`;
             }
             
-            el.onclick = () => { if(isEditMode) openM(i); };
-            el.dataset.spotId = i;
+            el.onclick = () => { if(isEditMode) openM(spotId); };
+            el.dataset.spotId = spotId;
             return el;
         }
 
-        function showTooltip(el, data){
-            const {car, num, color, owner, cost} = data;
+        // Показать подсказку
+        function showTooltip(el, data, spotId){
+            const {car, num, route, color, owner, cost} = data;
             const {hex: colorHex, auto} = getColorHex(color);
             
             let extraInfoHtml = '';
+            if(route) extraInfoHtml += `<div class="row"><span class="label">Маршрут:</span><span class="value">${route}</span></div>`;
             if(color) {
                 const colorLabel = auto ? `${color} ✨` : color;
                 extraInfoHtml += `<div class="row"><span class="label">Цвет:</span><span class="value">${colorLabel}</span></div>`;
@@ -856,250 +901,181 @@
             if(cost) extraInfoHtml += `<div class="row"><span class="label">Стоимость:</span><span class="value">${cost} ₽</span></div>`;
             
             const badgeClass = auto ? 'color-badge auto-detected' : 'color-badge';
+            const routeHtml = route ? `<span class="route-badge">№${route}</span>` : '';
             
             tooltip.innerHTML = `
                 <div class="header">
                     <div class="${badgeClass}" style="background:${colorHex}" title="${auto ? 'Цвет определён автоматически' : ''}"></div>
                     <div class="mark">${car||'—'}</div>
+                    ${routeHtml}
                 </div>
                 <div class="num">${num||'—'}</div>
                 ${extraInfoHtml ? `<div class="divider"></div><div class="extra-info">${extraInfoHtml}</div>` : ''}
-                <div class="spot-id">Место №${el.dataset.spotId}</div>
+                <div class="spot-id">Место №${spotId} • ЧАТП</div>
             `;
             tooltip.style.display = 'flex';
             positionTooltip(el);
         }
 
-        function hideTooltip(){
-            tooltip.style.display = 'none';
-        }
+        function hideTooltip(){ tooltip.style.display = 'none'; }
 
         function positionTooltip(el){
             const rect = el.getBoundingClientRect();
             const tooltipRect = tooltip.getBoundingClientRect();
-            
             let top = rect.top - tooltipRect.height - 12;
             let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
-            
             if(top < 10) top = rect.bottom + 12;
             if(left < 10) left = 10;
             if(left + tooltipRect.width > window.innerWidth - 10) left = window.innerWidth - tooltipRect.width - 10;
-            
             tooltip.style.top = top + 'px';
             tooltip.style.left = left + 'px';
         }
 
-        function col(){
-            const e = document.createElement('div');
-            e.className = 'col';
-            colCounter++;
-            const label = document.createElement('span');
-            label.className = 'label';
-            label.innerText = getColLetter(colCounter);
-            e.appendChild(label);
-            return e;
-        }
-        
-        function fake(){const e = document.createElement('div');e.className = 'fake';return e;}
-        function spacer(){const e = document.createElement('div');e.className = 'spacer';return e;}
-
-        function createSideGroup(count, isLeft){
-            const group = document.createElement('div');
-            group.className = 'side-group';
-            if(count === 0) { group.style.visibility = 'hidden'; return group; }
-            for(let i=0; i<count; i++) group.appendChild(mkSpot('', true));
-            return group;
-        }
-
-        function createCenterBlock(spotsCount, faceClass){
-            const center = document.createElement('div');
-            center.className = 'center-block ' + faceClass;
-            center.appendChild(fake());
-            const spotsPerBlock = 4;
-            const numBlocks = Math.ceil(spotsCount / spotsPerBlock);
-            for(let s = 0; s < numBlocks; s++){
-                const currentBlockSpots = Math.min(spotsPerBlock, spotsCount - (s * spotsPerBlock));
-                for(let i = 0; i < currentBlockSpots; i++) center.appendChild(mkSpot(faceClass, false));
-                if(s < numBlocks - 1) center.appendChild(fake());
+        // Создание оконного блока с тройными местами
+        function createWindowBlock(baseId, position){
+            const block = document.createElement('div');
+            block.className = 'window-block';
+            
+            // Окно (3 части)
+            const window = document.createElement('div');
+            window.className = 'window';
+            for(let i=0; i<3; i++){
+                const part = document.createElement('div');
+                part.className = 'window-part';
+                window.appendChild(part);
             }
-            center.appendChild(fake());
-            return center;
+            
+            // Тройные места
+            const triple = document.createElement('div');
+            triple.className = 'triple-spot';
+            for(let i=0; i<3; i++){
+                const spotId = baseId + i; 
+                triple.appendChild(mkSpot(spotId));
+            }
+            
+            // Для верхнего ряда: окна сверху, места снизу
+            // Для нижнего ряда: места сверху, окна снизу
+            if(position === 'top'){
+                block.appendChild(window);
+                block.appendChild(triple);
+            } else { // position === 'bottom'
+                block.appendChild(triple);
+                block.appendChild(window);
+            }
+            
+            return block;
         }
 
-        function createFullRow(spotsCount, faceClass, leftSideSpots = 0, rightSideSpots = 0, rightSpacer = false){
+        // Создание ряда с 5 оконными блоками
+        function createWindowRow(position, startId){
             const row = document.createElement('div');
-            row.className = 'row-full';
-            row.appendChild(createSideGroup(leftSideSpots, true));
-            row.appendChild(createCenterBlock(spotsCount, faceClass));
-            if(rightSpacer) row.appendChild(spacer());
-            else row.appendChild(createSideGroup(rightSideSpots, false));
+            row.className = position === 'top' ? 'row-top' : 'row-bottom';
+            
+            for(let i=0; i<5; i++){
+                // 🔢 Последовательная нумерация: каждое место +1
+                const blockStartId = startId + (i * 3);
+                row.appendChild(createWindowBlock(blockStartId, position));
+            }
             return row;
         }
 
-        function rowCols(cls){
-            const row = document.createElement('div');
-            row.className = 'row-full';
-            row.appendChild(createSideGroup(0, true));
-            const center = document.createElement('div');
-            center.className = 'center-block ' + cls;
-            center.appendChild(col());
-            for(let s = 0; s < 4; s++){
-                for(let i = 0; i < 4; i++) center.appendChild(mkSpot(cls, false));
-                center.appendChild(col());
-            }
-            for(let i = 0; i < 4; i++) center.appendChild(mkSpot(cls, false));
-            center.appendChild(col());
-            row.appendChild(center);
-            row.appendChild(createSideGroup(0, false));
-            return row;
-        }
-
-        function road(arrowDir){
-            const d = document.createElement('div');
-            d.className = 'road';
-            const arrow = document.createElement('span');
-            arrow.className = 'arrow';
-            arrow.innerText = arrowDir;
-            d.appendChild(arrow);
-            return d;
-        }
-
-        function doubleRoad(){
-            const d = document.createElement('div');
-            d.className = 'double-road';
-            const entrance = document.createElement('div');
-            entrance.className = 'entrance';
-            entrance.innerHTML = `<span class="arrow-in">➤</span><span class="label">Въезд</span>`;
-            d.appendChild(entrance);
-            const lanes = document.createElement('div');
-            lanes.className = 'lanes';
-            const top = document.createElement('div');
-            top.className = 'lane lane-top';
-            const topArrow = document.createElement('span');
-            topArrow.className = 'arrow';
-            topArrow.innerText = '← ← ←';
-            top.appendChild(topArrow);
-            const bottom = document.createElement('div');
-            bottom.className = 'lane lane-bottom';
-            const bottomArrow = document.createElement('span');
-            bottomArrow.className = 'arrow';
-            bottomArrow.innerText = '→ → →';
-            bottom.appendChild(bottomArrow);
-            lanes.appendChild(top);
-            lanes.appendChild(bottom);
-            d.appendChild(lanes);
-            return d;
-        }
-
-        function rowSeparator(){
-            const d = document.createElement('div');
-            d.className = 'row-separator';
-            return d;
-        }
-
-        function openM(i){
+        // Открытие модалки редактирования
+        function openM(spotId){
             if(!isEditMode) return;
-            active = i;
-            document.getElementById('title').innerText = '🚗 Место №' + i;
-            const d = localDB[i] || {};
+            active = spotId;
+            document.getElementById('title').innerText = `🚌 Место №${spotId}`;
+            const d = localDB[spotId] || {};
             document.getElementById('car').value = d.car || '';
             document.getElementById('num').value = d.num || '';
+            document.getElementById('route').value = d.route || '';
             document.getElementById('color').value = d.color || '';
             document.getElementById('owner').value = d.owner || '';
             document.getElementById('cost').value = d.cost || '';
             document.getElementById('modal').style.display = 'flex';
             document.getElementById('car').focus();
         }
-        function closeM(){
-            document.getElementById('modal').style.display = 'none';
-            active = null;
-        }
+        function closeM(){ document.getElementById('modal').style.display = 'none'; active = null; }
 
+        // Сохранение в Firebase с проверкой
         function save(){
             if(!active || !isEditMode) return;
             const car = document.getElementById('car').value.trim();
             const num = document.getElementById('num').value.trim();
+            const route = document.getElementById('route').value.trim();
             const color = document.getElementById('color').value.trim();
             const owner = document.getElementById('owner').value.trim();
             const cost = document.getElementById('cost').value.trim();
             
+            const spotRef = db.ref(`garages/${GARAGE_ID}/spots/` + active);
+            
             if(car){
-                db.ref('spots/' + active).set({car, num, color, owner, cost});
+                spotRef.set({car, num, route, color, owner, cost})
+                    .then(() => {
+                        console.log('✅ Данные сохранены:', {spotId: active, car, num, route, color, owner, cost});
+                        closeM();
+                    })
+                    .catch((error) => {
+                        console.error('❌ Ошибка сохранения:', error);
+                        alert('Ошибка сохранения данных! Проверьте подключение к Firebase.');
+                    });
             } else {
-                db.ref('spots/' + active).remove();
+                spotRef.remove()
+                    .then(() => {
+                        console.log('🗑️ Место очищено:', active);
+                        closeM();
+                    })
+                    .catch((error) => {
+                        console.error('❌ Ошибка удаления:', error);
+                        alert('Ошибка удаления данных!');
+                    });
             }
-            closeM();
         }
 
         function clearCar(){
             if(!active || !isEditMode) return;
-            document.getElementById('car').value = '';
-            document.getElementById('num').value = '';
-            document.getElementById('color').value = '';
-            document.getElementById('owner').value = '';
-            document.getElementById('cost').value = '';
-            db.ref('spots/' + active).remove();
+            ['car','num','route','color','owner','cost'].forEach(f => document.getElementById(f).value = '');
+            db.ref(`garages/${GARAGE_ID}/spots/` + active).remove();
             closeM();
         }
 
         document.getElementById('modal').onclick = function(e){ if(e.target === this) closeM(); };
 
+        // Поиск
         function handleSearch(){
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             currentSearchTerm = searchTerm;
-            
-            document.querySelectorAll('.spot.occupied').forEach(spot => {
-                spot.classList.remove('spot-found');
-            });
-            
-            if(!searchTerm){
-                hideTooltip();
-                return;
-            }
+            document.querySelectorAll('.spot.occupied').forEach(spot => spot.classList.remove('spot-found'));
+            if(!searchTerm){ hideTooltip(); return; }
             
             let foundSpots = [];
             document.querySelectorAll('.spot.occupied').forEach(spot => {
-                const spotId = spot.dataset.spotId;
-                const data = localDB[spotId];
+                const sid = spot.dataset.spotId;
+                const data = localDB[sid];
                 if(!data) return;
-                
-                const fields = [data.car, data.num, data.color, data.owner, data.cost].filter(f => f);
-                const match = fields.some(f => f.toLowerCase().includes(searchTerm));
-                
-                if(match){
+                const fields = [data.car, data.num, data.route, data.color, data.owner, data.cost].filter(f => f);
+                if(fields.some(f => f.toLowerCase().includes(searchTerm))){
                     foundSpots.push(spot);
                     spot.classList.add('spot-found');
                 }
             });
             
             if(foundSpots.length > 0){
-                const firstSpot = foundSpots[0];
-                firstSpot.scrollIntoView({behavior:'smooth', block:'center'});
-                
-                const spotId = firstSpot.dataset.spotId;
-                const data = localDB[spotId];
-                showTooltip(firstSpot, data);
-            } else {
-                hideTooltip();
-            }
+                const first = foundSpots[0];
+                first.scrollIntoView({behavior:'smooth', block:'center'});
+                showTooltip(first, localDB[first.dataset.spotId], first.dataset.spotId);
+            } else { hideTooltip(); }
         }
 
+        // Построение схемы
         function build(){
-            id = 0;
-            colCounter = 0;
             const g = document.getElementById('g');
             g.innerHTML = '';
-            g.appendChild(createFullRow(20, 'face-down', 2, 2, false));
-            g.appendChild(road('← ← ← ← ←'));
-            g.appendChild(rowCols('face-up'));
-            g.appendChild(rowSeparator());
-            g.appendChild(rowCols('face-down'));
-            g.appendChild(doubleRoad());
-            g.appendChild(rowCols('face-down'));
-            g.appendChild(rowSeparator());
-            g.appendChild(rowCols('face-up'));
-            g.appendChild(road('→ → → → →'));
-            g.appendChild(createFullRow(20, 'face-up', 2, 0, true));
+            
+            // 🔢 ВЕРХНИЙ РЯД: места 1-15 (слева направо)
+            g.appendChild(createWindowRow('top', 1));
+            
+            // 🔢 НИЖНИЙ РЯД: места 16-30 (слева направо)
+            g.appendChild(createWindowRow('bottom', 16));
         }
 
         build();
@@ -1113,9 +1089,7 @@
         
         document.getElementById('searchInput').addEventListener('input', (e) => {
             if(e.target.value === ''){
-                document.querySelectorAll('.spot.occupied').forEach(spot => {
-                    spot.classList.remove('spot-found');
-                });
+                document.querySelectorAll('.spot.occupied').forEach(spot => spot.classList.remove('spot-found'));
             }
         });
     </script>
