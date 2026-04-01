@@ -49,44 +49,7 @@
             margin-right:15px;
             flex-shrink:0;
             box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
-            position:relative;
         }
-        
-        /* 🚛 ГРУЗОВИК НА ВЪЕЗДЕ (новый элемент) */
-        .truck-entrance{
-            position:absolute;
-            bottom:-55px;
-            left:50%;
-            transform:translateX(-50%);
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            gap:4px;
-            z-index:10;
-        }
-        .truck-entrance .truck-icon{
-            font-size:28px;
-            animation:truckBounce 2s infinite;
-            filter:drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-        }
-        .truck-entrance .label{
-            color:#4ade80;
-            font-size:9px;
-            font-weight:700;
-            letter-spacing:1px;
-            text-transform:uppercase;
-            text-shadow:0 0 8px rgba(74,222,128,0.6);
-            white-space:nowrap;
-            background:rgba(26,15,42,0.8);
-            padding:2px 6px;
-            border-radius:4px;
-            border:1px solid #4ade80;
-        }
-        @keyframes truckBounce{
-            0%,100%{transform:translateY(0);}
-            50%{transform:translateY(-4px);}
-        }
-        
         .gate{
             width:48px;
             height:72px;
@@ -105,13 +68,16 @@
             transform:translateX(2px);
             box-shadow:0 5px 15px rgba(147,112,219,0.5);
         }
-        .gate .arrow{
-            color:#d8c4e8;
-            font-size:22px;
-            font-weight:bold;
-            animation:arrowPulse 2s infinite;
+        /* 🚛 Иконка грузовика внутри gate */
+        .gate .truck-icon{
+            font-size:26px;
+            animation:truckPulse 2s infinite;
+            filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
-        @keyframes arrowPulse{0%,100%{opacity:1;}50%{opacity:0.7;}}
+        @keyframes truckPulse{
+            0%,100%{opacity:1;transform:scale(1);}
+            50%{opacity:0.85;transform:scale(0.95);}
+        }
         
         /* === ОСНОВНАЯ ЗОНА ПАРКОВКИ === */
         .parking-area{
@@ -307,7 +273,7 @@
             padding:10px 14px;
             background:linear-gradient(180deg, #7b5a9e 0%, #6b4c7a 100%);
             color:#fff;border:none;border-radius:8px;
-            cursor:pointer;font-size:13px;font-weight:600;
+            cursor:pointer;font-size:12px;font-weight:600;
             box-shadow:0 4px 15px rgba(147,112,219,0.4);
             transition:all 0.25s;display:flex;
             align-items:center;gap:5px;text-decoration:none;
@@ -317,13 +283,16 @@
             transform:translateY(-2px);
             box-shadow:0 6px 20px rgba(147,112,219,0.55);
         }
-        .nav-btn.main-garage{
-            background:linear-gradient(180deg, #9370db 0%, #7b5a9e 100%);
-            box-shadow:0 4px 15px rgba(147,112,219,0.4);
+        /* 🚗 Кнопка на легковой гараж */
+        .nav-btn.cars{
+            background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+            box-shadow:0 4px 15px rgba(99,102,241,0.4);
         }
-        .nav-btn.main-garage:hover{
-            box-shadow:0 6px 20px rgba(147,112,219,0.55);
+        .nav-btn.cars:hover{
+            box-shadow:0 6px 20px rgba(99,102,241,0.55);
+            background:linear-gradient(180deg, #818cf8 0%, #6366f1 100%);
         }
+        /* 🚌 Кнопка на ЧАТП */
         .nav-btn.chatp{
             background:linear-gradient(180deg, #a78bfa 0%, #9370db 100%);
             box-shadow:0 4px 15px rgba(167,139,250,0.4);
@@ -354,65 +323,37 @@
         
         /* ========== ЕДИНЫЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН ========== */
         .modal-base {
-            display:none;
-            position:fixed;
-            inset:0;
-            background:rgba(0,0,0,.9);
-            align-items:center;
-            justify-content:center;
-            z-index:1000;
-            backdrop-filter:blur(8px);
+            display:none;position:fixed;inset:0;
+            background:rgba(0,0,0,.9);align-items:center;
+            justify-content:center;z-index:1000;backdrop-filter:blur(8px);
         }
         .modal-content {
             background:linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
-            padding:22px;
-            border-radius:14px;
-            width:360px;
-            max-width:90vw;
-            border:1px solid #555;
-            box-shadow:0 15px 50px rgba(0,0,0,0.7);
+            padding:22px;border-radius:14px;width:360px;max-width:90vw;
+            border:1px solid #555;box-shadow:0 15px 50px rgba(0,0,0,0.7);
         }
         .modal-content h3 {
-            margin-bottom:14px;
-            color:#ffd700;
-            text-align:center;
-            font-size:16px;
-            font-weight:600;
+            margin-bottom:14px;color:#ffd700;text-align:center;
+            font-size:16px;font-weight:600;
         }
         .modal-content input {
-            width:100%;
-            margin:8px 0;
-            padding:11px 12px;
-            background:#1a1a1a;
-            border:1px solid #555;
-            color:#eee;
-            border-radius:6px;
-            font-size:13px;
+            width:100%;margin:8px 0;padding:11px 12px;
+            background:#1a1a1a;border:1px solid #555;color:#eee;
+            border-radius:6px;font-size:13px;
         }
         .modal-content input:focus {
-            outline:none;
-            border-color:#6366f1;
+            outline:none;border-color:#6366f1;
             box-shadow:0 0 10px rgba(99,102,241,0.3);
         }
         .modal-content .btn-group {
-            display:grid;
-            grid-template-columns:1fr 1fr 1fr;
-            margin-top:14px;
-            gap:6px;
+            display:grid;grid-template-columns:1fr 1fr 1fr;
+            margin-top:14px;gap:6px;
         }
         .modal-content button {
-            padding:10px 6px;
-            background:#555;
-            color:#eee;
-            border:none;
-            border-radius:6px;
-            cursor:pointer;
-            font-size:11px;
-            transition:all 0.2s;
-            font-weight:600;
-            white-space:nowrap;
-            overflow:hidden;
-            text-overflow:ellipsis;
+            padding:10px 6px;background:#555;color:#eee;border:none;
+            border-radius:6px;cursor:pointer;font-size:11px;
+            transition:all 0.2s;font-weight:600;
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
         }
         .modal-content button:hover { transform:translateY(-1px); }
         .modal-content button.clear {
@@ -428,13 +369,9 @@
             background:linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
         }
         .modal-content button.close,
-        .modal-content button.cancel {
-            background:#555;
-        }
+        .modal-content button.cancel { background:#555; }
         .modal-content button.close:hover,
-        .modal-content button.cancel:hover {
-            background:#666;
-        }
+        .modal-content button.cancel:hover { background:#666; }
         .modal-content button.confirm {
             background:linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
         }
@@ -442,11 +379,8 @@
             background:linear-gradient(180deg, #818cf8 0%, #6366f1 100%);
         }
         .modal-content .error {
-            color:#f87171;
-            font-size:12px;
-            margin:8px 0;
-            text-align:center;
-            display:none;
+            color:#f87171;font-size:12px;margin:8px 0;
+            text-align:center;display:none;
         }
         /* ===================================================== */
         
@@ -472,8 +406,9 @@
     <div class="status" id="status">🔄 Подключение...</div>
     
     <div class="top-bar">
-        <!-- 📋 ЕДИНЫЙ БЛОК НАВИГАЦИИ -->
-        <a href="index.html" class="nav-btn main-garage" title="Вернуться в главное меню">🏠 Меню</a>
+        <!-- 🚗 Кнопка на легковой гараж -->
+        <a href="index.html" class="nav-btn cars" title="Перейти в гараж легковых авто">🚗 Легковой</a>
+        <!-- 🚌 Кнопка на ЧАТП -->
         <a href="catp.html" class="nav-btn chatp" title="Перейти в ЧАТП">🚌 ЧАТП</a>
         <div style="width:2px;height:24px;background:#9370db;margin:0 4px;border-radius:1px;"></div>
         <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">✏️ Редактирование</button>
@@ -483,18 +418,12 @@
     <main>
         <div class="garage">
             <div style="display:flex;align-items:stretch;">
-                <!-- Левая панель с въездами + грузовик -->
+                <!-- Левая панель с въездами (грузовик ВНУТРИ gate, без отдельного элемента) -->
                 <div class="left-panel">
-                    <div class="gate"><span class="arrow">🚛</span></div>
-                    <div class="gate"><span class="arrow">🚛</span></div>
-                    <div class="gate"><span class="arrow">🚛</span></div>
-                    <div class="gate"><span class="arrow">🚛</span></div>
-                    
-                    <!-- 🚛 Грузовик на въезде -->
-                    <div class="truck-entrance">
-                        <span class="truck-icon">🚚</span>
-                        <span class="label">Въезд</span>
-                    </div>
+                    <div class="gate"><span class="truck-icon">🚛</span></div>
+                    <div class="gate"><span class="truck-icon">🚛</span></div>
+                    <div class="gate"><span class="truck-icon">🚛</span></div>
+                    <div class="gate"><span class="truck-icon">🚛</span></div>
                 </div>
                 <div class="parking-area" id="g"></div>
             </div>
@@ -533,12 +462,12 @@
         </div>
     </div>
 
-    <!-- 🔥 FIREBASE (ЕДИНАЯ БАЗА ДЛЯ ВСЕХ ГАРАЖЕЙ) -->
+    <!-- 🔥 FIREBASE (ЕДИНАЯ БАЗА) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // 🔥 ЕДИНЫЙ FIREBASE CONFIG (как в первом файле)
+        // 🔥 ЕДИНЫЙ КОНФИГ ДЛЯ ВСЕХ ГАРАЖЕЙ
         const firebaseConfig = {
             apiKey: "AIzaSyC_9eS6hShP3Nujbf_AszF68OauqcAsH6I",
             authDomain: "garage-parking-ff729.firebaseapp.com",
@@ -554,7 +483,7 @@
         const statusEl = document.getElementById('status');
         
         const EDIT_PASSWORD = 'ip-donskaya_2026';
-        const GARAGE_ID = 'tk'; // 🔑 Уникальный ключ для ТК
+        const GARAGE_ID = 'tk';
         let isEditMode = false;
         let localDB = {};
         let active = null;
@@ -572,7 +501,6 @@
             }
         });
 
-        // 🔥 Читаем данные из "папки" ТК в общей базе
         db.ref(`garages/${GARAGE_ID}/spots`).on('value', (snapshot) => {
             localDB = snapshot.val() || {};
             build();
@@ -675,7 +603,7 @@
         }
 
         function showTooltip(el, data, spotId){
-            const {car, num, color, owner, cost} = data; // 🔥 Нет route для ТК
+            const {car, num, color, owner, cost} = data;
             const {hex: colorHex, auto} = getColorHex(color);
             
             let extraInfoHtml = '';
@@ -766,7 +694,6 @@
         }
         function closeM(){ document.getElementById('modal').style.display = 'none'; active = null; }
 
-        // 🔥 Сохраняем в "папку" ТК в общей базе (без поля route)
         function save(){
             if(!active || !isEditMode) return;
             const car = document.getElementById('car').value.trim();
@@ -795,7 +722,6 @@
 
         document.getElementById('modal').onclick = function(e){ if(e.target === this) closeM(); };
 
-        // 🔍 Поиск (без поля route)
         function handleSearch(){
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             currentSearchTerm = searchTerm;
